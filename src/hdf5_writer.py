@@ -19,8 +19,10 @@ def write_struct_hdf5(microstructure, filename):
         geometry.attrs['resolution'] = microstructure.resolution
         
         # Write orientations
-        num_grains = microstructure.get_num_grains()
-        euler_angles = np.zeros((num_grains, 3))
+        num_grains = len(microstructure.orientations)
+        if num_grains > 0:
+            max_grain_id = max(microstructure.orientations.keys())
+            euler_angles = np.zeros((max_grain_id, 3))
         
         for grain_id, angles in microstructure.orientations.items():
             if grain_id > 0:
@@ -29,3 +31,4 @@ def write_struct_hdf5(microstructure, filename):
         orientations.create_dataset('EulerAngles', data=euler_angles)
         orientations.attrs['convention'] = 'Bunge (ZXZ)'
         orientations.attrs['units'] = 'radians'
+        orientations.attrs['num_grains'] = num_grains
