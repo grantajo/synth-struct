@@ -10,11 +10,11 @@ from texture import Texture
 from hdf5_writer import write_struct_hdf5
 import matplotlib.pyplot as plt
 
-dims = 5000
+dims = 200
 res = 1.0 
-num_grains = 400
+num_grains = 350
 # Create a 2D microstructure
-micro = Microstructure(dimensions=(dims, dims), resolution=res)
+micro = Microstructure(dimensions=(dims, dims, dims), resolution=res)
 
 # Generate 50 grains
 micro.gen_voronoi(num_grains=num_grains, seed=42)
@@ -22,7 +22,7 @@ micro.gen_voronoi(num_grains=num_grains, seed=42)
 # Assign random orientations
 micro.orientations = Texture.random_orientations(num_grains, seed=42)
 
-write_struct_hdf5(micro, '../output/microstructure.h5')
+write_struct_hdf5(micro, '../output/microstructure_3d.h5')
 print('Microstructure saved to output/microstructure.h5')
 
 end_time = time.time()
