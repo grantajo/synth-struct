@@ -1,4 +1,0 @@
-Dimensions: 100 100 100
-Resolution: 1.0
-Data Type: int32
-Byte Order: lttle-endian
