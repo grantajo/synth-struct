@@ -1,6 +1,44 @@
 import h5py
 import numpy as np
 
+
+
+def write_hdf5_test(microstructure, filename):
+    """
+    File format:
+    /Microstructure
+    ├── GrainData
+    │   ├── GrainIDs
+    │   ├── GrainOrientations
+    │   └── Metadata
+    ├── SpatialInformation
+    │   ├── Dimensions
+    │   ├── Resolution
+    │   └── SpatialUnits
+    └── ProcessingInformation
+        └── Date
+    """
+    with h5py.File(filename, 'w') as f:
+        # Create main groups
+        grain_group = f.create_group('GrainData')
+        spatial_group = f.create_group('SpatialInformation')
+        processing_group = f.create_group('ProcessingInformation')
+        
+        # Store spatial information
+        spatial_group.attrs['Dimensions'] = microstructure.dimensions
+        spatial_group.attrs['Resolution'] = microstructure.resolution
+        spatial_group.attrs['SpatialUnits'] = microstructure.units
+        
+        # Store grain data
+        grain_group.create_dataset('GrainIDs', data=microstructure.grain_ids)
+        grain_group.create_dataset('GrainOrientations', data=microstructure.orientations) 
+        
+        # Add metadata
+        num_grains = len(microstructure.grain_ids)
+        grain_group.attrs['GrainCount'] = num_grains
+        
+        
+
 def write_struct_hdf5(microstructure, filename):
     """
     Write microstructure to HDF5 file

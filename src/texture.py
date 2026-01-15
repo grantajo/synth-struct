@@ -37,3 +37,5 @@ class Texture:
                 orientations[grain_id] = mean_orientation + np.random.normal(0, spread, 3)
                 
         return orientations
+        
+        
