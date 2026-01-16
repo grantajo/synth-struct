@@ -15,6 +15,7 @@ class Microstructure:
         self.units = units
         self.grain_ids = np.zeros(dimensions, dtype=np.int32)
         self.orientations = {} # grain_id: orientation (Euler angles)
+        self.stiffness = {} 
         
     def get_num_grains(self):
         return len(np.unique(self.grain_ids)) - 1 # exclude background (0)
