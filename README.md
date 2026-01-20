@@ -2,8 +2,7 @@ This is a microstructure generator that outputs an HDF5 file with the grain stru
 
 Things to be added:
  - Fix HDF5 writer so that a software can read it
- - Verify quaternion euler angle converter
- - More texture customization (add in texture components as well as custom textures)
+ - Test texture components and custom texture components
  - Custom grain size generation
  - Verify 3D works with the example
  - 

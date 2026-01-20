@@ -6,7 +6,7 @@ from euler_quat_converter import euler_to_quat, quat_to_euler
 import numpy as np
 
 # Create some test orientations
-orientations = Texture.random_orientations(5, seed=42)
+orientations = Texture.random_orientations(5, seed=54)
 
 print("Original Euler angles:")
 for gid, angles in orientations.items():
