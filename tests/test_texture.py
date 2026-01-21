@@ -299,6 +299,11 @@ class TestApplyTextureToRegion(unittest.TestCase):
                 orientations[gid],
                 self.original_orientations[gid]
             )
+            
+        # The nonexistent grain IDs should not be added to the dictionary
+        self.assertNotIn(999, orientations)
+        self.assertNotIn(1000, orientations)
+        self.assertNotIn(1001, orientations)
     
     # ============ Test Multiple Regions ============
     def test_multiple_regions_different_textures(self):

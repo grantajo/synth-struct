@@ -57,7 +57,7 @@ class Texture:
         
         elif texture_type == 'goss':
             # Goss texture: {011}<100>
-            mean_orientation = np.array([0.0, 0.0, 0.0])
+            mean_orientation = np.array([0.0, np.radians(45.0), np.radians(45.0)])
         
         elif texture_type == 'brass':
             # Brass texture: {110}<112>
@@ -106,10 +106,11 @@ class Texture:
         elif texture_type == 'random':
             # Random texture: Random orientations
             for grain_id in region_grain_ids:
-                phi1 = np.random.uniform(0.0, 2*np.pi)
-                Phi = np.arccos(np.random.uniform(-1.0, 1.0))
-                phi2 = np.random.uniform(0.0, 2*np.pi)
-                orientations[grain_id] = np.array([phi1, Phi, phi2])
+                if grain_id in orientations:
+                    phi1 = np.random.uniform(0.0, 2*np.pi)
+                    Phi = np.arccos(np.random.uniform(-1.0, 1.0))
+                    phi2 = np.random.uniform(0.0, 2*np.pi)
+                    orientations[grain_id] = np.array([phi1, Phi, phi2])
             return orientations
             
         else:
@@ -119,70 +120,71 @@ class Texture:
         # Apply texture with scatter to all grains in region
         for grain_id in region_grain_ids:
             # Add noise around ideal orientation
-            orientations[grain_id] = mean_orientation + np.random.normal(0, spread, 3)
+            if grain_id in orientations: # Check if grain_id is in the list of grains
+                orientations[grain_id] = mean_orientation + np.random.normal(0, spread, 3)
         
         return orientations
         
     @staticmethod
-def miller_to_euler(hkl, uvw):
-    """
-    Convert Miller indices to Euler angles (Bunge convention)
-    Allows users to define textures using crystallographic notation
-    
-    Args:
-    - hkl: Plane normal as [h, k, l]
-    - uvw: Direction as [u, v, w]
-    
-    Returns: Euler angles [phi1, Phi, phi2] in degrees
-    
-    Example:
-        # Goss texture {011}<100>
-        euler = Texture.miller_to_euler([0, 1, 1], [1, 0, 0])
-        orientations = Texture.apply_texture_to_region(
-            orientations,
-            texture_type='custom',
-            custom_euler=euler
-        )
-    """
-    # Normalize vectors
-    hkl = np.array(hkl, dtype=float)
-    uvw = np.array(uvw, dtype=float)
-    
-    hkl = hkl / np.linalg.norm(hkl)
-    uvw = uvw / np.linalg.norm(uvw)
-    
-    # hkl should be parallel to sample normal (ND)
-    # uvw should be parallel to rolling direction (RD)
-    
-    # Create rotation matrix from crystal to sample frame
-    # RD = uvw, TD = hkl x uvw, ND = hkl
-    RD = uvw
-    ND = hkl
-    TD = np.cross(ND, RD)
-    TD = TD / np.linalg.norm(TD)
-    
-    # Rotation matrix (crystal to sample)
-    g = np.column_stack([RD, TD, ND])
-    
-    # Convert rotation matrix to Euler angles (Bunge ZXZ)
-    # Phi (second angle)
-    Phi = np.arccos(g[2, 2])
-    
-    # Handle gimbal lock cases
-    if np.abs(Phi) < 1e-10:  # Phi ~ 0
-        phi1 = np.arctan2(g[0, 1], g[0, 0])
-        phi2 = 0.0
-    elif np.abs(Phi - np.pi) < 1e-10:  # Phi ~ 180
-        phi1 = np.arctan2(-g[0, 1], g[0, 0])
-        phi2 = 0.0
-    else:
-        phi1 = np.arctan2(g[2, 0], -g[2, 1])
-        phi2 = np.arctan2(g[0, 2], g[1, 2])
-    
-    # Convert to degrees and ensure positive angles
-    phi1_deg = np.degrees(phi1) % 360
-    Phi_deg = np.degrees(Phi)
-    phi2_deg = np.degrees(phi2) % 360
-    
-    return [phi1_deg, Phi_deg, phi2_deg]
+    def miller_to_euler(hkl, uvw):
+        """
+        Convert Miller indices to Euler angles (Bunge convention)
+        Allows users to define textures using crystallographic notation
+        
+        Args:
+        - hkl: Plane normal as [h, k, l]
+        - uvw: Direction as [u, v, w]
+        
+        Returns: Euler angles [phi1, Phi, phi2] in degrees
+        
+        Example:
+            # Goss texture {011}<100>
+            euler = Texture.miller_to_euler([0, 1, 1], [1, 0, 0])
+            orientations = Texture.apply_texture_to_region(
+                orientations,
+                texture_type='custom',
+                custom_euler=euler
+            )
+        """
+        # Normalize vectors
+        hkl = np.array(hkl, dtype=float)
+        uvw = np.array(uvw, dtype=float)
+        
+        hkl = hkl / np.linalg.norm(hkl)
+        uvw = uvw / np.linalg.norm(uvw)
+        
+        # hkl should be parallel to sample normal (ND)
+        # uvw should be parallel to rolling direction (RD)
+        
+        # Create rotation matrix from crystal to sample frame
+        # RD = uvw, TD = hkl x uvw, ND = hkl
+        RD = uvw
+        ND = hkl
+        TD = np.cross(ND, RD)
+        TD = TD / np.linalg.norm(TD)
+        
+        # Rotation matrix (crystal to sample)
+        g = np.column_stack([RD, TD, ND])
+        
+        # Convert rotation matrix to Euler angles (Bunge ZXZ)
+        # Phi (second angle)
+        Phi = np.arccos(g[2, 2])
+        
+        # Handle gimbal lock cases
+        if np.abs(Phi) < 1e-10:  # Phi ~ 0
+            phi1 = np.arctan2(g[0, 1], g[0, 0])
+            phi2 = 0.0
+        elif np.abs(Phi - np.pi) < 1e-10:  # Phi ~ 180
+            phi1 = np.arctan2(-g[0, 1], g[0, 0])
+            phi2 = 0.0
+        else:
+            phi1 = np.arctan2(g[2, 0], -g[2, 1])
+            phi2 = np.arctan2(g[0, 2], g[1, 2])
+        
+        # Convert to degrees and ensure positive angles
+        phi1_deg = np.degrees(phi1) % 360
+        Phi_deg = np.degrees(Phi)
+        phi2_deg = np.degrees(phi2) % 360
+        
+        return [phi1_deg, Phi_deg, phi2_deg]
         
