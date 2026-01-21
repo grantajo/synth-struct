@@ -22,7 +22,12 @@ class Microstructure:
             
     def gen_voronoi(self, num_grains, seed=None, chunk_size=1_000_000):
         """
-        More memory-efficient Voronoi using KDTree
+        Generate grains with a standard Voronoi tesselation
+        
+        Args:
+        - num_grains: Number of grains to generate
+        - seed: Random seed for reproducibility
+        - chunk_size: For memory efficient generation
         """
         if seed:
             np.random.seed(seed)
@@ -54,6 +59,128 @@ class Microstructure:
             
         # Reshape back to original dimensions
         self.grain_ids = grain_ids_flat.reshape(self.dimensions)
+        
+    def gen_voronoi_w(self, num_grains, grain_shapes='spherical', shape_params=None, seed=None)
+        """
+        Generate grains with controlled shapes using weighted Voronoi tesselation
+        
+        Args:
+        - num_grains: Number of grains to generate
+        - grain_shapes: Shape type ('spherical', 'ellipsoidal', 'columnar', 'equiaxed', 'mixed', 'custom')
+        - shape_params: Dictionary of shape parameters (dependent on grain_shapes)
+        - seed: Random seed for reproducibility
+        
+        Shape types and parameters:
+        
+        'spherical': Approximately equal size grains
+            - size_variation: Standard deviation of grain sizes (default: 0.2)
+        'ellipsoidal': Elongated grains
+            - aspect_ratio_mean: Mean aspect ratio (default: 2.0)
+            - aspect_ratio_std: Std dev of aspect ratio (default: 0.5)
+            - orientation: Preferred elongation direction ('x', 'y', 'z', 'random')
+        'columnar': Column-like grains along one axis
+            - axis: Growth direction ('x', 'y', or 'z', default: 'z')
+            - aspect_ratio: Length/weidth ratio (default: 3.0)
+        'equiaxed': Uniform, rounded grains
+            - size_variation: Size variation (default: 0.1)
+        'mixed': Mixture of shapes
+            - ellipsoid_fraction: Fraction of ellipsoidal grains (default: 0.5)
+            - aspect_ratio_mean: For ellipsoidal grains (default: 2.0)
+        'custom': User-defined weights    
+            - weights: Array of weights for each grain (required)
+        """
+        if seed:
+            np.random.seed(seed)
+            
+        # Set default parameters
+        if shape_params is None:
+            shape_params = {}
+            
+        ndim = lin(self.dimensions)
+        
+        seeds = np.random.rand(num_grains, ndim) * np.array(self.dimensions)
+        
+        # Generate weights based on shape type
+        if grain_shapes == 'spherical':
+            weights = self._generate_spherical_weights(num_grains, shape_params)
+            
+        elif grain_shapes == 'ellipsoidal':
+            weights, directions = self._generate_ellipsoidal_weights(num_grains, seeds, shape_params)
+            self.grain_elongation_directions = directions
+            
+        elif grain_shapes == 'columnar':
+            weights = self._generate_columnar_weights(num_grains, seeds, shape_params)
+            
+        elif grain_shapes == 'equiaxed':
+            weights = self._generate_equiaxed_weights(num_grains, shape_params)
+            
+        elif grain_shapes == 'mixed':
+            weights = self._generate_mixed_weights(num_grains, shape_params)
+            
+        elif grain_shapes == 'custom':
+            weights = shape_params.get('weights')
+            if weights is None or len(weights) != num_grains:
+                raise ValueError(f"Custom weights must be provided for all {num_grains} grains")
+                
+        else:
+            raise ValueError(f"Unknown grain_shapes: {grain_shapes}")
+            
+        # Perform weighted Voronoi tessellation
+        self._weighted_voronoi_assignment(seeds, weights)
+        
+        print(f"Generated {num_grains} grains with '{grain_shapes}' morphology")
+        
+    def _generate_spherical_weights(self, num_grains, params):
+        """
+        Generate weights for spherical grains
+        
+        Weights represent "radius" = larger weight = larger grain
+        """
+        size_variation = params.get('size_variation', 0.2)
+        weights = np.random.lognormal(mean=0, sigma=size_variation, size=num_grains)
+        
+        return weights
+        
+    def _generate_ellipsoidal_weights(self, num_grains, seeds, params):
+        """Generate weights and directions for ellipsoidal grains"""
+        aspect_ratio_mean = params.get('aspect_ratio_mean', 2.0)
+        aspect_ratio_std = params.get('aspect_ratio_std', 0.5)
+        orientation = params.get('orientation', 'random')
+        
+        ndim = len(self.dimensions)
+        
+        # Generate aspect ratios for each grain
+        aspect_ratios = np.random.normal(aspect_ratio_mean, aspect_ratio_std, num_grains)
+        aspect_ratios = np.clip(aspect_ratios, 1.0, 5.0)  # Reasonable limits
+        
+        # Generate elongation directions
+        if orientation == 'random':
+            if ndim == 3:
+                # Random 3D directions
+                directions = np.random.randn(num_grains, 3)
+                directions = directions / np.linalg.norm(directions, axis=1, keepdims=True)
+            else:
+                # Random 2D angles
+                angles = np.random.uniform(0, 2*np.pi, num_grains)
+                directions = np.column_stack([np.cos(angles), np.sin(angles)])
+        
+        elif orientation in ['x', 'y', 'z']:
+            axis_idx = {'x': 0, 'y': 1, 'z': 2}[orientation]
+            directions = np.zeros((num_grains, ndim))
+            directions[:, axis_idx] = 1.0
+        
+        else:
+            raise ValueError(f"orientation must be 'x', 'y', 'z', or 'random', got {orientation}")
+        
+        # Base weights (will be modified by distance calculations)
+        weights = np.ones(num_grains)
+        
+        return weights, directions
+        
+    """
+    Start here with new generators
+    """    
+        
         
     def get_grains_in_region(self, region_type='box', **kwargs):
         """

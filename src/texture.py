@@ -117,7 +117,7 @@ class Texture:
             raise ValueError(f"Unknown texture type: {texture_type}. "
                             f"Available types: cube, goss, brass, copper, s, rotated_cube, rotated_goss, p, basal, prismatic, random")
         
-        # Apply texture with scatter to all grains in region
+        # Apply texture with scatter to all grainsbackground in region
         for grain_id in region_grain_ids:
             # Add noise around ideal orientation
             if grain_id in orientations: # Check if grain_id is in the list of grains

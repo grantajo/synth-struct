@@ -10,7 +10,7 @@ def write_hdf5_test(microstructure, filename):
     ├── GrainData
     │   ├── GrainIDs
     │   ├── GrainOrientations
-    │   └── Metadata
+    │   └── Metadata (
     ├── SpatialInformation
     │   ├── Dimensions
     │   ├── Resolution

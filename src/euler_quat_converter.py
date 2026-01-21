@@ -42,6 +42,8 @@ def quat_to_euler(orientations, convention='ZXZ'):
         Phi = np.arccos(2*(w**2 + z**2) - 1)
         phi2 = np.arctan2(x*z - w*y, w*x + y*z)
         
-        euler_angles[grain_id] = np.array([normalize_angle(phi1), normalize_angle(Phi), normalize_angle(phi2)])
+        euler_angles[grain_id] = np.array([normalize_angle(phi1), 
+                                         normalize_angle(Phi), 
+                                         normalize_angle(phi2)])
         
     return euler_angles
