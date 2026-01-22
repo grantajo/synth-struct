@@ -60,7 +60,7 @@ class Microstructure:
         # Reshape back to original dimensions
         self.grain_ids = grain_ids_flat.reshape(self.dimensions)
         
-    def gen_voronoi_w(self, num_grains, grain_shapes='spherical', shape_params=None, seed=None)
+    def gen_voronoi_w(self, num_grains, grain_shapes='spherical', shape_params=None, seed=None):
         """
         Generate grains with controlled shapes using weighted Voronoi tesselation
         
@@ -96,7 +96,7 @@ class Microstructure:
         if shape_params is None:
             shape_params = {}
             
-        ndim = lin(self.dimensions)
+        ndim = len(self.dimensions)
         
         seeds = np.random.rand(num_grains, ndim) * np.array(self.dimensions)
         
@@ -177,9 +177,80 @@ class Microstructure:
         
         return weights, directions
         
-    """
-    Start here with new generators
-    """    
+    def _generate_columnar_weights(self, num_grains, seeds, params):
+        """Generate weights for columnar grains"""
+        axis = params.get('axis', 'z')
+        aspect_ratio = params.get('aspect_ratio', 3.0)
+        
+        weights = np.ones(num_grains) * aspect_ratio
+        
+        return weights
+        
+    def _generate_equiaxed_weights(self, num_grains, params):
+        """Generate weights for equiaxed (uniform) grains"""
+        size_variation = params.get('size_variation', 0.1)
+        
+        weights = np.random.normal(1.0, size_variation, num_grains)
+        weights = np.clip(weights, 0.5, 1.5)
+        
+        return weights
+        
+    def _generate_mixed_weights(self, num_grains, params):
+        """Generate weights for mixed grain morphologies"""
+        ellipsoid_fraction = params.get('ellipsoid_fraction', 0.5)
+        aspect_ratio_mean = params.get('aspect_ratio_mean', 2.0)
+        
+        num_ellipsoid = int(num_grains * ellipsoid_fraction)
+        num_spherical = num_grains - num_ellipsoid
+        
+        weights = np.ones(num_grains)
+        
+        ellipsoid_weights = np.random.normal(aspect_ratio_mean, 0.3, num_ellipsoid)
+        weights[:num_ellipsoid] = ellipsoid_weights
+        
+        np.random.shuffle(weights)
+        
+        return weights
+        
+    def _weighted_voronoi_assignment(self, seeds, weights):
+        """
+        Assign voxels to nearest weighted seed (Laguerre-Voronoi)
+        
+        For weighted Voronoi: d_weighted = d_euclidean^2 - weight^2
+        """
+        ndim = len(self.dimensions)
+        
+        total_voxels = np.prod(self.dimensions)
+        grain_ids_flat = np.zeros(total_voxels, dtype=np.int32)
+        
+        chunk_size = 1_000_000
+        
+        print(f"Performing weighted Voronoi tessellation...")
+        
+        for start in range(0, total_voxels, chunk_size):
+            end = min(start + chunk_size, total_voxels)
+            
+            # Get coordinates for current chunk
+            chunk_indices = np.arange(start, end)
+            chunk_coords = np.unravel_index(chunk_indices, self.dimensions)
+            chunk_coords = np.column_stack(chunk_coords).astype(float)
+            
+            # Calculate weighted distance to all seeds
+            # d_weighted = ||p-s||^2 - w^2
+            distances_sq = np.sum((chunk_coords[:, np.newaxis, :] - seeds[np.newaxis, :, :])**2, axis=2)
+            weighted_distances = distances_sq - weights[np.newaxis, :]**2
+            
+            # Assign to seed with minimum weighted distance
+            grain_assignment = np.argmin(weighted_distances, axis=1) + 1
+            grain_ids_flat[start:end] = grain_assignment
+            
+            if (start // chunk_size) % 10 == 0:
+                progress = 100 * end / total_voxels
+                print(f"    Progress: {progress:.1f}%")
+                
+        self.grain_ids = grain_ids_flat.reshape(self.dimensions)
+        print("Done!")
+        
         
         
     def get_grains_in_region(self, region_type='box', **kwargs):
