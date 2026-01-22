@@ -81,8 +81,6 @@ class Microstructure:
             - axis: Growth direction ('x', 'y', or 'z', default: 'z')
             - aspect_ratio: Length/weidth ratio (default: 3.0)
             - base_size: size of the short axis (default: 10.0)
-        'equiaxed': Uniform, rounded grains
-            - size_variation: Size variation (default: 0.1)
         'mixed': Mixture of shapes
             - ellipsoid_fraction: Fraction of ellipsoidal grains (default: 0.5)
             - aspect_ratio_mean: For ellipsoidal grains (default: 5.0)
@@ -105,11 +103,11 @@ class Microstructure:
         
         # Generate weights based on shape type
             
-        if grain_shapes == 'columnar':
-            scale_factors, rotations = self._generate_columnar_params(num_grains, shape_params)
-            
-        elif grain_shapes == 'ellipsoidal':
+        if grain_shapes == 'ellipsoidal':
             scale_factors, rotations = self._generate_ellipsoidal_params(num_grains, shape_params)
+        
+        elif grain_shapes == 'columnar':
+            scale_factors, rotations = self._generate_columnar_params(num_grains, shape_params)
             
         elif grain_shapes == 'mixed':
             scale_factors, rotations = self._generate_mixed_params(num_grains, shape_params)

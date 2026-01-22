@@ -1,16 +1,17 @@
 This is a microstructure generator that outputs an HDF5 file with the grain structure and the orientations.
 
 Things to be added:
- - Finish adding new morphology generators
- - Fix failing test with test_microstructure
- - Fix HDF5 writer so that a software can read it
- - Custom grain size generation
- - Verify 3D works with the example
- - Function to get all grain IDs for a specific region
- - 
+- Add grain structures with grain size better distribution
+- Fix HDF5 writer so that a software can read it
+- Add in ability to have porosity
+- Make sure there is the ability to have a second phase with a different stiffness tensor
+- Add in ability to have precipitates
  
+Long term additions:
+- Add in ability to have orientation gradients within grains, subgrains and GNDs
+- Add in ability to create a mesh with the microstructure
  
 Dependencies
- - Numpy
- - Scipy
- - h5py
+- Numpy
+- Scipy
+- h5py

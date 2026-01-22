@@ -26,20 +26,40 @@ class TestStiffness(unittest.TestCase):
         num_grains = self.micro.get_num_grains()
         self.assertEqual(len(stiffness), num_grains)
     
-    def test_isotropic_values(self):
-        """Test that Isotropic returns correct E and nu"""
+    def test_isotropic_returns_dict(self):
+        """Test that Isotropic returns a dictionary"""
         E, nu = 200.0, 0.25
-        stiffness = Stiffness.Isotropic(self.micro, E=E, nu=nu)
-        for grain_id, values in stiffness.items():
-            self.assertEqual(values[0], E)
-            self.assertEqual(values[1], nu)
-    
-    def test_isotropic_default_values(self):
-        """Test that Isotropic uses correct defaults"""
         stiffness = Stiffness.Isotropic(self.micro)
-        for grain_id, values in stiffness.items():
-            self.assertEqual(values[0], 210.0)
-            self.assertEqual(values[1], 0.3)
+        self.assertIsInstance(stiffness, dict)
+        
+    def test_isotropic_matrix_shape(self):
+        """Test that Isotropic returns 6x6 matrices"""
+        stiffness = Stiffness.Isotropic(self.micro)
+        for grain_id, C in stiffness.items():
+            self.assertEqual(C.shape, (6, 6))
+            
+    def test_isotropic_symmetry(self):
+        """Test that Isotropic returns a symmetric matrix"""
+        stiffness = Stiffness.Isotropic(self.micro)
+        for grain_id, C in stiffness.items():
+            np.testing.assert_array_almost_equal(C, C.T, decimal=10,
+                err_msg=f"Grain {grain_id} stiffness not symmetric")
+    
+    def test_isotropic_positive_definite(self):
+        """Test that stiffness matrices are positive definite"""
+        stiffness = Stiffness.Isotropic(self.micro)
+        for grain_id, C in stiffness.items():
+            eigenvalues = np.linalg.eigvalsh(C)
+            self.assertTrue(np.all(eigenvalues > 0),
+                f"Grain {grain_id} stiffness not positive definite")
+       
+    def test_isotropic_positive_definite_w_noise(self):
+        """Test that stiffness matrices are positive definite"""
+        stiffness = Stiffness.Isotropic(self.micro, noise=1e-4)
+        for grain_id, C in stiffness.items():
+            eigenvalues = np.linalg.eigvalsh(C)
+            self.assertTrue(np.all(eigenvalues > 0),
+                f"Grain {grain_id} stiffness not positive definite")
     
     # ============ Test Cubic ============
     def test_cubic_returns_dict(self):
@@ -93,6 +113,14 @@ class TestStiffness(unittest.TestCase):
             eigenvalues = np.linalg.eigvalsh(C)
             self.assertTrue(np.all(eigenvalues > 0),
                 f"Grain {grain_id} stiffness not positive definite")
+                
+    def test_cubic_positive_definite_w_noise(self):
+        """Test that stiffness matrices are positive definite"""
+        stiffness = Stiffness.Cubic(self.micro, noise=1e-4)
+        for grain_id, C in stiffness.items():
+            eigenvalues = np.linalg.eigvalsh(C)
+            self.assertTrue(np.all(eigenvalues > 0),
+                f"Grain {grain_id} stiffness not positive definite")
     
     # ============ Test Hexagonal ============
     def test_hexagonal_returns_dict(self):
@@ -125,6 +153,22 @@ class TestStiffness(unittest.TestCase):
         C66_actual = stiffness[1][5, 5]
         
         self.assertAlmostEqual(C66_actual, C66_expected, places=10)
+        
+    def test_hex_positive_definite(self):
+        """Test that stiffness matrices are positive definite"""
+        stiffness = Stiffness.Hexagonal(self.micro)
+        for grain_id, C in stiffness.items():
+            eigenvalues = np.linalg.eigvalsh(C)
+            self.assertTrue(np.all(eigenvalues > 0),
+                f"Grain {grain_id} stiffness not positive definite")
+                
+    def test_hex_positive_definite_w_noise(self):
+        """Test that stiffness matrices are positive definite"""
+        stiffness = Stiffness.Hexagonal(self.micro, noise=1e-4)
+        for grain_id, C in stiffness.items():
+            eigenvalues = np.linalg.eigvalsh(C)
+            self.assertTrue(np.all(eigenvalues > 0),
+                f"Grain {grain_id} stiffness not positive definite")
     
     # ============ Test Rotation Functions ============
     def test_voigt_tensor_conversion_roundtrip(self):

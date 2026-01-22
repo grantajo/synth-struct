@@ -37,7 +37,7 @@ class TestGrainMasks(unittest.TestCase):
         grains = micro.get_grains_in_region('box')  # No limits = entire volume
         get_grains = micro.get_num_grains()
         
-        self.assertEqual(len(grains), micro.get_num_grains() - 1)
+        self.assertEqual(len(grains), micro.get_num_grains())
     
 if __name__ == '__main__':
     unittest.main(verbosity=2)
