@@ -66,27 +66,30 @@ class Microstructure:
         
         Args:
         - num_grains: Number of grains to generate
-        - grain_shapes: Shape type ('spherical', 'ellipsoidal', 'columnar', 'equiaxed', 'mixed', 'custom')
+        - grain_shapes: Shape type ('ellipsoidal', 'columnar', 'equiaxed', 'mixed', 'custom')
         - shape_params: Dictionary of shape parameters (dependent on grain_shapes)
         - seed: Random seed for reproducibility
         
         Shape types and parameters:
         
-        'spherical': Approximately equal size grains
-            - size_variation: Standard deviation of grain sizes (default: 0.2)
         'ellipsoidal': Elongated grains
             - aspect_ratio_mean: Mean aspect ratio (default: 2.0)
             - aspect_ratio_std: Std dev of aspect ratio (default: 0.5)
             - orientation: Preferred elongation direction ('x', 'y', 'z', 'random')
-        'columnar': Column-like grains along one axis
+            - base_size: size of the short axis (default: 10.0)
+        'columnar': Column-like grains along one axis, only works for 3D
             - axis: Growth direction ('x', 'y', or 'z', default: 'z')
             - aspect_ratio: Length/weidth ratio (default: 3.0)
+            - base_size: size of the short axis (default: 10.0)
         'equiaxed': Uniform, rounded grains
             - size_variation: Size variation (default: 0.1)
         'mixed': Mixture of shapes
             - ellipsoid_fraction: Fraction of ellipsoidal grains (default: 0.5)
-            - aspect_ratio_mean: For ellipsoidal grains (default: 2.0)
-        'custom': User-defined weights    
+            - aspect_ratio_mean: For ellipsoidal grains (default: 5.0)
+            - base_size: size of the short axis (default: 10.0)
+        
+        Maybe figure out a way to add in a custom
+        'custom': User-defined weights **NOT IMPLEMENTED**
             - weights: Array of weights for each grain (required)
         """
         if seed:
@@ -101,157 +104,241 @@ class Microstructure:
         seeds = np.random.rand(num_grains, ndim) * np.array(self.dimensions)
         
         # Generate weights based on shape type
-        if grain_shapes == 'spherical':
-            weights = self._generate_spherical_weights(num_grains, shape_params)
+            
+        if grain_shapes == 'columnar':
+            scale_factors, rotations = self._generate_columnar_params(num_grains, shape_params)
             
         elif grain_shapes == 'ellipsoidal':
-            weights, directions = self._generate_ellipsoidal_weights(num_grains, seeds, shape_params)
-            self.grain_elongation_directions = directions
-            
-        elif grain_shapes == 'columnar':
-            weights = self._generate_columnar_weights(num_grains, seeds, shape_params)
-            
-        elif grain_shapes == 'equiaxed':
-            weights = self._generate_equiaxed_weights(num_grains, shape_params)
+            scale_factors, rotations = self._generate_ellipsoidal_params(num_grains, shape_params)
             
         elif grain_shapes == 'mixed':
-            weights = self._generate_mixed_weights(num_grains, shape_params)
-            
-        elif grain_shapes == 'custom':
-            weights = shape_params.get('weights')
-            if weights is None or len(weights) != num_grains:
-                raise ValueError(f"Custom weights must be provided for all {num_grains} grains")
+            scale_factors, rotations = self._generate_mixed_params(num_grains, shape_params)
                 
         else:
             raise ValueError(f"Unknown grain_shapes: {grain_shapes}")
             
         # Perform weighted Voronoi tessellation
-        self._weighted_voronoi_assignment(seeds, weights)
+        self._anisotropic_voronoi_assignment(seeds, scale_factors, rotations)
         
-        print(f"Generated {num_grains} grains with '{grain_shapes}' morphology")
+        print(f"Generated {num_grains} grains with {grain_shapes} morphology")
         
-    def _generate_spherical_weights(self, num_grains, params):
-        """
-        Generate weights for spherical grains
         
-        Weights represent "radius" = larger weight = larger grain
-        """
-        size_variation = params.get('size_variation', 0.2)
-        weights = np.random.lognormal(mean=0, sigma=size_variation, size=num_grains)
-        
-        return weights
-        
-    def _generate_ellipsoidal_weights(self, num_grains, seeds, params):
+    def _generate_ellipsoidal_params(self, num_grains, params):
         """Generate weights and directions for ellipsoidal grains"""
-        aspect_ratio_mean = params.get('aspect_ratio_mean', 2.0)
+        aspect_ratio_mean = params.get('aspect_ratio_mean', 5.0)
         aspect_ratio_std = params.get('aspect_ratio_std', 0.5)
         orientation = params.get('orientation', 'random')
+        base_size = params.get('base_size', 10.0)
         
         ndim = len(self.dimensions)
         
         # Generate aspect ratios for each grain
         aspect_ratios = np.random.normal(aspect_ratio_mean, aspect_ratio_std, num_grains)
-        aspect_ratios = np.clip(aspect_ratios, 1.0, 5.0)  # Reasonable limits
+        aspect_ratios = np.clip(aspect_ratios, 1.5, 10.0)  
         
-        # Generate elongation directions
-        if orientation == 'random':
+        scale_factors = np.zeros((num_grains, ndim))
+        rotations = []
+        
+        for i in range(num_grains):
             if ndim == 3:
-                # Random 3D directions
-                directions = np.random.randn(num_grains, 3)
-                directions = directions / np.linalg.norm(directions, axis=1, keepdims=True)
-            else:
-                # Random 2D angles
-                angles = np.random.uniform(0, 2*np.pi, num_grains)
-                directions = np.column_stack([np.cos(angles), np.sin(angles)])
+                long_axis = base_size * aspect_ratios[i]
+                short_axis = base_size
+                scale_factors[i] = [short_axis, short_axis, long_axis]
+                
+                if orientation == 'random':
+                    angles = np.random.uniform(0, 2*np.pi, 3)
+                    R = self._euler_to_rotation_matrix_3d(angles)
+                elif orientation == 'x':
+                    R = self._rotation_z_to_x()
+                elif orientation == 'y':
+                    R = self._rotation_z_to_y()
+                elif orientation == 'z':
+                    R = np.eye(3)
+                else:
+                    R = np.eye(3)
+                    
+                rotations.append(R)
+            
+            else: # 2D
+                long_axis = base_size * aspect_ratios[i]
+                short_axis = base_size
+                scale_factors[i] = [short_axis, long_axis]
+                
+                if orientation == 'random':
+                    angle = np.random.uniform(0, 2*np.pi)
+                    R = self._rotation_matrix_2d(angle)
+                elif orientation == 'x':
+                    R = self._rotation_matrix_2d(0)
+                elif orientation == 'y':
+                    R = self._rotation_matrix_2d(np.pi/2)
+                else:
+                    R = np.eye(2)
+                    
+                rotations.append(R)
+                
+        return scale_factors, rotations
         
-        elif orientation in ['x', 'y', 'z']:
-            axis_idx = {'x': 0, 'y': 1, 'z': 2}[orientation]
-            directions = np.zeros((num_grains, ndim))
-            directions[:, axis_idx] = 1.0
         
-        else:
-            raise ValueError(f"orientation must be 'x', 'y', 'z', or 'random', got {orientation}")
-        
-        # Base weights (will be modified by distance calculations)
-        weights = np.ones(num_grains)
-        
-        return weights, directions
-        
-    def _generate_columnar_weights(self, num_grains, seeds, params):
+    def _generate_columnar_params(self, num_grains, params):
         """Generate weights for columnar grains"""
         axis = params.get('axis', 'z')
-        aspect_ratio = params.get('aspect_ratio', 3.0)
+        aspect_ratio = params.get('aspect_ratio', 5.0)
+        base_size = params.get('base_size', 8.0)
         
-        weights = np.ones(num_grains) * aspect_ratio
-        
-        return weights
-        
-    def _generate_equiaxed_weights(self, num_grains, params):
-        """Generate weights for equiaxed (uniform) grains"""
-        size_variation = params.get('size_variation', 0.1)
-        
-        weights = np.random.normal(1.0, size_variation, num_grains)
-        weights = np.clip(weights, 0.5, 1.5)
-        
-        return weights
-        
-    def _generate_mixed_weights(self, num_grains, params):
-        """Generate weights for mixed grain morphologies"""
-        ellipsoid_fraction = params.get('ellipsoid_fraction', 0.5)
-        aspect_ratio_mean = params.get('aspect_ratio_mean', 2.0)
-        
-        num_ellipsoid = int(num_grains * ellipsoid_fraction)
-        num_spherical = num_grains - num_ellipsoid
-        
-        weights = np.ones(num_grains)
-        
-        ellipsoid_weights = np.random.normal(aspect_ratio_mean, 0.3, num_ellipsoid)
-        weights[:num_ellipsoid] = ellipsoid_weights
-        
-        np.random.shuffle(weights)
-        
-        return weights
-        
-    def _weighted_voronoi_assignment(self, seeds, weights):
-        """
-        Assign voxels to nearest weighted seed (Laguerre-Voronoi)
-        
-        For weighted Voronoi: d_weighted = d_euclidean^2 - weight^2
-        """
         ndim = len(self.dimensions)
         
+        if ndim != 3:
+            raise ValueError("Columnar grains only supported for 3D microstructures")
+            
+        scale_factors = np.zeros((num_grains, 3))
+        rotations = []
+        
+        long_axis = base_size * aspect_ratio
+        short_axis = base_size
+        
+        for i in range(num_grains):
+            this_long = long_axis * np.random.uniform(0.8, 1.2)
+            this_short = short_axis * np.random.uniform(0.8, 1.2)
+            
+            scale_factors[i] = [this_short, this_short, this_long]
+            
+            if axis == 'x':
+                R = self._rotation_z_to_x()
+            elif axis == 'y':
+                R = self._rotation_z_to_y()
+            else:
+                R = np.eye(3)
+                
+            rotations.append(R)
+            
+        return scale_factors, rotations
+        
+        
+    def _generate_mixed_params(self, num_grains, params):
+        """Generate weights for mixed grain morphologies"""
+        ellipsoid_fraction = params.get('ellipsoid_fraction', 0.5)
+        aspect_ratio_mean = params.get('aspect_ratio_mean', 5.0)
+        base_size = params.get('base_size', 10.0)
+        
+        ndim = len(self.dimensions)
+        num_ellipsoidal = int(num_grains * ellipsoid_fraction)
+        
+        scale_factors = np.zeros((num_grains, ndim))
+        rotations = []
+        
+        for i in range(num_grains):
+            if i < num_ellipsoidal: # Ellipsoidal
+                aspect_ratio = np.random.normal(aspect_ratio_mean, 0.5)
+                aspect_ratio = np.clip(aspect_ratio, 1.5, 8.0)
+                
+                if ndim == 3:
+                    scale_factors[i] = [base_size, base_size, base_size * aspect_ratio]
+                    angles = np.random.uniform(0, 2*np.pi, 3)
+                    R = self._euler_to_rotation_matrix_3d(angles)
+                else: # 2D
+                    scale_factors[i] = [base_size, base_size * aspect_ratio]
+                    angle = np.random.uniform(0, 2*np.pi)
+                    R = self._rotation_matrix_2d(angle)
+                    
+            else: # Spherical
+                scale_factors[i] = base_size
+                R = np.eye(ndim)
+                
+            rotations.append(R)
+            
+        return scale_factors, rotations
+    
+    
+    
+    def _anisotropic_voronoi_assignment(self, seeds, scale_factors, rotations):
+        """
+        Assign voxels using anisotropic distance metric
+        
+        For each point p and seed s with scaling S and rotation R:
+        d_aniso = ||S^-1 * R^T * (p - s)||^2
+        """
+        
+        ndim = len(self.dimensions)
         total_voxels = np.prod(self.dimensions)
         grain_ids_flat = np.zeros(total_voxels, dtype=np.int32)
         
-        chunk_size = 1_000_000
+        chunk_size = 100_000
         
-        print(f"Performing weighted Voronoi tessellation...")
+        print(f"Performing anisotropic Voronoi tessellation...")
         
         for start in range(0, total_voxels, chunk_size):
             end = min(start + chunk_size, total_voxels)
             
-            # Get coordinates for current chunk
             chunk_indices = np.arange(start, end)
             chunk_coords = np.unravel_index(chunk_indices, self.dimensions)
             chunk_coords = np.column_stack(chunk_coords).astype(float)
             
-            # Calculate weighted distance to all seeds
-            # d_weighted = ||p-s||^2 - w^2
-            distances_sq = np.sum((chunk_coords[:, np.newaxis, :] - seeds[np.newaxis, :, :])**2, axis=2)
-            weighted_distances = distances_sq - weights[np.newaxis, :]**2
+            distances = np.zeros((len(chunk_coords), len(seeds)))
             
-            # Assign to seed with minimum weighted distance
-            grain_assignment = np.argmin(weighted_distances, axis=1) + 1
+            for i, (seed, scale, R) in enumerate(zip(seeds, scale_factors, rotations)):
+                diff = chunk_coords - seed
+                diff_rotated = diff @ R.T # R^T * (p-s)
+                diff_scaled = diff_rotated / scale
+                
+                distances[:, i] = np.sum(diff_scaled**2, axis=1)
+                
+            grain_assignment = np.argmin(distances, axis=1) + 1
             grain_ids_flat[start:end] = grain_assignment
             
             if (start // chunk_size) % 10 == 0:
                 progress = 100 * end / total_voxels
-                print(f"    Progress: {progress:.1f}%")
+                print(f"  Progress: {progress:.1f}%")
                 
         self.grain_ids = grain_ids_flat.reshape(self.dimensions)
         print("Done!")
         
         
+    def _rotation_matrix_2d(self, angle):
+        """2D rotation matrix"""
+        c, s = np.cos(angle), np.sin(angle)
+        return np.array([[c, -s], [s, c]])
+        
+    def _euler_to_rotation_matrix_3d(self, angles):
+        """3D rotation matrix from Euler angles (ZXZ convention)"""
+        alpha, beta, gamma = angles
+        
+        # Rotation around Z
+        Rz1 = np.array([
+            [np.cos(alpha), -np.sin(alpha), 0],
+            [np.sin(alpha),  np.cos(alpha), 0],
+            [            0,              0, 1]
+        ])
+        
+        # Rotation around X
+        Rx = np.array([
+            [1,            0,             0],
+            [0, np.cos(beta), -np.sin(beta)],
+            [0, np.sin(beta),  np.cos(beta)]
+        ])
+        
+        # Rotation around Z again
+        Rz2 = np.array([
+            [np.cos(gamma), -np.sin(gamma), 0],
+            [np.sin(gamma),  np.cos(gamma), 0],
+            [            0,              0, 1]
+        ])
+        
+        return Rz2 @ Rx @ Rz1
+        
+        
+    def _rotation_z_to_x(self):
+        return np.array([
+            [ 0, 0, 1],
+            [ 0, 1, 0],
+            [-1, 0, 0]
+        ])
+        
+    def _rotation_z_to_y(self):
+        return np.array([
+            [ 1, 0, 0],
+            [ 0, 0, 1],
+            [ 0,-1, 0]
+        ])
         
     def get_grains_in_region(self, region_type='box', **kwargs):
         """
