@@ -16,14 +16,11 @@ num_grains = 350
 # Create a 2D microstructure
 micro = Microstructure(dimensions=(dims, dims), resolution=res)
 
-# Generate 50 grains
+# Generate grains
 micro.gen_voronoi(num_grains=num_grains, seed=42)
 
 # Assign random orientations
 micro.orientations = Texture.random_orientations(num_grains, seed=42)
-
-write_struct_hdf5(micro, '../output/microstructure_3d.h5')
-print('Microstructure saved to output/microstructure.h5')
 
 end_time = time.time()
 elapsed_time = end_time - start_time
@@ -33,7 +30,7 @@ print(f"Execution Time: {elapsed_time:.2f} seconds")
 plt.figure(figsize=(8, 8))
 plt.imshow(micro.grain_ids, cmap='tab20')
 plt.colorbar(label='Grain ID')
-plt.title('Generated Microstructure')
-plt.savefig('../output/microstructure.png', dpi=150)
+plt.title('2D Example')
+plt.savefig('../output/2d_slice.png', dpi=150)
 plt.show()
 

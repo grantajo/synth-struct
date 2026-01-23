@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '../src')
+
 from microstructure import Microstructure
 from texture import Texture
 

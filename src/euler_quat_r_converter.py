@@ -47,3 +47,24 @@ def quat_to_euler(orientations, convention='ZXZ'):
                                          normalize_angle(phi2)])
         
     return euler_angles
+    
+def euler_to_rotation_matrix(euler_angles):
+    """
+    Convert Bunge Euler angles (ZXZ) to rotation matrix
+    """
+    
+    phi1, Phi, phi2 = euler_angles
+    
+    R = np.array([
+        [ np.cos(phi1)*np.cos(phi2) - np.sin(phi1)*np.sin(phi2)*np.cos(Phi),
+          np.sin(phi1)*np.cos(phi2) + np.cos(phi1)*np.sin(phi2)*np.cos(Phi),
+          np.sin(phi2)*np.sin(Phi)],
+        [-np.cos(phi1)*np.sin(phi2) - np.sin(phi1)*np.cos(phi2)*np.cos(Phi),
+         -np.sin(phi1)*np.sin(phi2) + np.cos(phi1)*np.cos(phi2)*np.cos(Phi),
+          np.cos(phi2)*np.sin(Phi)],
+        [ np.sin(phi1)*np.sin(Phi),
+         -np.cos(phi1)*np.sin(Phi),
+          np.cos(Phi)]
+    ])
+    
+    return R
