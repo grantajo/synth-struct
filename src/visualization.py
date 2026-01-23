@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap
 
-import euler_quat_r_converter
+import rotation_converter
 
 class IPFVisualizer:
     """

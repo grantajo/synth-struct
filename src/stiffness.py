@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, '../src')
 
-from euler_quat_converter import euler_to_quat
+from rotation_converter import euler_to_quat
 
 import numpy as np
 
