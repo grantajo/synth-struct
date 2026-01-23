@@ -13,7 +13,7 @@ class IPFVisualizer:
     """
     
     @staticmethod
-    def euler_to_ipf_color(euler_angles, direction='z', crystal_structure='cubic'):
+    def rotation_matrix_to_ipf_color(rotation_matrices, direction='z', crystal_structure='cubic'):
         """
         Convert Euler angles to IPF color for a given sample direction
         
@@ -26,8 +26,6 @@ class IPFVisualizer:
         """
         
         # Get rotation matrix from Euler angles
-        R = euler_quat_r_converter.euler_to_rotation_matrix(euler_angles)
-        
         if direction == 'x':
             sample_dir = np.array([1, 0, 0])
         elif direction == 'y':
@@ -35,16 +33,21 @@ class IPFVisualizer:
         else:
             sample_dir = np.array([0, 0, 1])
             
-        crystal_dir = R.T @ sample_dir
+        ipf_colors = {}
         
-        if crystal_structure == 'cubic':
-            color = IPFVisualizer._cubic_ipf_color(crystal_dir)
-        elif crystal_structure == 'hexagonal':
-            color = IPFVisualizer._hexagonal_ipf_color(crystal_dir)
-        else:
-            raise ValueError(f"Unknown crystal structure: {crystal_structure}")
+        for grain_id, R in rotation_matrices.items():
+            crystal_dir = R.T @ sample_dir
+        
+            if crystal_structure == 'cubic':
+                color = IPFVisualizer._cubic_ipf_color(crystal_dir)
+            elif crystal_structure == 'hexagonal':
+                color = IPFVisualizer._hexagonal_ipf_color(crystal_dir)
+            else:
+                raise ValueError(f"Unknown crystal structure: {crystal_structure}")
+                
+            ipf_colors[grain_id] = color
             
-        return color
+        return ipf_colors
         
     @staticmethod
     def _cubic_ipf_color(direction):
@@ -151,15 +154,18 @@ class IPFVisualizer:
             grain_slice = microstructure.grain_ids
             
         # Create RGB image
+        rotation_matrices = rotation_converter.euler_to_rotation_matrix(microstructure.orientations)
+        
+        ipf_colors = IPFVisualizer.rotation_matrix_to_ipf_color(rotation_matrices, direction, crystal_structure)
+        
         ipf_map = np.zeros((*grain_slice.shape, 3))
         
-        # Color each grain
-        for grain_id, euler in microstructure.orientations.items():
+        for grain_id, color in ipf_colors.items():
             mask = grain_slice == grain_id
-            color = IPFVisualizer.euler_to_ipf_color(euler, direction, crystal_structure)
             ipf_map[mask] = color
             
         return ipf_map
+        
         
     @staticmethod
     def plot_ipf_map(microstructure, direction='z', crystal_structure='cubic',

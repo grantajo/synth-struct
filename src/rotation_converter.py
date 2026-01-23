@@ -40,10 +40,10 @@ def euler_to_rotation_matrix(orientations):
     """
     R = {}
     
-    for grain_id, quat in orientations.items():
-        phi1, Phi, phi2 = euler_angles
+    for grain_id, euler_angle in orientations.items():
+        phi1, Phi, phi2 = euler_angle
         
-        R = np.array([
+        R_new = np.array([
             [ np.cos(phi1)*np.cos(phi2) - np.sin(phi1)*np.sin(phi2)*np.cos(Phi),
               np.sin(phi1)*np.cos(phi2) + np.cos(phi1)*np.sin(phi2)*np.cos(Phi),
               np.sin(phi2)*np.sin(Phi)],
@@ -54,6 +54,8 @@ def euler_to_rotation_matrix(orientations):
              -np.cos(phi1)*np.sin(Phi),
               np.cos(Phi)]
         ])
+        
+        R[grain_id] = R_new
     
     return R
     
@@ -117,7 +119,7 @@ def rotation_matrix_to_euler(orientations):
     for grain_id, R in orientations.items():
         R0 = R[grain_id]
         if abs(R0[2,2]) == 1:
-            phi1 = np.arctan2(R0[0,1], R0[0,0], 
+            phi1 = np.arctan2(R0[0,1], R0[0,0])
             Phi = (np.pi/2)*(1 - R0[2,2])
             phi2 = 0.
         else:
@@ -130,7 +132,7 @@ def rotation_matrix_to_euler(orientations):
                                            normalize_angle(Phi),
                                            normalize_angle(phi2)])
                                            
-   return euler_angles
+    return euler_angles
 
 def rotation_matrix_to_quat(orientations):
     """
