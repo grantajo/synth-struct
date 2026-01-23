@@ -14,7 +14,7 @@ dims = 200
 res = 1.0 
 num_grains = 350
 # Create a 2D microstructure
-micro = Microstructure(dimensions=(dims, dims, dims), resolution=res)
+micro = Microstructure(dimensions=(dims, dims), resolution=res)
 
 # Generate 50 grains
 micro.gen_voronoi(num_grains=num_grains, seed=42)
