@@ -4,7 +4,8 @@ import numpy as np
 This file holds a set of conversion functions between Euler angles, 
 quaternions, and orientation matrices
 
-These are based on Rowenhorst et al. 2015
+These are based on Rowenhorst et al. 2015. Modelling Simul. Materi. Sci. Eng.
+doi: 10.1088/0965-0393/23/8/083501
 
 Bunge Euler convention is always ZXZ
 """
@@ -29,7 +30,7 @@ def euler_to_quat(orientations):
             c*np.cos(sigma), -s*np.cos(delta), -s*np.sin(delta), -c*np.sin(sigma)
         ])
         
-        if quat[grain_id] < 0:
+        if quat[grain_id][0] < 0:
             quat[grain_id] = -quat[grain_id]
         
     return quat
