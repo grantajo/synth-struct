@@ -3,7 +3,7 @@ sys.path.insert(0, '../src')
 
 from microstructure import Microstructure
 from texture import Texture
-from visualization import IPFVisualizer
+from plotting import IPFVisualizer
 
 # Create microstructure
 micro = Microstructure(dimensions=(100, 100, 100), resolution=1.0)
@@ -25,22 +25,4 @@ micro.orientations = Texture.apply_texture_to_region(
     degspread=5
 )
 
-# Create IPF-Z map
-IPFVisualizer.plot_ipf_map(
-    micro,
-    direction='z',
-    crystal_structure='cubic',
-    slice_idx=50,
-    slice_direction='z',
-    filename='ipf_z_map_sphere.png',
-    show_legend=True
-)
 
-# Show multiple IPF directions
-IPFVisualizer.plot_multiple_ipf_maps(
-    micro,
-    directions=['x', 'y', 'z'],
-    crystal_structure='cubic',
-    slice_idx=50,
-    filename='ipf_xyz_maps_sphere.png'
-)

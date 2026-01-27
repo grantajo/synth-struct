@@ -8,12 +8,18 @@ from orix.quaternion import Orientation, Symmetry
 from orix.vector import Vector3d
 from orix.crystal_map import CrystalMap, Phase, PhaseList
 from orix.plot import IPFColorKeyTSL
+from orix import plot
 
 from rotation_converter import euler_to_quat
 
-class OrixIPFVisualizer:
+class OrixVisualizer:
     """
-    IPF Visualization using orix
+    Microstructure visualization using orix
+    Mostly EBSD related visualizations
+    
+    - IPF maps
+    - Pole figures
+    - ODFs
     """
     
     @staticmethod
@@ -112,7 +118,7 @@ class OrixIPFVisualizer:
         - show_colorkey: Show IPF color key
         """
         
-        crystal_map = OrixIPFVisualizer.create_crystal_map_from_microstructure(
+        crystal_map = OrixVisualizer.create_crystal_map_from_microstructure(
             microstructure, crystal_structure
         )
         
@@ -183,68 +189,78 @@ class OrixIPFVisualizer:
         # plt.show()
         
     @staticmethod
-    def plot_pole_figure(microstructure, crystal_structure='cubic',
-                         miller_indices=None, filename=None, show_labels=True):
+    def plot_pole_figure(ax, miller_index, microstructure,
+                         crystal_structure='cubic', show_labels=True):
         """
-        Plot pole figures
+        Plot a pole figure
         
         Args:
+        - ax: axis for pole figure to be plotted on
+        - miller_index: 
         - microstructure: Microstructure object
         - crystal_structure: 'cubic' or 'hexagonal'
-        - miller_indices: List of Miller indices, e.g., [[1,0,0], [1,1,0], [1,1,1]]
-        - filneame: Save filename
+        - 
         """
         
+        from orix import plot
         from orix.vector import Miller
         
-        crystal_map = OrixIPFVisualizer.create_crystal_map_from_microstructure(
+        crystal_map = OrixVisualizer.create_crystal_map_from_microstructure(
             microstructure, crystal_structure
         )
         
         symmetry = crystal_map.phases[0].point_group
             
-        if miller_indices is None:
-            if crystal_structure.lower() in ['cubic', 'fcc', 'bcc']:
-                miller_indices = [[1, 0, 0], [1, 1, 0], [1, 1, 1]]
-            else:  # hexagonal
-                miller_indices = [[0, 0, 0, 1], [1, 0, -1, 0], [1, 1, -2, 0]]
-        
         phase = crystal_map.phases[0]
         
-        miller = Miller(uvw=miller_indices, phase=phase)
+        miller = Miller(uvw=miller_index, phase=phase)
+        orientations = crystal_map.orientations
         
-        miller_in_sample = crystal_map.rotations.outer(miller)
+        pf = ax.scatter(orientations.inv().outer(miller))
         
-        n_miller = len(miller_indices)
+        if show_labels:
+            ax.set_labels('X', 'Y', 'Z')
         
-        fig, axes = plt.subplots(1, n_miller, figsize=(5*n_miller, 5),
-                                 subplot_kw=dict(projection='stereographic'))
-                                 
-        if n_miller == 1:
-            axes = [axes]
-            
-        for i, (ax, idx) in enumerate(zip(axes, miller_indices)):
-            plt.sca(ax)
-            miller_in_sample[:, i].scatter(
-                c='blue',
-                s=1,
-                alpha=0.5
-            )
-            
-            if len(idx) == 3:
-                label = f'{{{idx[0]}{idx[1]}{idx[2]}}}'
-            else:
-                label = f'{{{idx[0]}{idx[1]}{idx[2]}{idx[3]}}}'
-                
-            ax.set_title(f'{label} Pole Figure')
-            
-        plt.tight_layout()
+        ax.set_title(r"$\left<{miller_index[0]} {miller_index[1]} {miller_index[2]}\right>$")
         
-        if filename:
-            plt.savefig(f"../output/{filename}", dpi=150, bbox_inches='tight')
-            print(f"Saved pole figure to ../output/{filename}")
+        return pf
+    
+    @staticmethod
+    def plot_all_pole_figures(axes, miller_indices, microstructure, 
+                              crystal_structure='cubic', show_labels=True,
+                              **plot_kwargs):
+    
+        from orix.vector import Miller
+        
+        crystal_map = OrixVisualizer.create_crystal_map_from_microstructure(
+            microstructure, crystal_structure
+        )
+        
+        if len(axes) != len(miller_indices):
+            raise ValueError(f"Number of axes {len(axes)} must match number of Miller indices {len(miller_indices)}")
+        
+        artists = []
+        
+        for ax, hkl in zip(axes, miller_indices):
+            artist = OrixVisualizer.plot_pole_figure(ax, hkl, microstructure, 
+                crystal_structure=crystal_structure, show_labels=show_labels, **plot_kwargs)
+            artists.append(artist)
             
-        # plt.show()
+        return artists
+        
+    @staticmethod
+    def create_pole_figure_axes(fig, n, projection='stereographic'):
+        """
+        Create n stereographic subplots arranged in a single row.
+        """
+        axes = []
+        for i in range(n):
+            ax = fig.add_subplot(1, n, i+1, projection=projection)
+            axes.append(ax)
+            
+        return axes
+        
+        
         
     @staticmethod
     def plot_odf(microstructure, crystal_structure='cubic', filename=None):
@@ -257,7 +273,7 @@ class OrixIPFVisualizer:
         - filename: Save filename
         """
         
-        crystal_map = OrixIPFVisualizer.create_crystal_map_from_microstructure(
+        crystal_map = OrixVisualizer.create_crystal_map_from_microstructure(
             microstructure, crystal_structure
         )
         
