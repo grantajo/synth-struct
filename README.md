@@ -4,7 +4,8 @@ Things to be added:
 - Add grain structures with grain size better distribution
 - Fix HDF5 writer so that a software can read it
 - Integrate with orix for better orientation information and plotting
-  - Add in PDF, ODF, and pole figures
+  - Redo IPF maps
+  - Add in IPFs and ODFs
   - Add in ability to have the colorkey shown in an IPF map
 - Add in ability to have porosity
 - Make sure there is the ability to have a second phase with a different stiffness tensor

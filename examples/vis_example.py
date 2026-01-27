@@ -44,36 +44,27 @@ for direction in ['x', 'y', 'z']:
     )
 """    
 # Pole Figures
-
 miller_indices = [
     (1,0,0), 
     (1,1,0), 
     (1,1,1)
 ]
 
-print(f"There are {len(miller_indices)} Miller indices")
 n_miller = len(miller_indices)
-fig = plt.figure(figsize=(n_miller*3,3))
+fig = plt.figure(figsize=(n_miller*3,4))
 
 axes = OrixVisualizer.create_pole_figure_axes(fig, len(miller_indices))
-
 artists = OrixVisualizer.plot_all_pole_figures(
     axes,
     miller_indices,
-    micro
-)
-
-cbar = fig.colorbar(
-    artists[0],
-    ax=axes,
-    shrink=0.8,
-    label='MUD'
+    micro,
+    subset=0.5
 )
 
 fig.suptitle("Pole Figures", fontsize=14)
 fig.tight_layout()
 fig.savefig('../output/pole_figures.png', dpi=150)
-
+print("Saved pole figure to '../output/pole_figures.png'") 
 
 """
 # ODF

@@ -190,7 +190,8 @@ class OrixVisualizer:
         
     @staticmethod
     def plot_pole_figure(ax, miller_index, microstructure,
-                         crystal_structure='cubic', show_labels=True):
+                         crystal_structure='cubic', show_labels=True,
+                         subset=None):
         """
         Plot a pole figure
         
@@ -199,7 +200,7 @@ class OrixVisualizer:
         - miller_index: 
         - microstructure: Microstructure object
         - crystal_structure: 'cubic' or 'hexagonal'
-        - 
+        - show_labels: Show labels on the 
         """
         
         from orix import plot
@@ -215,19 +216,28 @@ class OrixVisualizer:
         
         miller = Miller(uvw=miller_index, phase=phase)
         orientations = crystal_map.orientations
+        print(orientations.size)
         
-        pf = ax.scatter(orientations.inv().outer(miller))
+        if subset:
+            n = orientations.size
+            
+            idx = np.random.choice(n, size=int(subset*n), replace=False)
+            orientations_sub = orientations[idx]
+            print(orientations_sub.size)
+            pf = ax.scatter(orientations_sub.inv().outer(miller))
+        else:        
+            pf = ax.scatter(orientations.inv().outer(miller))
         
         if show_labels:
             ax.set_labels('X', 'Y', 'Z')
         
-        ax.set_title(r"$\left<{miller_index[0]} {miller_index[1]} {miller_index[2]}\right>$")
+        ax.set_title(fr"$\left<{miller_index[0]} {miller_index[1]} {miller_index[2]}\right>$")
         
         return pf
     
     @staticmethod
     def plot_all_pole_figures(axes, miller_indices, microstructure, 
-                              crystal_structure='cubic', show_labels=True,
+                              crystal_structure='cubic', show_labels=True, subset=None,
                               **plot_kwargs):
     
         from orix.vector import Miller
@@ -243,7 +253,8 @@ class OrixVisualizer:
         
         for ax, hkl in zip(axes, miller_indices):
             artist = OrixVisualizer.plot_pole_figure(ax, hkl, microstructure, 
-                crystal_structure=crystal_structure, show_labels=show_labels, **plot_kwargs)
+                crystal_structure=crystal_structure, show_labels=show_labels, subset=subset,
+                **plot_kwargs)
             artists.append(artist)
             
         return artists
