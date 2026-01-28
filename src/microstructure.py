@@ -1,7 +1,4 @@
 import numpy as np
-from scipy.spatial import Voronoi, voronoi_plot_2d
-from scipy.spatial.distance import cdist
-from scipy.spatial import cKDTree
 
 class Microstructure:
     def __init__(self, dimensions, resolution, units='micron'):
@@ -10,15 +7,27 @@ class Microstructure:
         resolution: physical size per voxel
         """
         
-        self.dimensions = dimensions
+        self.dimensions = tuple(dimensions)
         self.resolution = resolution
         self.units = units
-        self.grain_ids = np.zeros(dimensions, dtype=np.int32)
-        self.orientations = {} # grain_id: orientation (Euler angles)
-        self.stiffness = {} 
+        
+        self.grain_ids = np.zeros(self.dimensions, dtype=np.int32) # 0 = background (e.g. unindexed EBSD)
+        self.num_grains = 0
+        
+        self.fields = {} 
+        self.metadata = {}
+        
+    def attach_field(self, name, array):
+        """
+        Attach per-grain or per-voxel data (orientations, stiffnesses, etc.)
+        """
+        self.fields[name] = array
+        
+    def get_field(self, name):
+        return self.fields[name]
         
     def get_num_grains(self):
-        return len(np.unique(self.grain_ids)) # exclude background (0)
+        return self.num_grains # exclude background (0)
             
     def gen_voronoi(self, num_grains, seed=None, chunk_size=1_000_000):
         """
@@ -34,24 +43,25 @@ class Microstructure:
         
         # Number of dimensions
         ndim = len(self.dimensions)
+        self.num_grains = num_grains
         
         # Generate random seed points
         seeds = np.random.rand(num_grains, ndim) * np.array(self.dimensions)
         tree = cKDTree(seeds)
         
         # Total number of voxels
-        total_voxels = np.prod(self.dimensions)
-        grain_ids_flat = np.zeros(total_voxels, dtype=np.int32)
+        total_voxels = int(np.prod(self.dimensions))
+        grain_ids_flat = np.empty(total_voxels, dtype=np.int32)
         
         # Process in chunks
-        chunk_size = 1_000_000
         for start in range(0, total_voxels, chunk_size):
             end = min(start+chunk_size, total_voxels)
             
             # Convert flat indices to coordinates
-            chunk_indices = np.arange(start, end)
-            chunk_coords = np.unravel_index(chunk_indices, self.dimensions)
-            chunk_coords = np.column_stack(chunk_coords)
+            flat_indices = np.arange(start, end)
+            coords = np.column_stack(
+                np.unravel_index(flat_indices, self.dimensions)
+            )
             
             # Find nearest seed for each coordinate
             distances, indices = tree.query(chunk_coords)
