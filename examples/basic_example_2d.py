@@ -15,12 +15,8 @@ num_grains = 350
 micro = Microstructure(dimensions=(dims, dims), resolution=res)
 
 # Initialize Voronoi Generator
-voronoi_gen = VoronoiGenerator(num_grains=num_grains, seed=42, chunk_size=500_000)
-
+voronoi_gen = VoronoiGenerator(num_grains=num_grains, seed=None, chunk_size=500_000)
 voronoi_gen.generate(micro)
-
-print(micro.grain_ids.shape)
-print(micro.num_grains)
 
 end_time = time.time()
 elapsed_time = end_time - start_time

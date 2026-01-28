@@ -1,3 +1,5 @@
+# synth_struct/src/microstructure.py
+
 import numpy as np
 
 class Microstructure:

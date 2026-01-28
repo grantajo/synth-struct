@@ -1,10 +1,15 @@
+# synth_struct/src/generators/voronoi.py
+
+from .base import MicrostructureGenerator
+from.utils import get_seed_coordinates
+
 import numpy as np
 
-from scipy.spatial import Voronoi, voronoi_plot_2d
-from scipy.spatial.distance import cdist
 from scipy.spatial import cKDTree
 
-class VoronoiGenerator:
+
+
+class VoronoiGenerator(MicrostructureGenerator):
     """
     Voronoi tessellation generator for a Microstructure object.
     
@@ -46,7 +51,7 @@ class VoronoiGenerator:
         micro.num_grains = self.num_grains
         
         # Generate random seed points
-        self.seeds = np.random.rand(self.num_grains, ndim) * np.array(micro.dimensions)
+        self.seeds = get_seed_coordinates(self.num_grains, micro.dimensions, self.seed)
         tree = cKDTree(self.seeds)
         
         # Total number of voxels
@@ -69,25 +74,9 @@ class VoronoiGenerator:
         # Allocate default per-grain arrays if needed
         if not hasattr(micro, 'orientations') or micro.orientations is None:
             self._allocate_grain_arrays(micro)
+    
         
     
-    def _allocate_grain_arrays(self, micro):
-        """
-        Allocate per-grain arrays for orientatations, stiffnes, and phase.
-        """
-        
-        n = micro.num_grains + 1 # index 0 reserved for background
-        
-        micro.orientations = np.zeros((n, 3), dtype=np.float64)
-        micro.stiffness = np.zeros((n, 6, 6), dtype=np.float32)
-        micro.phase = np.zeros(n, dtype=np.int8)
-        
-    def get_seed_coordinates(self):
-        """
-        Return the coordinates of the Voronoi seed points
-        """
-        
-        return self.seeds
 
 
 
