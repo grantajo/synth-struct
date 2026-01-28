@@ -1,3 +1,5 @@
+# synth_struct/examples/basic_2d_example.py
+
 import sys
 import time
 from pathlib import Path
@@ -6,6 +8,10 @@ from src.microstructure import Microstructure
 from src.generators.voronoi import VoronoiGenerator
 
 import matplotlib.pyplot as plt
+
+"""
+This is a simple example to create a 2D microstructure.
+"""
 
 start_time = time.time()
 

@@ -1,3 +1,5 @@
+# synth_struct/examples/shapes.py
+
 import sys
 sys.path.insert(0, '../src')
 
@@ -8,6 +10,9 @@ import numpy as np
 from microstructure import Microstructure
 from texture import Texture
 
+"""
+This example creates a microstructure with each of the various Microstructure generator classes
+"""
 
 def main():
     micro = Microstructure(dimensions=(100, 100, 100), resolution=1.0)

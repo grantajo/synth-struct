@@ -1,7 +1,7 @@
 # synth_struct/src/generators/voronoi.py
 
-from .base import MicrostructureGenerator
-from.utils import get_seed_coordinates
+from .gen_base import MicrostructureGenerator
+from .gen_utils import get_seed_coordinates
 
 import numpy as np
 
@@ -17,7 +17,7 @@ class VoronoiGenerator(MicrostructureGenerator):
     """
     
     
-    def __init__(self, num_grains, seed=None, chunk_size=1_000_000):
+    def __init__(self, num_grains, seed=None, chunk_size=500_000):
         """
         Initiates generator information
         
@@ -35,7 +35,7 @@ class VoronoiGenerator(MicrostructureGenerator):
         self.chunk_size = chunk_size
         self.seeds = None # Will store coordinates for Voronoi seeds
 
-    def generate(self, micro):
+    def _generate_internal(self, micro):
         """
         Generate grains with a standard Voronoi tesselation
         
@@ -71,9 +71,6 @@ class VoronoiGenerator(MicrostructureGenerator):
         # Reshape to Microstructure voxel grid
         micro.grain_ids = grain_ids_flat.reshape(micro.dimensions)
         
-        # Allocate default per-grain arrays if needed
-        if not hasattr(micro, 'orientations') or micro.orientations is None:
-            self._allocate_grain_arrays(micro)
     
         
     

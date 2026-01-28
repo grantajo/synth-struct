@@ -1,6 +1,6 @@
-import time
+# synth_struct/examples/basic_3d_example.py
 
-start_time = time.time()
+import time
 
 import sys
 sys.path.insert(0, '../src')
@@ -9,6 +9,12 @@ from microstructure import Microstructure
 from texture import Texture
 from hdf5_writer import write_struct_hdf5
 import matplotlib.pyplot as plt
+
+"""
+This is a simple example to create a 3D microstructure.
+"""
+
+start_time = time.time()
 
 dims = 200
 res = 1.0 

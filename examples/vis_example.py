@@ -10,6 +10,10 @@ from microstructure import Microstructure
 from texture import Texture
 from plotting import OrixVisualizer
 
+"""
+This example shows how to plot IPF maps, pole figures, and ODFs for a 3D microstructure
+"""
+
 micro = Microstructure(dimensions=(100,100,100), resolution=1.0)
 micro.gen_voronoi(num_grains=150, seed=42)
 micro.orientations = Texture.random_orientations(150, seed=42)

@@ -1,3 +1,5 @@
+# synth_struct/tests/test_rotations.py
+
 import sys
 sys.path.insert(0, '../src')
 

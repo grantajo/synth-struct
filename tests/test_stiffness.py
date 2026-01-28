@@ -1,3 +1,5 @@
+# synth_struct/tests/test_stiffness.py
+
 import sys
 sys.path.insert(0, '../src')
 
