@@ -75,7 +75,7 @@ class Stiffness:
         stiffness = {}
         
         # Convert Euler angles to quaternions
-        quaternions = euler_to_quat(microstructure.orientations, convention='ZXZ')
+        quaternions = euler_to_quat(microstructure.orientations)
         
         # For each grain, rotate the stiffness tensor using quaternions
         for grain_id, quat in quaternions.items():
@@ -133,7 +133,7 @@ class Stiffness:
         C66 = 0.5 * (C11 - C12)
         
         # Convert Euler angles to quaternions
-        quaternions = euler_to_quat(microstructure.orientations, convention='ZXZ')
+        quaternions = euler_to_quat(microstructure.orientations)
         
         # For each grain, rotate the stiffness tensor using quaternions
         for grain_id, quat in quaternions.items():

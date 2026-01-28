@@ -10,16 +10,19 @@ import numpy.testing as npt
 
 
 class TestRotationConverter(unittest.TestCase):
+    
+    def setUp(self):
+        """Set up test textures"""
+        self.orientations = Texture.random_orientations(5, seed=None)
 
     def test_euler_and_quats(self):
         """Test euler to quaternions and back"""
-        orientations = Texture.random_orientations(5, seed=None)
-        quats = rc.euler_to_quat(orientations)
+        quats = rc.euler_to_quat(self.orientations)
         recovered = rc.quat_to_euler(quats)
         
-        for key in orientations:
+        for key in recovered:
             npt.assert_allclose(
-                orientations[key],
+                self.orientations[key],
                 recovered[key],
                 rtol=1e-7,
                 atol=1e-9,
@@ -28,13 +31,12 @@ class TestRotationConverter(unittest.TestCase):
         
     def test_euler_and_rotation_matrices(self):
         """Test euler to rotation matrix and back"""
-        orientations = Texture.random_orientations(5, seed=None) 
-        rots = rc.euler_to_rotation_matrix(orientations)
+        rots = rc.euler_to_rotation_matrix(self.orientations)
         recovered = rc.rotation_matrix_to_euler(rots)
         
-        for key in orientations:
+        for key in recovered:
             npt.assert_allclose(
-                orientations[key],
+                self.orientations[key],
                 recovered[key],
                 rtol=1e-7,
                 atol=1e-9,
@@ -43,8 +45,7 @@ class TestRotationConverter(unittest.TestCase):
 
     def test_quat_and_rotation_matrices(self):
         """Test quaternion to rotation matrix and back"""
-        orientations = Texture.random_orientations(5, seed=None)
-        quats = rc.euler_to_quat(orientations)
+        quats = rc.euler_to_quat(self.orientations)
         rots = rc.quat_to_rotation_matrix(quats)
         recovered_quats = rc.rotation_matrix_to_quat(rots)
         
@@ -59,11 +60,10 @@ class TestRotationConverter(unittest.TestCase):
     
     def test_all_rotations(self):
         """Tests quats from Euler and quats from rotation matrices (through Euler)"""
-        orientations = Texture.random_orientations(5, seed=None)
-        rot_from_euler = rc.euler_to_rotation_matrix(orientations)
+        rot_from_euler = rc.euler_to_rotation_matrix(self.orientations)
         quat_from_rot = rc.rotation_matrix_to_quat(rot_from_euler)
         
-        quat_from_euler = rc.euler_to_quat(orientations)
+        quat_from_euler = rc.euler_to_quat(self.orientations)
         
         for key in quat_from_rot:
             npt.assert_allclose(
