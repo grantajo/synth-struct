@@ -87,7 +87,7 @@ def quat_to_euler(orientations):
             Phi = np.arctan2(2*chi, q03 - q12)
             phi2 = np.arctan2((q0*q2 + q1*q3) / chi, (q2*q3 - q0*q1) / chi)
             
-        euler_angle[grain_id] = np.array([normalize_angle(phi1),
+        euler_angles[grain_id] = np.array([normalize_angle(phi1),
                                           normalize_angle(Phi),
                                           normalize_angle(phi2)])
         
@@ -118,16 +118,15 @@ def rotation_matrix_to_euler(orientations):
     euler_angles = {}
     
     for grain_id, R in orientations.items():
-        R0 = R[grain_id]
-        if abs(R0[2,2]) == 1:
-            phi1 = np.arctan2(R0[0,1], R0[0,0])
-            Phi = (np.pi/2)*(1 - R0[2,2])
+        if abs(R[2,2]) == 1:
+            phi1 = np.arctan2(R[0,1], R[0,0])
+            Phi = (np.pi/2)*(1 - R[2,2])
             phi2 = 0.
         else:
-            xi = 1 / np.sqrt(1 - R0[2,2]**2)
-            phi1 = np.arctan2(R0[2,0]*xi, -R0[2,1]*xi)
-            Phi = np.arccos(R0[2,2])
-            phi2 = np.arctan2(R[0,2]*xi, R0[1,2]*xi)
+            xi = 1 / np.sqrt(1 - R[2,2]**2)
+            phi1 = np.arctan2(R[2,0]*xi, -R[2,1]*xi)
+            Phi = np.arccos(R[2,2])
+            phi2 = np.arctan2(R[0,2]*xi, R[1,2]*xi)
             
         euler_angles[grain_id] = np.array([normalize_angle(phi1),
                                            normalize_angle(Phi),
@@ -141,19 +140,17 @@ def rotation_matrix_to_quat(orientations):
     """
     quat = {}
     
-    for grain_id, R in orientations.items():
-        R0 = R[grain_id]
+    for grain_id, R in orientations.items():     
+        q0 = 0.5 * np.sqrt(1 + R[0,0] + R[1,1] + R[2,2])
+        q1 = 0.5 * np.sqrt(1 + R[0,0] - R[1,1] - R[2,2])
+        q2 = 0.5 * np.sqrt(1 - R[0,0] + R[1,1] - R[2,2])
+        q3 = 0.5 * np.sqrt(1 - R[0,0] - R[1,1] + R[2,2])
         
-        q0 = 0.5 * np.sqrt(1 + R0[0,0] + R0[1,1] + R0[2,2])
-        q1 = 0.5 * np.sqrt(1 + R0[0,0] - R0[1,1] - R0[2,2])
-        q2 = 0.5 * np.sqrt(1 - R0[0,0] + R0[1,1] - R0[2,2])
-        q3 = 0.5 * np.sqrt(1 - R0[0,0] - R0[1,1] + R0[2,2])
-        
-        if R[2,1] < R0[1,2]:
+        if R[2,1] < R[1,2]:
             q1 = -q1
-        if R[0,2] < R0[2,0]:
+        if R[0,2] < R[2,0]:
             q2 = -q2
-        if R[1,0] < R0[0,1]:
+        if R[1,0] < R[0,1]:
             q3 = -q3
             
         norm = np.sqrt(q0**2 + q1**2 + q2**2 + q3**2)
