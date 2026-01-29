@@ -4,6 +4,7 @@
 Useful utility functions for microstructure generators
 """
 
+import time
 import numpy as np
 
 def get_seed_coordinates(num_grains, dimensions, seed=None):
@@ -28,7 +29,7 @@ def get_seed_coordinates(num_grains, dimensions, seed=None):
     return seeds
     
     
-def anisotropic_voronoi_assignment(micro, seeds, scale_factors, rotations, chunk_size=100_000):
+def aniso_voronoi_assignment(micro, seeds, scale_factors, rotations, chunk_size=500_000):
     """
     Assign voxels using anisotropic distance metric.
     
@@ -47,6 +48,7 @@ def anisotropic_voronoi_assignment(micro, seeds, scale_factors, rotations, chunk
     grain_ids_flat = np.zeros(total_voxels, dtype=np.int32)
     
     print(f"Performing anisotropic Voronoi tessellation...")
+    start_time = time.time()
     
     for start in range(0, total_voxels, chunk_size):
         end = min(start + chunk_size, total_voxels)
@@ -60,7 +62,7 @@ def anisotropic_voronoi_assignment(micro, seeds, scale_factors, rotations, chunk
         for i, (seed, scale, R) in enumerate(zip(seeds, scale_factors, rotations)):
             diff = chunk_coords - seed
             diff_rotated = diff @ R.T  # R^T * (p-s)
-            diff_scaled = diff_rotated / scale
+            diff_scaled = diff_rotated / scale[np.newaxis, :]
             
             distances[:, i] = np.sum(diff_scaled**2, axis=1)
             

@@ -24,21 +24,30 @@ Dependencies
 - orix
 
 Currently doing on 'change-to-nparrays'
-- Finish updating orientation converter
-- Finish adding ellipsoidal
+- Finish updating shapes example
+
 
 To do for branch 'change-to-nparrays'
-- Add in other microstructure generator types
-  - Ellipsoidal
-  - Columnar
-  - Mixed
 - Update texture capabilities
 - Update examples
+  - shapes
 - Update plotting
 - Update tests
 - Update get_grain_ids in region function
 - Remove unnecessary stuff in microstructure.py
+- Update lath generator to spatially put colonies together
 
+Done:
+- Updating orientation converter
+- Updating microstructure generators
+  - Voronoi
+  - Ellipsoidal
+  - Columnar
+  - Mixed
+  - Lath
+  - Moved generators out from microstructure.py
+- Examples
+  - Basic 2D/3D
 
 File structure:
 project_root/ (synth_struct)

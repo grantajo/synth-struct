@@ -1,10 +1,14 @@
 # synth_struct/src/generators/ellipsoidal.py
 
 from .gen_base import MicrostructureGenerator
-from .gen_utils import get_seed_coordinates, anisotropic_voronoi_assignment
+from .gen_utils import get_seed_coordinates, aniso_voronoi_assignment
+from ..orientation import (
+    euler_to_rotation_matrix,
+    create_rotation_matrix_2d,
+    rotation_z_to_x,
+    rotation_z_to_y
+)
 import numpy as np
-
-from scipy.spatial import cKDTree
 
 class EllipsoidalGenerator(MicrostructureGenerator):
     """
@@ -59,13 +63,16 @@ class EllipsoidalGenerator(MicrostructureGenerator):
         # Generate random seed points
         self.seeds = get_seed_coordinates(self.num_grains, micro.dimensions, self.seed)
         
+        # Generate ellipsoidal parameters
         self.scale_factors, self.rotations = self._generate_ellipsoidal_params(self.num_grains, ndim)
         
-        self._anisotropic_voronoi_assignment(micro)
+        # Perform weighted Voronoi tessellation
+        aniso_voronoi_assignment(micro, self.seeds, self.scale_factors,
+                                             self.rotations, self.chunk_size)
         
         print(f"Generated {self.num_grains} grains with ellipsoidal morphology")
         
-    def _generate_ellipsoidal_params(self, num_grains, ndim)
+    def _generate_ellipsoidal_params(self, num_grains, ndim):
         """
         Generate scale factors and rotation matrices for ellipsoidal grains.
         

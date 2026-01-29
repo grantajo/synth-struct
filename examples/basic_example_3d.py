@@ -1,52 +1,71 @@
-# synth_struct/examples/basic_3d_example.py
-
-import time
+# synth_struct/examples/basic_example_3d.py
 
 import sys
-sys.path.insert(0, '../src')
+import time
+from pathlib import Path
 
-from microstructure import Microstructure
-from texture import Texture
-from hdf5_writer import write_struct_hdf5
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
+
+from src.microstructure import Microstructure
+from src.generators.voronoi import VoronoiGenerator
 import matplotlib.pyplot as plt
+import numpy as np
 
 """
-This is a simple example to create a 3D microstructure.
+This is a simple example to create a 3D microstructure and visualize slices.
 """
 
 start_time = time.time()
 
-dims = 200
+dims = (100, 100, 100)
 res = 1.0 
-num_grains = 350
+num_grains = 500
+
 # Create a 2D microstructure
-micro = Microstructure(dimensions=(dims, dims, dims), resolution=res)
+micro = Microstructure(dimensions=dims, resolution=res)
 
-# Generate 50 grains
-micro.gen_voronoi(num_grains=num_grains, seed=42)
-
-# Assign random orientations
-micro.orientations = Texture.random_orientations(num_grains, seed=42)
+# Initialize Voronoi Generator
+voronoi_gen = VoronoiGenerator(num_grains=num_grains, seed=42)
+voronoi_gen.generate(micro)
 
 end_time = time.time()
 elapsed_time = end_time - start_time
 
+print(f"Created 3D Microstructure: {dims}")
+print(f"Number of grains: {micro.num_grains}")
 print(f"Execution Time: {elapsed_time:.2f} seconds")
 
-fig, axs = plt.subplots(1, 3, figsize=(6, 3), constrained_layout=True)
-middle_slice = micro.grain_ids.shape[2] // 2
-im = axs[0].imshow(micro.grain_ids[:, :, middle_slice], cmap='nipy_spectral')
-axs[0].set_title(f'Z-slice at {middle_slice}')
+#print('Memory size of voronoi_gen:', sys.getsizeof(voronoi_gen), 'bytes')
+#print('Memory size of micro:', sys.getsizeof(micro.grain_ids), 'bytes')
 
-middle_slice = micro.grain_ids.shape[1] // 2
-axs[1].imshow(micro.grain_ids[:, middle_slice, :], cmap='nipy_spectral')
-axs[1].set_title(f'Y-slice at {middle_slice}')
+# Visualize the three orthogonal slices
+fig, axes = plt.subplots(1, 3, figsize=(15,5))
 
-middle_slice = micro.grain_ids.shape[0] // 2
-axs[2].imshow(micro.grain_ids[middle_slice, :, :], cmap='nipy_spectral')
-axs[2].set_title(f'X-slice at {middle_slice}')
+# XY slice (middle of Z)
+z_slice = dims[2] // 2
+axes[0].imshow(micro.grain_ids[:, :, z_slice], cmap='nipy_spectral', origin='lower')
+axes[0].set_title(f'XY Slice (z={z_slice})')
 
-fig.colorbar(im, ax=axs, orientation='horizontal', label='Grain ID', pad=0.08, aspect=40)
-fig.suptitle('3D Example')
-plt.savefig('../output/3d_slices.png', dpi=150)
-plt.close()
+# XZ slice (middle of y)
+y_slice = dims[1] // 2
+axes[1].imshow(micro.grain_ids[:, y_slice, :], cmap='nipy_spectral', origin='lower')
+axes[1].set_title(f'XZ Slice (y={y_slice})')
+
+# YZ slice (middle of x)
+x_slice = dims[0] // 2
+axes[2].imshow(micro.grain_ids[x_slice, :, :], cmap='nipy_spectral', origin='lower')
+axes[2].set_title(f'YZ Slice (x={x_slice})')
+
+plt.tight_layout()
+
+repo_root = Path(__file__).resolve().parent.parent
+output_dir = repo_root / 'output'
+output_dir.mkdir(exist_ok=True)
+plt.savefig(output_dir / '3d_slices.png', dpi=150)
+
+print(f"Saved visualization to {output_dir / '3d_slices.png'}")
+
+plt.show()
+
+

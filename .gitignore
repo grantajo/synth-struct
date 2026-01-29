@@ -2,3 +2,9 @@
 /.gitignore
 /src/__pycache__/
 /examples/__pycache__/
+/src/generators/__pycache__/
+/src/orientation/__pycache__/
+/src/plotting/__pycache__/
+/src/io/__pycache__/
+/src/stiffness/__pycache__/
+/tests/__pycache__/

@@ -1,3 +1,9 @@
+# synth_struct/src/orientation/rotation_converter.py
+"""
+To import from a src file, use
+from ..orientations.rotation_converter import (functions here)
+"""
+
 import numpy as np
 
 """
@@ -12,9 +18,9 @@ Bunge Euler convention is always ZXZ
 
 # eu2quat, eu2om, quat2eu, om2eu, quat2om, om2quat
 
-def normalize_angle(angle):
-    """ Normalize angle to be within [0, 2π) """
-    return angle % (2 * np.pi)
+def normalize_angle(angles):
+    """ Normalize Euelr angles to be within [0, 2π) """
+    return angles % (2 * np.pi)
 
 def euler_to_quat(euler_angles):
     """
@@ -24,7 +30,7 @@ def euler_to_quat(euler_angles):
     - euler_angles: np.ndarray of shape (3,) or (N, 3) - [phi1, Phi, phi2]
     
     Returns:
-    - quaternions: np.ndarray of shape (4,) or (N, 4) - [q0, q1, q2, q3]
+    - quats: np.ndarray of shape (4,) or (N, 4) - [q0, q1, q2, q3]
     """
     
     single_input = euler_angles.ndim == 1
@@ -92,7 +98,7 @@ def euler_to_rotation_matrix(euler_angles):
     R[:, 2, 1] = -np.cos(phi1)*np.sin(Phi)
     R[:, 2, 2] =  np.cos(Phi)
     
-    returnR[0] if single_input else R
+    return R[0] if single_input else R
     
     
 def quat_to_euler(quats):
@@ -192,55 +198,142 @@ def quat_to_rotation_matrix(quats):
         
     return R[0] if single_input else R
     
-"""
-def rotation_matrix_to_euler(orientations):
-    """
-    #Convert rotation matrix to Euler angles
-    """
-    euler_angles = {}
-    
-    for grain_id, R in orientations.items():
-        if abs(R[2,2]) == 1:
-            phi1 = np.arctan2(R[0,1], R[0,0])
-            Phi = (np.pi/2)*(1 - R[2,2])
-            phi2 = 0.
-        else:
-            xi = 1 / np.sqrt(1 - R[2,2]**2)
-            phi1 = np.arctan2(R[2,0]*xi, -R[2,1]*xi)
-            Phi = np.arccos(R[2,2])
-            phi2 = np.arctan2(R[0,2]*xi, R[1,2]*xi)
-            
-        euler_angles[grain_id] = np.array([normalize_angle(phi1),
-                                           normalize_angle(Phi),
-                                           normalize_angle(phi2)])
-                                           
-    return euler_angles
 
-def rotation_matrix_to_quat(orientations):
+def rotation_matrix_to_euler(R):
     """
-    #Convert rotation matrix to quaternions
-    """
-    quat = {}
+    Convert rotation matrix to Euler angles
     
-    for grain_id, R in orientations.items():     
-        q0 = 0.5 * np.sqrt(1 + R[0,0] + R[1,1] + R[2,2])
-        q1 = 0.5 * np.sqrt(1 + R[0,0] - R[1,1] - R[2,2])
-        q2 = 0.5 * np.sqrt(1 - R[0,0] + R[1,1] - R[2,2])
-        q3 = 0.5 * np.sqrt(1 - R[0,0] - R[1,1] + R[2,2])
+    Args:
+    - R: np.ndarray of shape (3, 3) or (N, 3, 3)
+    
+    Returns:
+    - euler_angles: np.ndarray of shape (3,) or (N, 3) - [phi1, Phi, phi2]
+    """
+    single_input = R.ndim == 2
+    
+    if single_input:
+        R = R[np.newaxis, :, :]
         
-        if R[2,1] < R[1,2]:
-            q1 = -q1
-        if R[0,2] < R[2,0]:
-            q2 = -q2
-        if R[1,0] < R[0,1]:
-            q3 = -q3
+    N = len(R)
+    euler_angles = np.zeros((N, 3))
+    
+    # Case 1: R[2,2] == ±1 (gimbal lock)
+    mask1 = np.abs(R[:, 2, 2]) == 1
+    euler_angles[mask1, 0] = np.arctan2(R[mask1,0,1], R[mask1,0,0])
+    euler_angles[mask1, 1] = (np.pi/2)*(1 - R[mask1,2,2])
+    euler_angles[mask1, 2] = 0.
+    
+    # Case 2: General case
+    mask2 = ~mask1
+    xi = 1 / np.sqrt(1 - R[mask2,2,2]**2)
+    euler_angles[mask2, 0] = np.arctan2(R[mask2,2,0]*xi, -R[mask2,2,1]*xi)
+    euler_angles[mask2, 1] = np.arccos(R[mask2,2,2])
+    euler_angles[mask2, 2] = np.arctan2(R[mask2,0,2]*xi, R[mask2,1,2]*xi)
+    
+    euler_angles = normalize_angle(euler_angles)
+                                           
+    return euler_angles[0] if single_input else euler_angles
+
+def rotation_matrix_to_quat(R):
+    """
+    Convert rotation matrix to quaternions
+    
+    Args:
+    - R: np.ndarray of shape (3, 3) or (N, 3, 3)
+    
+    Returns:
+    - quats: np.ndarray of shape (4,) or (N, 4) - [q0, q1, q2, q3]
+    """
+    single_input = R.ndim == 2
+    if single_input:
+        R = R[np.newaxis, :, :]
+        
+    N = len(R)
+    quats = np.zeros((N, 4))
+    
+    # Convert R to quaternions
+    quats[:,0] = 0.5 * np.sqrt(1 + R[:,0,0] + R[:,1,1] + R[:,2,2])
+    quats[:,1] = 0.5 * np.sqrt(1 + R[:,0,0] - R[:,1,1] - R[:,2,2])
+    quats[:,2] = 0.5 * np.sqrt(1 - R[:,0,0] + R[:,1,1] - R[:,2,2])
+    quats[:,3] = 0.5 * np.sqrt(1 - R[:,0,0] - R[:,1,1] + R[:,2,2])
+    
+    # Sign corrections
+    quats[R[:,2,1] < R[:,1,2], 1] *= -1
+    quats[R[:,0,2] < R[:,2,0], 2] *= -1
+    quats[R[:,1,0] < R[:,0,1], 2] *= -1
             
-        norm = np.sqrt(q0**2 + q1**2 + q2**2 + q3**2)
-        q0, q1, q2, q3 = q0 / norm, q1 / norm, q2 / norm, q3 / norm
-        
-        quat[grain_id] = np.array([q0, q1, q2, q3])
-        
-    return quat
+    norm = np.linalg.norm(quats, axis=1, keepdims=True)
+    quats = quats / norm
+    
+    return quats[0] if single_input else quats
     
 """
+Additional utility functions for microstructure generation
+"""
+
+def create_rotation_matrix_2d(angle):
+    """
+    Create a 2D rotation matrix.
+    
+    Args:
+    - angle: float or np.ndarray - Rotation angle(s) in radians
+    
+    Returns:
+    - R: np.ndarray of shape (2, 2) or (N, 2, 2) - Rotation matrix
+    """
+    
+    single_input = np.isscalar(angle)
+    if single_input:
+        angle = np.array([angle])
+        
+    c, s = np.cos(angle), np.sin(angle)
+    N = len(angle)
+    R = np.zeros((N, 2, 2))
+    R[:, 0, 0] = c
+    R[:, 0, 1] = -s
+    R[:, 1, 0] = s
+    R[:, 1, 1] = c
+    
+    return R[0] if single_input else R
+    
+def rotation_z_to_x():
+    """
+    Rotation matrix that aligns z-axis to x-axis.
+    Created for weighted microstructure generation (ellipsoidal, columnar, etc.)
+    Maps: z -> x, x -> -z, y -> y
+    
+    Returns:
+    - np.ndarray of shape (3, 3)
+    """
+    return np.array([
+        [ 0, 0, 1],
+        [ 0, 1, 0],
+        [-1, 0, 0]
+    ])
+    
+def rotation_z_to_y():
+    """
+    Rotation matrix that aligns z-axis to x-axis.
+    Created for weighted microstructure generation (ellipsoidal, columnar, etc.)
+    Maps: z -> y, y -> -z, x -> x
+    
+    Returns:
+    - np.ndarray of shape (3, 3)
+    """
+    return np.array([
+        [1, 0, 0],
+        [0, 0, 1],
+        [0,-1, 0]
+    ])
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
