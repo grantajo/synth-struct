@@ -38,10 +38,12 @@ To do for branch 'change-to-nparrays'
 
 Currently doing on 'change-to-nparrays'
 - Create plotting capabilities
+  - Finish shapes example (plotting laths while shuffling display IDs)
 
 
 Done:
-- Updated shapes example and fixed mixed generator
+- Updated lath generate for colonies and basketweave
+- Created utility function file for plotting
 
 
 File structure:

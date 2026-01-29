@@ -13,6 +13,7 @@ from src.generators.ellipsoidal import EllipsoidalGenerator
 from src.generators.columnar import ColumnarGenerator
 from src.generators.mixed import MixedGenerator
 from src.generators.lath import LathGenerator
+from src.plotting.plot_utils import shuffle_display_grain_ids
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -41,7 +42,7 @@ def main():
 
     micro_2d = Microstructure(dimensions=dims_2d, resolution=resolution)
     micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
-    
+    """
     # ===========================
     # Voronoi
     # ===========================
@@ -161,7 +162,7 @@ def main():
     fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Mixed (50% Ellipsoidal)", "mixed_3d")
     fig.savefig(output_dir / 'mixed_3d.png', dpi=150, bbox_inches='tight')
     print(f"    3D: {elapsed:.2f}s")
-    
+    """
     # ===========================
     # Lath
     # ===========================
@@ -172,18 +173,65 @@ def main():
 
     gen = LathGenerator(
         num_grains=400,
-        num_colonies=30,
+        num_colonies=25,
         aspect_ratio_mean=12.0,
-        aspect_ratio_std=2.0,
+        aspect_ratio_std=1.0,
         width_mean=2.0,
         width_std=0.5,
-        colony_misorientation=10.0,
+        colony_misorientation=5.0,
+        basketweave_fraction=0.0,
+        bw_variants=24,
+        seed=seed,
+        chunk_size=1_000_000
+    )
+    
+    fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Lath (30 Colonies)", "lath_3d")
+    fig.savefig(output_dir / 'lath_colony.png', dpi=150, bbox_inches='tight')
+    print(f"  Pure Colony: {elapsed:.2f}s")
+    
+    # Get colony information
+    colony_info = gen.get_colony_info()
+    print(f"    Colonies: {colony_info['num_colonies']}")
+    print(f"    Avg laths per colony: {len(colony_info['colony_ids']) / colony_info['num_colonies']:.1f}")
+    
+    gen = LathGenerator(
+        num_grains=400,
+        num_colonies=25,
+        aspect_ratio_mean=12.0,
+        aspect_ratio_std=1.0,
+        width_mean=2.0,
+        width_std=0.5,
+        colony_misorientation=5.0,
+        basketweave_fraction=1.0,
+        bw_variants=24,
         seed=seed,
         chunk_size=1_000_000
     )
     fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Lath (30 Colonies)", "lath_3d")
-    fig.savefig(output_dir / 'lath_3d.png', dpi=150, bbox_inches='tight')
-    print(f"    3D: {elapsed:.2f}s")
+    fig.savefig(output_dir / 'lath_basketweave.png', dpi=150, bbox_inches='tight')
+    print(f"  Pure Basketweave: {elapsed:.2f}s")
+    
+    # Get colony information
+    colony_info = gen.get_colony_info()
+    print(f"    Colonies: {colony_info['num_colonies']}")
+    print(f"    Avg laths per colony: {len(colony_info['colony_ids']) / colony_info['num_colonies']:.1f}")
+    
+    gen = LathGenerator(
+        num_grains=400,
+        num_colonies=25,
+        aspect_ratio_mean=12.0,
+        aspect_ratio_std=1.0,
+        width_mean=2.0,
+        width_std=0.5,
+        colony_misorientation=5.0,
+        basketweave_fraction=0.7,
+        bw_variants=24,
+        seed=seed,
+        chunk_size=1_000_000
+    )
+    fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Lath (30 Colonies)", "lath_3d")
+    fig.savefig(output_dir / 'lath_mixed.png', dpi=150, bbox_inches='tight')
+    print(f"  Mixed Basketweave/Colony: {elapsed:.2f}s")
     
     # Get colony information
     colony_info = gen.get_colony_info()
