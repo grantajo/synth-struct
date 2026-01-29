@@ -23,31 +23,26 @@ Dependencies
 - matplotlib-scalebar
 - orix
 
-Currently doing on 'change-to-nparrays'
-- Finish updating shapes example
-
 
 To do for branch 'change-to-nparrays'
 - Update texture capabilities
 - Update examples
-  - shapes
+  - plotting
+  - get grains and change texture
 - Update plotting
 - Update tests
 - Update get_grain_ids in region function
 - Remove unnecessary stuff in microstructure.py
 - Update lath generator to spatially put colonies together
 
+
+Currently doing on 'change-to-nparrays'
+- Create plotting capabilities
+
+
 Done:
-- Updating orientation converter
-- Updating microstructure generators
-  - Voronoi
-  - Ellipsoidal
-  - Columnar
-  - Mixed
-  - Lath
-  - Moved generators out from microstructure.py
-- Examples
-  - Basic 2D/3D
+- Updated shapes example and fixed mixed generator
+
 
 File structure:
 project_root/ (synth_struct)

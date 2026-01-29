@@ -97,7 +97,7 @@ class MixedGenerator(MicrostructureGenerator):
         for i in range(num_grains):
             if i < num_ellipsoidal: # Ellipsoidal grains
                 aspect_ratio = np.random.normal(self.aspect_ratio_mean, self.aspect_ratio_std)
-                aspect_ration = np.clip(aspect_ratio, 1.5, 15.0)
+                aspect_ratio = np.clip(aspect_ratio, 1.5, 15.0)
                 
                 if ndim == 3:
                     scale_factors[i] = [self.base_size, self.base_size, self.base_size * aspect_ratio]
@@ -105,7 +105,7 @@ class MixedGenerator(MicrostructureGenerator):
                     R = euler_to_rotation_matrix(angles)
                 else: # 2D
                     scale_factors[i] = [self.base_size, self.base_size * aspect_ratio]
-                    angle = np.random.uniform(0, 2*np.pi, 3)
+                    angle = np.random.uniform(0, 2*np.pi)
                     R = create_rotation_matrix_2d(angle)
                     
             else: # Equiaxed grains

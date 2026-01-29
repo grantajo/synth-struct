@@ -41,7 +41,7 @@ def main():
 
     micro_2d = Microstructure(dimensions=dims_2d, resolution=resolution)
     micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
-
+    
     # ===========================
     # Voronoi
     # ===========================
@@ -93,7 +93,7 @@ def main():
     )
     fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Ellipsoidal", "ellipsoidal_3d")
     fig.savefig(output_dir / 'ellipsoidal_3d.png', dpi=150, bbox_inches='tight')
-    print(f"  3D: {elapsed:.2f}s")
+    print(f"    3D: {elapsed:.2f}s")
 
     # ===========================
     # Columnar
@@ -128,7 +128,6 @@ def main():
     fig.savefig(output_dir / 'columnar_x.png', dpi=150, bbox_inches='tight')
     print(f"    X-axis: {elapsed:.2f}s")
     
-    """
     # ===========================
     # Mixed
     # ===========================
@@ -162,7 +161,7 @@ def main():
     fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Mixed (50% Ellipsoidal)", "mixed_3d")
     fig.savefig(output_dir / 'mixed_3d.png', dpi=150, bbox_inches='tight')
     print(f"    3D: {elapsed:.2f}s")
-    """
+    
     # ===========================
     # Lath
     # ===========================
@@ -185,16 +184,16 @@ def main():
     fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Lath (30 Colonies)", "lath_3d")
     fig.savefig(output_dir / 'lath_3d.png', dpi=150, bbox_inches='tight')
     print(f"    3D: {elapsed:.2f}s")
-
+    
     # Get colony information
     colony_info = gen.get_colony_info()
     print(f"    Colonies: {colony_info['num_colonies']}")
     print(f"    Avg laths per colony: {len(colony_info['colony_ids']) / colony_info['num_colonies']:.1f}")
-
+    
     print("\n" + "="*60)
     print(f"All examples saved to: {output_dir}")
     print("="*60)
-
+    
     plt.show()
 
 
