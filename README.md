@@ -50,49 +50,49 @@ File structure:
 project_root/ (synth_struct)  
 ├── README.md  
 ├── src/  
-│   ├── __init__.py
-│   ├── micro_utils.py # Utility functions such as getting the grains IDs from a specific region\n
-│   ├── microstructure.py # Houses the Microstructure base class\n
-│   ├── generators/\n
-│   │   ├── __init__.py\n
-│   │   ├── gen_base.py # Houses the MicrostructureGenerator base class\n
-│   │   ├── gen_utils.py # Utility functions\n
-│   │   ├── voronoi.py\n
-│   │   ├── ellipsoidal.py\n
-│   │   ├── columnar.py\n
-│   │   └── mixed.py\n
-│   ├── orientation/\n
-│   │   ├── __init__.py\n
-│   │   ├── rotation_converter.py # Conversions between orientation standards (eu, quat, rotmats)
-│   │   └── texture.py # Creates a set of textures for a given microstructure or set of grains (may switch to separate files?)
-│   ├── stiffness/
-│   │   ├── __init__.py
-│   │   ├── stif_utils.py # Helper functions for stiffness rotations
-│   │   └── stiffness.py # Rotates the stiffness matrix for each grain based on the orientation of the grain
-│   ├── plotting/
-│   │   ├── __init__.py
-│   │   ├── plot_utils.py # Helper functions for plotting
-│   │   ├── gen_plot.py # General plotting functions (Grain IDs, etc.)
-│   │   ├── orix_plot.py # Plotting using orix for IPFs, Pole figures, ODFs, etc.
-│   │   └── ipfcolorkeys.py # Functions to plot the series of IPF color keys from orix
-│   └── io/
-│       ├── __init__.py
-│       ├── write_utils.py # Helper functions for outputting files
-│       ├── vtk_writer.py # Write a mesh to VTK file
-│       └── hdf5_writer.py # Write to HDF5 file
-├── examples/
-│   ├── __init__.py
-│   ├── basic_example_2d.py # Basic examples
-│   ├── basic_example_3d.py # Basic examples
-│   ├── shapes.py # Examples for each of the microstructure generator types
-│   └── vis_example.py # Examples for plotting
-├── output/
-└── tests/
-    ├── __init__.py
-    ├── test_microstructure.py
-    ├── test_rotations.py
-    ├── test_stiffness.py
-    └── test_texture.py
+│   ├── __init__.py  
+│   ├── micro_utils.py # Utility functions such as getting the grains IDs from a specific region  
+│   ├── microstructure.py # Houses the Microstructure base class  
+│   ├── generators/  
+│   │   ├── __init__.py  
+│   │   ├── gen_base.py # Houses the MicrostructureGenerator base class  
+│   │   ├── gen_utils.py # Utility functions  
+│   │   ├── voronoi.py  
+│   │   ├── ellipsoidal.py  
+│   │   ├── columnar.py  
+│   │   └── mixed.py  
+│   ├── orientation/  
+│   │   ├── __init__.py  
+│   │   ├── rotation_converter.py # Conversions between orientation standards (eu, quat, rotmats)  
+│   │   └── texture.py # Creates a set of textures for a given microstructure or set of grains (may switch to separate files?)  
+│   ├── stiffness/  
+│   │   ├── __init__.py  
+│   │   ├── stif_utils.py # Helper functions for stiffness rotations  
+│   │   └── stiffness.py # Rotates the stiffness matrix for each grain based on the orientation of the grain  
+│   ├── plotting/  
+│   │   ├── __init__.py  
+│   │   ├── plot_utils.py # Helper functions for plotting  
+│   │   ├── gen_plot.py # General plotting functions (Grain IDs, etc.)  
+│   │   ├── orix_plot.py # Plotting using orix for IPFs, Pole figures, ODFs, etc.  
+│   │   └── ipfcolorkeys.py # Functions to plot the series of IPF color keys from orix  
+│   └── io/  
+│       ├── __init__.py  
+│       ├── write_utils.py # Helper functions for outputting files  
+│       ├── vtk_writer.py # Write a mesh to VTK file  
+│       └── hdf5_writer.py # Write to HDF5 file  
+├── examples/  
+│   ├── __init__.py  
+│   ├── basic_example_2d.py # Basic examples  
+│   ├── basic_example_3d.py # Basic examples  
+│   ├── shapes.py # Examples for each of the microstructure generator types  
+│   └── vis_example.py # Examples for plotting  
+├── output/  
+└── tests/  
+    ├── __init__.py  
+    ├── test_microstructure.py  
+    ├── test_rotations.py  
+    ├── test_stiffness.py  
+    └── test_texture.py  
 
 
 
