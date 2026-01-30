@@ -38,17 +38,17 @@ To do for branch 'change-to-nparrays'
 
 Currently doing on 'change-to-nparrays'
 - Adding in texture capabilities
-  - See if Generator scheme would be useful
+  - Add in hexagonal, random, and custom.
+  - See what ODF texture would look like
 
 
 Done:
-- Added in some plotting capabilities (gen_plot)
-- Finished shapes example
+- Added in base classes for textures
+- Added in cubic textures
 
 
 File structure: 
-project_root/ (synth_struct)  
-├── README.md  
+synth_struct/  
 ├── src/  
 │   ├── __init__.py  
 │   ├── micro_utils.py # Utility functions such as getting the grains IDs from a specific region  
@@ -86,14 +86,13 @@ project_root/ (synth_struct)
 │   ├── basic_example_3d.py # Basic examples  
 │   ├── shapes.py # Examples for each of the microstructure generator types  
 │   └── vis_example.py # Examples for plotting  
+├── tests/  
+│   ├── __init__.py  
+│   ├── test_microstructure.py  
+│   ├── test_rotations.py  
+│   ├── test_stiffness.py  
+│   ├── test_texture.py  
 ├── output/  
-└── tests/  
-    ├── __init__.py  
-    ├── test_microstructure.py  
-    ├── test_rotations.py  
-    ├── test_stiffness.py  
-    └── test_texture.py  
-
-
+└── README.md  
 
 

@@ -3,10 +3,19 @@
 import numpy as np
 
 class Microstructure:
-    def __init__(self, dimensions, resolution, units='micron'):
+    """
+    Data container for a synthetic microstructure
+    """
+    
+    def __init__(self, dimensions, resolution, units='micron', symmetry=None):
         """
-        dimensions: tuple (nx, ny) or (nx, ny, nz) for 2D or 3D
-        resolution: physical size per voxel
+        Initiation of a Microstructure class
+        
+        Args:
+        - dimensions: tuple - (nx, ny) for 2D, (nx, ny, nz) for 3D
+        - resolution: float - physical size per voxel
+        - units: str - physical units
+        - symmetry: str, optional - Crystal symmetry ('cubic' or 'hexagonal')
         """
         
         self.dimensions = tuple(dimensions)
@@ -14,10 +23,14 @@ class Microstructure:
         self.units = units
         
         self.grain_ids = np.zeros(self.dimensions, dtype=np.int32) # 0 = background (e.g. unindexed EBSD)
-        self.num_grains = 0
         
         self.fields = {} 
         self.metadata = {}
+        
+    @property
+    def num_grains(self):
+        """Number of grain excluding the background"""
+        return int(self.grain_ids.max())
         
     def attach_field(self, name, array):
         """
