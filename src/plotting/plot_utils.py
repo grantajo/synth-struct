@@ -30,15 +30,21 @@ def shuffle_display_grain_ids(grain_ids, num_grains, seed=None):
     
     if seed:
         np.random.seed(seed)
-        
+    
+    max_grain_id = int(np.max(grain_ids))
+    map_size = max(num_grains + 1, max_grain_id + 1)
     # Create random permutation
     old_ids = np.arange(1, num_grains + 1)
-    new_ids = np.random.permutations(old_ids) + 1
+    new_ids = np.random.permutation(old_ids) + 1
     
     # Create display mapping
-    id_map = np.zeros(num_grains + 1, dtype=np.int32)
+    id_map = np.zeros(map_size, dtype=np.int32)
     id_map[0] = 0 # Background stays 0
     id_map[old_ids] = new_ids
+    
+    if max_grain_id > num_grains:
+        extra_ids = np.arange(num_grains + 1, max_grain_id + 1)
+        id_map[extra_ids] = extra_ids
     
     # Return mapped grain_ids
     return id_map[grain_ids]

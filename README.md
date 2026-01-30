@@ -37,13 +37,13 @@ To do for branch 'change-to-nparrays'
 
 
 Currently doing on 'change-to-nparrays'
-- Create plotting capabilities
-  - Finish shapes example (plotting laths while shuffling display IDs)
+- Adding in texture capabilities
+  - See if Generator scheme would be useful
 
 
 Done:
-- Updated lath generate for colonies and basketweave
-- Created utility function file for plotting
+- Added in some plotting capabilities (gen_plot)
+- Finished shapes example
 
 
 File structure:
@@ -51,11 +51,11 @@ project_root/ (synth_struct)
 ├── README.md
 ├── src/
 │   ├── __init__.py
-│   ├── grain_utils.py # Utility functions such as getting the grains IDs from a specific region
-│   ├── microstructure.py
+│   ├── micro_utils.py # Utility functions such as getting the grains IDs from a specific region
+│   ├── microstructure.py # Houses the Microstructure base class
 │   ├── generators/
 │   │   ├── __init__.py
-│   │   ├── base.py # Houses the microstructure generator base class
+│   │   ├── gen_base.py # Houses the MicrostructureGenerator base class
 │   │   ├── gen_utils.py # Utility functions
 │   │   ├── voronoi.py
 │   │   ├── ellipsoidal.py
@@ -67,13 +67,17 @@ project_root/ (synth_struct)
 │   │   └── texture.py # Creates a set of textures for a given microstructure or set of grains (may switch to separate files?)
 │   ├── stiffness/
 │   │   ├── __init__.py
+│   │   ├── stif_utils.py # Helper functions for stiffness rotations
 │   │   └── stiffness.py # Rotates the stiffness matrix for each grain based on the orientation of the grain
 │   ├── plotting/
 │   │   ├── __init__.py
-│   │   ├── plotting.py # Functions to plot IPF maps, pole figures, etc.
+│   │   ├── plot_utils.py # Helper functions for plotting
+│   │   ├── gen_plot.py # General plotting functions (Grain IDs, etc.)
+│   │   ├── orix_plot.py # Plotting using orix for IPFs, Pole figures, ODFs, etc.
 │   │   └── ipfcolorkeys.py # Functions to plot the series of IPF color keys from orix
 │   └── io/
 │       ├── __init__.py
+│       ├── write_utils.py # Helper functions for outputting files
 │       ├── vtk_writer.py # Write a mesh to VTK file
 │       └── hdf5_writer.py # Write to HDF5 file
 ├── examples/

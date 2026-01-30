@@ -1,3 +1,5 @@
+# synth_struct/src/plotting/orix_plot.py
+
 import sys
 sys.path.insert(0, '../src')
 
@@ -300,14 +302,3 @@ class OrixVisualizer:
             print(f"Saved ODF to ../output/{filename}")
         
         # plt.show()
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        

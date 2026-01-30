@@ -47,7 +47,7 @@ def aniso_voronoi_assignment(micro, seeds, scale_factors, rotations, chunk_size=
     total_voxels = int(np.prod(micro.dimensions))
     grain_ids_flat = np.zeros(total_voxels, dtype=np.int32)
     
-    print(f"Performing anisotropic Voronoi tessellation...")
+    print(f"  Performing anisotropic Voronoi tessellation...")
     start_time = time.time()
     
     for start in range(0, total_voxels, chunk_size):

@@ -13,7 +13,7 @@ from src.generators.ellipsoidal import EllipsoidalGenerator
 from src.generators.columnar import ColumnarGenerator
 from src.generators.mixed import MixedGenerator
 from src.generators.lath import LathGenerator
-from src.plotting.plot_utils import shuffle_display_grain_ids
+from src.plotting.gen_plot import Plotter 
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,33 +42,43 @@ def main():
 
     micro_2d = Microstructure(dimensions=dims_2d, resolution=resolution)
     micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
-    """
+    
     # ===========================
     # Voronoi
     # ===========================
     print("\n1. Standard Voronoi:")
     print("-"*60)
+    print("Starting Standard Voronoi 2D")
 
     # 2D Voronoi
     gen = VoronoiGenerator(num_grains=num_grains, seed=seed)
-    fig, elapsed = generate_and_visualize_2d(gen, micro_2d, "Voronoi", "voronoi_2d")
+    gen.generate(micro_2d)
+    fig, ax = plt.subplots()
+    Plotter.plot_grain_ids(ax, micro_2d)
     fig.savefig(output_dir / 'voronoi_2d.png', dpi=100, bbox_inches='tight')
-    print(f"    2D: {elapsed:.2f}s")
+    print(f"    Voronoi 2D saved to: {output_dir / 'voronoi_2d.png'}")
 
     # 3D Voronoi
+    print()
+    print("Starting Standard Voronoi 3D")
     gen = VoronoiGenerator(num_grains=num_grains, seed=seed)
-    fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Voronoi", "voronoi_3d")
+    gen.generate(micro_3d)
+    fig = plt.figure(figsize=(15,5))
+    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / 'voronoi_3d.png', dpi=100, bbox_inches='tight')
-    print(f"    3D: {elapsed:.2f}s")
+    print(f"    Voronoi 3D saved to: {output_dir / 'voronoi_3d.png'}")
 
 
     # ===========================
     # Ellipsoidal
     # ===========================
+    micro_2d = Microstructure(dimensions=dims_2d, resolution=resolution)
+    micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
     print()
     print("="*60)
     print("2. Ellipsoidal:")
     print("-"*60)
+    print("Starting Ellipsoidal 2D")
 
     #2D Ellipsoidal
     gen = EllipsoidalGenerator(
@@ -79,10 +89,14 @@ def main():
         base_size=8.0,
         seed=seed
     )
-    fig, elapsed = generate_and_visualize_2d(gen, micro_2d, "Ellipsoidal", "ellipsoidal_2d")
+    gen.generate(micro_2d)
+    fig, ax = plt.subplots()
+    Plotter.plot_grain_ids(ax, micro_2d)
     fig.savefig(output_dir / 'ellipsoidal_2d.png', dpi=150, bbox_inches='tight')
-    print(f"    2D: {elapsed:.2f}s")
-
+    print(f"    Ellipsoidal 2D saved to: {output_dir / 'ellipsoidal_2d.png'}")
+    
+    print()
+    print("Starting Ellipsoidal 3D")
     gen = EllipsoidalGenerator(
         num_grains=num_grains,
         aspect_ratio_mean=5.0,
@@ -92,17 +106,21 @@ def main():
         seed=seed,
         chunk_size=1_000_000
     )
-    fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Ellipsoidal", "ellipsoidal_3d")
+    gen.generate(micro_3d)
+    fig = plt.figure(figsize=(15,5))
+    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / 'ellipsoidal_3d.png', dpi=150, bbox_inches='tight')
-    print(f"    3D: {elapsed:.2f}s")
+    print(f"    Ellipsoidal 3D saved to: {output_dir / 'ellipsoidal_3d.png'}")
 
     # ===========================
     # Columnar
     # ===========================
+    micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
     print()
     print("="*60)
     print("3. Columnar:")
     print("-"*60)
+    print("Starting Columnar Z-axis")
 
     gen = ColumnarGenerator(
         num_grains=num_grains,
@@ -113,10 +131,15 @@ def main():
         seed=seed,
         chunk_size=1_000_000
     )
-    fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Columnar (Z-axis)", "columnar_z")
+    gen.generate(micro_3d)
+    fig = plt.figure(figsize=(15,5))
+    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / 'columnar_z.png', dpi=150, bbox_inches='tight')
-    print(f"    Z-axis: {elapsed:.2f}s")
+    print(f"    Columnar in Z-axis saved to: {output_dir / 'columnar_z.png'}")
 
+    print()
+    print("Starting Columnar X-axis")
+    micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
     gen = ColumnarGenerator(
         num_grains=num_grains,
         axis='x',
@@ -125,17 +148,22 @@ def main():
         seed=seed,
         chunk_size=1_000_000
     )
-    fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Columnar (X-axis)", "columnar_x")
+    gen.generate(micro_3d)
+    fig = plt.figure(figsize=(15,5))
+    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / 'columnar_x.png', dpi=150, bbox_inches='tight')
-    print(f"    X-axis: {elapsed:.2f}s")
+    print(f"    Columnar in X-axis saved to: {output_dir / 'columnar_x.png'}")
     
     # ===========================
     # Mixed
     # ===========================
+    micro_2d = Microstructure(dimensions=dims_2d, resolution=resolution)
+    micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
     print()
     print("="*60)
     print("4. Mixed (ellipsoidal + equiaxed):")
     print("-"*60)
+    print("Starting Mixed 2D")
 
     gen = MixedGenerator(
         num_grains=num_grains,
@@ -145,12 +173,14 @@ def main():
         base_size=10.0,
         seed=seed
     )
-    fig, elapsed = generate_and_visualize_2d(gen, micro_2d, "Mixed (60% Ellipsoidal)", "mixed_2d")
+    fig, ax = plt.subplots()
+    Plotter.plot_grain_ids(ax, micro_2d)
     fig.savefig(output_dir / 'mixed_2d.png', dpi=150, bbox_inches='tight')
-    print(f"    2D: {elapsed:.2f}s")
+    print(f"    Mixed 2D saved to: {output_dir / 'mixed_2d.png'}")
 
     # 3D Mixed
-    micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
+    print()
+    print("Starting Mixed 3D")
     gen = MixedGenerator(
         num_grains=num_grains,
         ellipsoid_fraction=0.5,
@@ -159,17 +189,21 @@ def main():
         seed=seed,
         chunk_size=1_000_000
     )
-    fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Mixed (50% Ellipsoidal)", "mixed_3d")
+    gen.generate(micro_3d)
+    fig = plt.figure(figsize=(15,5))
+    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / 'mixed_3d.png', dpi=150, bbox_inches='tight')
-    print(f"    3D: {elapsed:.2f}s")
-    """
+    print(f"    Mixed 3D saved to: {output_dir / 'mixed_3d.png'}")
+    
     # ===========================
     # Lath
     # ===========================
+    micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
     print()
     print("="*60)
     print("5. Lath (Martensitic/Bainitic):")
     print("-"*60)
+    print("Starting Lath Pure Colony")
 
     gen = LathGenerator(
         num_grains=400,
@@ -183,17 +217,21 @@ def main():
         bw_variants=24,
         seed=seed,
         chunk_size=1_000_000
-    )
-    
-    fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Lath (30 Colonies)", "lath_3d")
+    )   
+    gen.generate(micro_3d)
+    fig = plt.figure(figsize=(15,5))
+    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / 'lath_colony.png', dpi=150, bbox_inches='tight')
-    print(f"  Pure Colony: {elapsed:.2f}s")
+    print(f"  Pure Colony saved to: {output_dir / 'lath_colony.png'}")
     
     # Get colony information
     colony_info = gen.get_colony_info()
     print(f"    Colonies: {colony_info['num_colonies']}")
     print(f"    Avg laths per colony: {len(colony_info['colony_ids']) / colony_info['num_colonies']:.1f}")
     
+    print()
+    print("Starting Lath Pure Basketweave")
+    micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
     gen = LathGenerator(
         num_grains=400,
         num_colonies=25,
@@ -207,15 +245,20 @@ def main():
         seed=seed,
         chunk_size=1_000_000
     )
-    fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Lath (30 Colonies)", "lath_3d")
+    gen.generate(micro_3d)
+    fig = plt.figure(figsize=(15,5))
+    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / 'lath_basketweave.png', dpi=150, bbox_inches='tight')
-    print(f"  Pure Basketweave: {elapsed:.2f}s")
+    print(f"  Pure Basketweave saved to: {output_dir / 'lath_basketweave.png'}")
     
     # Get colony information
     colony_info = gen.get_colony_info()
     print(f"    Colonies: {colony_info['num_colonies']}")
     print(f"    Avg laths per colony: {len(colony_info['colony_ids']) / colony_info['num_colonies']:.1f}")
     
+    print()
+    print("Starting Lath Mixed Colony/Basketweave")
+    micro_3d = Microstructure(dimensions=dims_3d, resolution=resolution)
     gen = LathGenerator(
         num_grains=400,
         num_colonies=25,
@@ -229,9 +272,11 @@ def main():
         seed=seed,
         chunk_size=1_000_000
     )
-    fig, elapsed = generate_and_visualize_3d(gen, micro_3d, "Lath (30 Colonies)", "lath_3d")
+    gen.generate(micro_3d)
+    fig = plt.figure(figsize=(15,5))
+    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / 'lath_mixed.png', dpi=150, bbox_inches='tight')
-    print(f"  Mixed Basketweave/Colony: {elapsed:.2f}s")
+    print(f"  Mixed Basketweave/Colony saved to: {output_dir / 'lath_mixed.png'}")
     
     # Get colony information
     colony_info = gen.get_colony_info()
@@ -243,50 +288,6 @@ def main():
     print("="*60)
     
     plt.show()
-
-
-"""
-Helper functions
-"""
-def generate_and_visualize_2d(generator, micro, title, filename):
-    """Helper function to generate and visualize 2D microstructure"""
-    start = time.time()
-    generator.generate(micro)
-    elapsed = time.time() - start
-    
-    plt.figure(figsize=(6,6))
-    plt.imshow(micro.grain_ids, cmap='nipy_spectral', origin='lower')
-    plt.colorbar(label='Grain ID')
-    plt.title(f'{title} (2D)\n{micro.num_grains} grains')
-    
-    return plt.gcf(), elapsed
-    
-def generate_and_visualize_3d(generator, micro, title, filename):
-    """Helper function to generate and visualize 3D microstructure"""
-    start = time.time()
-    generator.generate(micro)
-    elapsed = time.time() - start
-    
-    fig, axes = plt.subplots(1, 3, figsize=(15,5))
-    
-    z_mid = micro.dimensions[2] // 2
-    y_mid = micro.dimensions[1] // 2
-    x_mid = micro.dimensions[0] // 2
-    
-    axes[0].imshow(micro.grain_ids[:, :, z_mid], cmap='nipy_spectral', origin='lower')
-    axes[0].set_title(f'XY Slice')
-    
-    axes[1].imshow(micro.grain_ids[:, y_mid, :], cmap='nipy_spectral', origin='lower')
-    axes[1].set_title(f'XZ Slice')
-    
-    axes[2].imshow(micro.grain_ids[x_mid, :, :], cmap='nipy_spectral', origin='lower')
-    axes[2].set_title(f'YZ Slice')
-    
-    fig.suptitle(f'{title} (3D) - {micro.num_grains} grains', 
-                 fontsize=14, y=1.02)
-    plt.tight_layout()
-    
-    return fig, elapsed
     
 if __name__ == '__main__':
     main()
