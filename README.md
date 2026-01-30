@@ -47,9 +47,9 @@ Done:
 
 
 File structure: 
-project_root/ (synth_struct)\n
-├── README.md\n
-├── src/\n
+project_root/ (synth_struct)  
+├── README.md  
+├── src/  
 │   ├── __init__.py
 │   ├── micro_utils.py # Utility functions such as getting the grains IDs from a specific region\n
 │   ├── microstructure.py # Houses the Microstructure base class\n
