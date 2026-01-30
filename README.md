@@ -46,7 +46,7 @@ Done:
 - Finished shapes example
 
 
-File structure:\n
+File structure: 
 project_root/ (synth_struct)\n
 ├── README.md\n
 ├── src/\n
