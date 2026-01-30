@@ -46,23 +46,23 @@ Done:
 - Finished shapes example
 
 
-File structure:
-project_root/ (synth_struct)
-├── README.md
-├── src/
+File structure:\n
+project_root/ (synth_struct)\n
+├── README.md\n
+├── src/\n
 │   ├── __init__.py
-│   ├── micro_utils.py # Utility functions such as getting the grains IDs from a specific region
-│   ├── microstructure.py # Houses the Microstructure base class
-│   ├── generators/
-│   │   ├── __init__.py
-│   │   ├── gen_base.py # Houses the MicrostructureGenerator base class
-│   │   ├── gen_utils.py # Utility functions
-│   │   ├── voronoi.py
-│   │   ├── ellipsoidal.py
-│   │   ├── columnar.py
-│   │   └── mixed.py
-│   ├── orientation/
-│   │   ├── __init__.py
+│   ├── micro_utils.py # Utility functions such as getting the grains IDs from a specific region\n
+│   ├── microstructure.py # Houses the Microstructure base class\n
+│   ├── generators/\n
+│   │   ├── __init__.py\n
+│   │   ├── gen_base.py # Houses the MicrostructureGenerator base class\n
+│   │   ├── gen_utils.py # Utility functions\n
+│   │   ├── voronoi.py\n
+│   │   ├── ellipsoidal.py\n
+│   │   ├── columnar.py\n
+│   │   └── mixed.py\n
+│   ├── orientation/\n
+│   │   ├── __init__.py\n
 │   │   ├── rotation_converter.py # Conversions between orientation standards (eu, quat, rotmats)
 │   │   └── texture.py # Creates a set of textures for a given microstructure or set of grains (may switch to separate files?)
 │   ├── stiffness/
