@@ -11,7 +11,7 @@ from ..rotation_converter import (
     rotation_matrix_to_quat
 )
 
-CUBIC_ORIENTATIONS = {
+CUBIC_TEXTURES = {
     'cube': np.array([0., 0., 0.]),
     'goss': np.array([0.0, np.radians(45.0), np.radians(45.0)]),
     'brass': np.array([np.radians(35.26), np.radians(45.0), 0.0]),
@@ -34,7 +34,7 @@ class CubicTexture(TextureGenerator):
     """
     
     def __init__(self, type=None, degspread=5.0, seed=None):
-        if type not in CUBIC_ORIENTATIONS:
+        if type not in CUBIC_TEXTURES:
             raise ValueError(f"Unkown cubic texture type {type}")
         self.type = type
         self.degspread = degspread
@@ -44,8 +44,8 @@ class CubicTexture(TextureGenerator):
         """
         Returns a (num_grains, 3) array of Euler angles
         """
-        n = microstructure.num_grains
-        base_orienation = CUBIC_ORIENTATIONS[self.type]
+        n = micro.num_grains
+        base_orienation = CUBIC_TEXTURES[self.type]
         
         if self.spread == 0:
             orientations = np.tile(base_orientation, (n, 1))

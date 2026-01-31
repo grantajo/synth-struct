@@ -14,6 +14,7 @@ Things to be added:
 Long term additions:
 - Add in ability to have orientation gradients within grains, subgrains and GNDs
 - Add in ability to create a mesh with the microstructure
+- See what adding in ODF textures would be like and what would be gained from it
  
 Dependencies
 - Numpy
@@ -25,7 +26,6 @@ Dependencies
 
 
 To do for branch 'change-to-nparrays'
-- Update texture capabilities
 - Update examples
   - plotting
   - get grains and change texture
@@ -37,14 +37,12 @@ To do for branch 'change-to-nparrays'
 
 
 Currently doing on 'change-to-nparrays'
-- Adding in texture capabilities
-  - Add in hexagonal, random, and custom.
-  - See what ODF texture would look like
+- Add in texture examples
+- Add in functionality to get grains in a region (masks)
 
 
 Done:
-- Added in base classes for textures
-- Added in cubic textures
+- Added in hexagonal, random, and custom texture generators
 
 
 File structure: 
