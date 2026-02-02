@@ -1,3 +1,5 @@
+# synth_struct/src/plotting/ipfcolorkeys.py
+
 import sys
 sys.path.insert(0, '../src')
 import os

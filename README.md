@@ -31,19 +31,21 @@ To do for branch 'change-to-nparrays'
   - get grains and change texture
 - Update plotting
 - Update tests
-- Update get_grain_ids in region function
-- Remove unnecessary stuff in microstructure.py
 - Update lath generator to spatially put colonies together
 
 
 Currently doing on 'change-to-nparrays'
 - Add in crytallography plotting
 - Add in IPF, pole figure, and ODF examples
+  - Figure out how to handle hexagonal directions for pole figures and ODFs
+  - Add in ability to do ODF contour plots
+  - Update ipfcolorkeys.py
 - Add in texture examples
 
 
 Done:
-- Added in functionality to get grains in a region
+- Added in basic IPF map, pole figure, and ODF plotting
+- Make sure init files are updated.
 
 
 File structure: 
