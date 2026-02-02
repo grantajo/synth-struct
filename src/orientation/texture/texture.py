@@ -47,6 +47,7 @@ class Texture:
         if not isinstance(self.symmetry, str):
             raise TypeError(f"symmetry must be a string (e.g. 'cubic' or 'hexagonal')")
             
+            
     @property
     def n_orientations(self) -> int:
         return self.orienations.shape[0]
@@ -95,7 +96,7 @@ class Texture:
         
     def copy(self) -> "Texture":
         return Texture(
-            orientations=self.orienations.copy(),
+            orientations=self.orientations.copy(),
             representation=self.representation,
             symmetry=self.symmetry,
             metadata=self.metadata.copy()

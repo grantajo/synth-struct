@@ -65,7 +65,14 @@ synth_struct/
 │   ├── orientation/  
 │   │   ├── __init__.py  
 │   │   ├── rotation_converter.py # Conversions between orientation standards (eu, quat, rotmats)  
-│   │   └── texture.py # Creates a set of textures for a given microstructure or set of grains (may switch to separate files?)  
+│   │   └── texture/  
+│   │       ├── __init__.py  
+│   │       ├── texture_base.py # Houses base TextureGenerator  
+│   │       ├── texture.py # Does this actually do anything?  
+│   │       ├── random.py  
+│   │       ├── cubic.py  
+│   │       ├── hexagonal.py  
+│   │       └── custom.py # Custom texture components  
 │   ├── stiffness/  
 │   │   ├── __init__.py  
 │   │   ├── stif_utils.py # Helper functions for stiffness rotations  

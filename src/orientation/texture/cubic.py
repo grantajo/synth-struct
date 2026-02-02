@@ -12,14 +12,14 @@ from ..rotation_converter import (
 )
 
 CUBIC_TEXTURES = {
-    'cube': np.array([0., 0., 0.]),
-    'goss': np.array([0.0, np.radians(45.0), np.radians(45.0)]),
-    'brass': np.array([np.radians(35.26), np.radians(45.0), 0.0]),
-    'copper': np.array([np.radians(90.0), np.radians(35.26), np.radians(45.0)]),
-    's': np.array([np.radians(58.98), np.radians(36.70), np.radians(63.43)]),
-    'p': np.array([np.radians(70.53), np.radians(45.0), 0.0]),
-    'rotated_cube': np.array([np.radians(45.0), 0.0, 0.0]),
-    'rotated_goss': np.array([0.0, np.radians(45.0), np.radians(45.0)])
+    'cube':         np.array([              0.0,               0.0,               0.0]),
+    'goss':         np.array([              0.0,  np.radians(45.0),  np.radians(45.0)]),
+    'brass':        np.array([np.radians(35.26),  np.radians(45.0),               0.0]),
+    'copper':       np.array([ np.radians(90.0), np.radians(35.26),  np.radians(45.0)]),
+    's':            np.array([np.radians(58.98), np.radians(36.70), np.radians(63.43)]),
+    'p':            np.array([np.radians(70.53),  np.radians(45.0),               0.0]),
+    'rotated_cube': np.array([ np.radians(45.0),               0.0,               0.0]),
+    'rotated_goss': np.array([              0.0,  np.radians(45.0),  np.radians(45.0)])
 }
 
 class CubicTexture(TextureGenerator):
