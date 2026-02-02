@@ -1,18 +1,17 @@
 # synth_struct/src/plotting/orix_plot.py
 
-import sys
-sys.path.insert(0, '../src')
-
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib_scalebar.scalebar import ScaleBar
+
 from orix.quaternion import Orientation, Symmetry
-from orix.vector import Vector3d
+from orix.vector import Vector3d, Miller
 from orix.crystal_map import CrystalMap, Phase, PhaseList
 from orix.plot import IPFColorKeyTSL
+from diffpy.structure import Lattice, Structure
 from orix import plot
 
-from rotation_converter import euler_to_quat
+from ..orientation.rotation_converter import euler_to_quat
 
 class OrixVisualizer:
     """
@@ -33,7 +32,7 @@ class OrixVisualizer:
         - microstructure: Microstructure object with orientations
         - crystal_structure: 'cubic', 'hexagonal', etc.
         
-        Returns: orix CrystalMap        
+        Returns: orix CrystalMap object        
         """
                 
         if crystal_structure.lower() in ['cubic', 'fcc', 'bcc']:
@@ -46,6 +45,7 @@ class OrixVisualizer:
             raise ValueError(f"Unknown crystal structure: {crystal_structure}")
             
         phase_list = PhaseList(phase)
+        symmetry = phase.point_group
             
         quaternions = euler_to_quat(microstructure.orientations)
         

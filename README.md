@@ -37,12 +37,13 @@ To do for branch 'change-to-nparrays'
 
 
 Currently doing on 'change-to-nparrays'
+- Add in crytallography plotting
+- Add in IPF, pole figure, and ODF examples
 - Add in texture examples
-- Add in functionality to get grains in a region (masks)
 
 
 Done:
-- Added in hexagonal, random, and custom texture generators
+- Added in functionality to get grains in a region
 
 
 File structure: 
@@ -71,8 +72,10 @@ synth_struct/
 │   │   ├── __init__.py  
 │   │   ├── plot_utils.py # Helper functions for plotting  
 │   │   ├── gen_plot.py # General plotting functions (Grain IDs, etc.)  
-│   │   ├── orix_plot.py # Plotting using orix for IPFs, Pole figures, ODFs, etc.  
-│   │   └── ipfcolorkeys.py # Functions to plot the series of IPF color keys from orix  
+│   │   ├── ipf_maps.py # # IPF color maps  
+│   │   ├── pole_figures.py # Pole figures  
+│   │   ├── odf_plots.py # Orientation distribution functions
+│   │   └── ipfcolorkeys.py # IPF color key plotting
 │   └── io/  
 │       ├── __init__.py  
 │       ├── write_utils.py # Helper functions for outputting files  
