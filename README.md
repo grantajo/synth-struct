@@ -35,6 +35,9 @@ To do for branch 'change-to-nparrays'
 
 
 Currently doing on 'change-to-nparrays'
+- Creating test files
+  - generators (ellipsoidal, columnar, mixed, lath)
+  - orientations (rotation_converter, textures)
 - Add in crytallography plotting
 - Add in IPF, pole figure, and ODF examples
   - Figure out how to handle hexagonal directions for pole figures and ODFs
@@ -44,8 +47,7 @@ Currently doing on 'change-to-nparrays'
 
 
 Done:
-- Added in basic IPF map, pole figure, and ODF plotting
-- Make sure init files are updated.
+- Added in some basic tests for microstructure, micro_utils, and voronoi generator
 
 
 File structure: 

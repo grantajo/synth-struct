@@ -1,45 +1,113 @@
 # synth_struct/tests/test_microstructure.py
 
-import sys
-sys.path.insert(0, '../src')
-
+import pytest
 import numpy as np
-import unittest
-from microstructure import Microstructure
-from texture import Texture
 
-class TestGrainMasks(unittest.TestCase):
+from src.microstructure import Microstructure
 
-    def test_get_grains_in_box_region(self):
-        """Test getting grains in a box region"""
-        micro = Microstructure(dimensions=(50, 50, 50), resolution=1.0)
-        micro.gen_voronoi(num_grains=50, seed=42)
-        
-        grains = micro.get_grains_in_region('box', x_min=10, x_max=40, y_min=10, y_max=40, z_min=10, z_max=40)
-        
-        self.assertIsInstance(grains, list)
-        self.assertGreater(len(grains), 0)
-        self.assertNotIn(0, grains)  # No background grain
 
-    def test_get_grains_in_sphere_region(self):
-        """Test getting grains in a spherical region"""
-        micro = Microstructure(dimensions=(50, 50, 50), resolution=1.0)
-        micro.gen_voronoi(num_grains=50, seed=42)
+class TestMicrostructure:
+    def test_initialization_2d(self):
+        """Test 2D microstructure initialization"""
+        micro = Microstructure(dimensions=(50,50), resolution=1.0)
         
-        grains = micro.get_grains_in_region('sphere', center=[25, 25, 25], radius=15)
+        assert micro.dimensions == (50,50)
+        assert micro.resolution == (1.0)
+        assert micro.units == 'micron'
         
-        self.assertGreater(len(grains), 0)
-        self.assertLess(len(grains), 50)  # Should be subset
-
-    def test_get_grains_entire_microstructure(self):
-        """Test that full box returns all grains"""
-        micro = Microstructure(dimensions=(20, 20, 20), resolution=1.0)
-        micro.gen_voronoi(num_grains=30, seed=45)
+        assert micro.grain_ids.shape == (50,50)
+        assert micro.grain_ids.dtype == np.int32
+        assert np.all(micro.grain_ids == 0) # background initially
         
-        grains = micro.get_grains_in_region('box')  # No limits = entire volume
-        get_grains = micro.get_num_grains()
+    def test_initialization_3d(self):
+        """Test 3D microstructure initialization"""
+        micro = Microstructure(dimensions=(25,25,25), resolution=1.0, units='mm')
         
-        self.assertEqual(len(grains), micro.get_num_grains())
+        assert micro.dimensions == (25,25,25)
+        assert micro.resolution == 1.0
+        assert micro.units == 'mm'
+        
+        assert micro.grain_ids.shape == (25,25,25)
+        assert micro.grain_ids.dtype == np.int32
+        
+    def test_num_grains_empty(self):
+        """Test num_grains for an empty microstructure"""
+        micro = Microstructure(dimensions=(25,25), resolution=1.0)
+        micro.grain_ids[2:5, 2:5] = 1
+        micro.grain_ids[8:13, 8:13] = 2
+        
+        assert micro.num_grains == 2
+        assert micro.get_num_grains() == 2
+        
+    def test_attach_and_get_field(self):
+        """Test attaching and retrieving fields"""
+        micro = Microstructure(dimensions=(25,25), resolution=1.0)
+        
+        #Create simple field
+        orientations = np.random.rand(10, 10, 3)
+        
+        # Attach field
+        micro.attach_field('orientations', orientations)
+        
+        # Retrieve field
+        retrieved_field = micro.get_field('orientations')
+        
+        # Check field retrieval
+        np.testing.assert_array_equal(orientations, retrieved_field)
+        
+    def test_multiple_fields(self):
+        """Test attaching multiple fields"""
+        micro = Microstructure(dimensions=(10, 10), resolution=1.0)
+        
+        # Attach multiple fields
+        orientations = np.random.rand(10, 10, 3)
+        stiffness = np.random.rand(10, 10, 6, 6)
+        
+        micro.attach_field('orientations', orientations)
+        micro.attach_field('stiffness', stiffness)
+        
+        # Check both fields can be retrieved
+        assert 'orientations' in micro.fields
+        assert 'stiffness' in micro.fields
+        
+        np.testing.assert_array_equal(
+            micro.get_field('orientations'), 
+            orientations
+        )
+        np.testing.assert_array_equal(
+            micro.get_field('stiffness'), 
+            stiffness
+        )
     
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
+    def test_invalid_field_retrieval(self):
+        """Test retrieving a non-existent field"""
+        micro = Microstructure(dimensions=(10, 10), resolution=1.0)
+        
+        with pytest.raises(KeyError):
+            micro.get_field('non_existent_field')
+    
+    @pytest.mark.parametrize("dims", [
+        (10, 10),       # 2D
+        (10, 10, 10),   # 3D
+        (5, 5),         # Small 2D
+        (20, 20, 20)    # Large 3D
+    ])
+    
+    def test_dimension_variations(self, dims):
+        """Test microstructure initialization with different dimension sizes"""
+        micro = Microstructure(dimensions=dims, resolution=0.1)
+        
+        assert micro.dimensions == dims
+        assert micro.grain_ids.shape == dims
+    
+    def test_metadata(self):
+        """Test metadata functionality"""
+        micro = Microstructure(dimensions=(10, 10), resolution=1.0)
+        
+        # Add metadata
+        micro.metadata['sample_id'] = 'test_sample'
+        micro.metadata['creation_date'] = '2024-02-02'
+        
+        # Check metadata
+        assert micro.metadata['sample_id'] == 'test_sample'
+        assert micro.metadata['creation_date'] == '2024-02-02'

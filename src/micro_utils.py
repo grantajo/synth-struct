@@ -73,7 +73,7 @@ def get_grains_in_region(micro, region_type: str = 'box', **kwargs) -> np.ndarra
     
     else:
         raise ValueError(
-            f"Unkown region_type: '{region_type}'."
+            f"Unknown region_type: '{region_type}'. "
             f"Available types: 'box', 'sphere', 'cylinder', 'custom_mask'"
         )
         
@@ -81,9 +81,9 @@ def get_grains_in_region(micro, region_type: str = 'box', **kwargs) -> np.ndarra
     grains_in_region = np.unique(micro.grain_ids[mask])
     
     # Remove background
-    grains_in_region = grains_in_region[grain_in_region > 0]
+    grains_in_region = grains_in_region[grains_in_region > 0]
     
-    return grain_in_region
+    return grains_in_region
     
 def _create_box_mask(
     micro,
@@ -144,7 +144,7 @@ def _create_sphere_mask(
     radius: Optional[float] = None
 ) -> np.ndarray:
     """
-    Create a spherical (or circular in 2D boolean mask.
+    Create a spherical (or circular in 2D) boolean mask.
     
     Args:
     - micro: Microstructure instance
@@ -156,7 +156,7 @@ def _create_sphere_mask(
     """
     
     if radius is None:
-        raise ValueError("'radius parameter is required for shpere region type")
+        raise ValueError("'radius' parameter is required for sphere region type")
         
     ndim = len(micro.dimensions)
     
@@ -231,7 +231,7 @@ def _create_cylinder_mask(
         axis = axis.lower()
     
     if radius is None:
-        raise ValueError("'radius parameter is required for cylinder region type") 
+        raise ValueError("'radius' parameter is required for cylinder region type") 
         
     if len(micro.dimensions) != 3:
         raise ValueError("Cylinder region only supported for 3D microstructures")
