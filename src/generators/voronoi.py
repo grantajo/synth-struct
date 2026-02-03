@@ -48,7 +48,6 @@ class VoronoiGenerator(MicrostructureGenerator):
         
         # Number of dimensions
         ndim = len(micro.dimensions)
-        micro.num_grains = self.num_grains
         
         # Generate random seed points
         self.seeds = get_seed_coordinates(self.num_grains, micro.dimensions, self.seed)
