@@ -2,8 +2,8 @@
 
 import numpy as np
 import pytest
-from src.microstructure import Microstructure
-from src.generators.columnar import ColumnarGenerator
+from synth_struct.microstructure import Microstructure
+from synth_struct.generators.columnar import ColumnarGenerator
 
 class TestColumnarGenerator:
     

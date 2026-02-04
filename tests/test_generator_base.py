@@ -2,9 +2,9 @@
 
 import numpy as np
 import pytest
-from src.microstructure import Microstructure
-from src.generators.gen_base import MicrostructureGenerator
-from src.generators.gen_utils import get_seed_coordinates, aniso_voronoi_assignment
+from synth_struct.microstructure import Microstructure
+from synth_struct.generators.gen_base import MicrostructureGenerator
+from synth_struct.generators.gen_utils import get_seed_coordinates, aniso_voronoi_assignment
 
 class DummyGenerator(MicrostructureGenerator):
     """

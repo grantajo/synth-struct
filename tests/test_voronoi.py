@@ -3,9 +3,9 @@
 import pytest
 import numpy as np
 
-from src.microstructure import Microstructure
-from src.generators.gen_utils import get_seed_coordinates
-from src.generators.voronoi import VoronoiGenerator
+from synth_struct.microstructure import Microstructure
+from synth_struct.generators.gen_utils import get_seed_coordinates
+from synth_struct.generators.voronoi import VoronoiGenerator
 
 class TestVoronoiGeneratorInitialization:
     """Test suite for VoronoiGenerator initialization"""

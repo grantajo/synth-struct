@@ -2,8 +2,8 @@
 
 import numpy as np
 import pytest
-from src.microstructure import Microstructure
-from src.generators.mixed import MixedGenerator
+from synth_struct.microstructure import Microstructure
+from synth_struct.generators.mixed import MixedGenerator
 
 
 class TestMixedGenerator:

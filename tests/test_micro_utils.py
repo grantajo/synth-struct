@@ -3,8 +3,8 @@
 import pytest
 import numpy as np
 
-from src.microstructure import Microstructure
-from src.micro_utils import (
+from synth_struct.microstructure import Microstructure
+from synth_struct.micro_utils import (
     get_grains_in_region,
     _create_box_mask,
     _create_sphere_mask,

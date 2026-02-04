@@ -7,8 +7,8 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.microstructure import Microstructure
-from src.generators.voronoi import VoronoiGenerator
+from synth_struct.microstructure import Microstructure
+from synth_struct.generators.voronoi import VoronoiGenerator
 
 import matplotlib.pyplot as plt
 

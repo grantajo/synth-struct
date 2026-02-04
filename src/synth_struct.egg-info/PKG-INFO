@@ -1,3 +1,11 @@
+Metadata-Version: 2.4
+Name: synth_struct
+Version: 0.0.1
+Summary: Synthetic microstructure generation
+Author-email: Grant Johnson <grantajohnson1@gmail.com>
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+
 This is a microstructure generator that outputs an HDF5 file with the grain structure and the orientations.
 
 Things to be added:

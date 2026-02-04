@@ -2,9 +2,9 @@
 
 import numpy as np
 import pytest
-from src.microstructure import Microstructure
-from src.generators.ellipsoidal import EllipsoidalGenerator
-from src.orientation.rotation_converter import (
+from synth_struct.microstructure import Microstructure
+from synth_struct.generators.ellipsoidal import EllipsoidalGenerator
+from synth_struct.orientation.rotation_converter import (
     rotation_z_to_x, rotation_z_to_y, euler_to_rotation_matrix, create_rotation_matrix_2d
 )
 

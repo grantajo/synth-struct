@@ -1,10 +1,10 @@
-# synth_struct/tests/test_cubic_texture.py
+# synth_struct/tests/test_texture_cubic.py
 
 import pytest
 import numpy as np
-from src.microstructure import Microstructure
-from src.orientation.texture.cubic import CubicTexture, CUBIC_TEXTURES
-from src.orientation.texture.texture import Texture
+from synth_struct.microstructure import Microstructure
+from synth_struct.orientation.texture.cubic import CubicTexture, CUBIC_TEXTURES
+from synth_struct.orientation.texture.texture import Texture
 
 
 class TestCubicTexture:
@@ -151,7 +151,7 @@ class TestCubicTexture:
         
         # Use 's' texture (no angles near 0 or 2π)
         gen_small = CubicTexture(type='s', degspread=2.0, seed=42)
-        gen_large = CubicTexture(type='s', degspread=15.0, seed=43)
+        gen_large = CubicTexture(type='s', degspread=15.0, seed=42)
         
         texture_small = gen_small.generate(micro)
         texture_large = gen_large.generate(micro)

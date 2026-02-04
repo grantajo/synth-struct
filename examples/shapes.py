@@ -7,13 +7,13 @@ from pathlib import Path
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
 
-from src.microstructure import Microstructure
-from src.generators.voronoi import VoronoiGenerator
-from src.generators.ellipsoidal import EllipsoidalGenerator
-from src.generators.columnar import ColumnarGenerator
-from src.generators.mixed import MixedGenerator
-from src.generators.lath import LathGenerator
-from src.plotting.gen_plot import Plotter 
+from synth_struct.microstructure import Microstructure
+from synth_struct.generators.voronoi import VoronoiGenerator
+from synth_struct.generators.ellipsoidal import EllipsoidalGenerator
+from synth_struct.generators.columnar import ColumnarGenerator
+from synth_struct.generators.mixed import MixedGenerator
+from synth_struct.generators.lath import LathGenerator
+from synth_struct.plotting.gen_plot import Plotter 
 
 import matplotlib.pyplot as plt
 import numpy as np

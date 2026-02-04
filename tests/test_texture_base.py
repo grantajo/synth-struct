@@ -2,9 +2,9 @@
 
 import pytest
 import numpy as np
-from src.orientation.texture.texture_base import TextureGenerator
-from src.orientation.texture.texture import Texture
-from src.microstructure import Microstructure
+from synth_struct.orientation.texture.texture_base import TextureGenerator
+from synth_struct.orientation.texture.texture import Texture
+from synth_struct.microstructure import Microstructure
 
 
 class ConcreteTextureGenerator(TextureGenerator):

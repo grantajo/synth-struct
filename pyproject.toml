@@ -1,0 +1,20 @@
+# synth_struct/pyproject.toml
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "synth_struct"
+version = "0.0.1"
+description = "Synthetic microstructure generation"
+authors = [{name="Grant Johnson", email="grantajohnson1@gmail.com"}]
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+

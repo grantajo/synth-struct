@@ -3,7 +3,7 @@
 import pytest
 import numpy as np
 
-from src.microstructure import Microstructure
+from synth_struct.microstructure import Microstructure
 
 
 class TestMicrostructure:

@@ -2,7 +2,7 @@
 
 import numpy as np
 import pytest
-from src.orientation.texture.texture import Texture
+from synth_struct.orientation.texture.texture import Texture
 
 
 class TestTexture:
@@ -203,7 +203,7 @@ class TestTexture:
             
     def test_quat_to_euler_conversion(self):
         """Test conversion from quaternion to Euler"""
-        from src.orientation.rotation_converter import euler_to_quat
+        from synth_struct.orientation.rotation_converter import euler_to_quat
         
         original_euler = np.random.rand(5, 3) * 2 * np.pi
         orientations = euler_to_quat(original_euler)
@@ -320,7 +320,7 @@ class TestTexture:
         
     def test_round_trip_conversion_euler_quat(self):
         """Test round-trip conversion Euler -> Quat -> Euler"""
-        from src.orientation.rotation_converter import normalize_angle, euler_to_rotation_matrix
+        from synth_struct.orientation.rotation_converter import normalize_angle, euler_to_rotation_matrix
         
         original = np.random.rand(5, 3) * 2 * np.pi
         texture = Texture(
@@ -341,7 +341,7 @@ class TestTexture:
         
     def test_round_trip_conversion_euler_rotmat(self):
         """Test round-trip conversion Euler -> RotMat -> Euler"""
-        from src.orientation.rotation_converter import normalize_angle, euler_to_rotation_matrix
+        from synth_struct.orientation.rotation_converter import normalize_angle, euler_to_rotation_matrix
         
         original = np.random.rand(5, 3) * 2 * np.pi
         texture = Texture(

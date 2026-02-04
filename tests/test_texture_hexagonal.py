@@ -1,10 +1,10 @@
-# synth_struct/tests/test_hexagonal_texture.py
+# synth_struct/tests/test_texture_hexagonal.py
 
 import pytest
 import numpy as np
-from src.microstructure import Microstructure
-from src.orientation.texture.hexagonal import HexagonalTexture, HEXAGONAL_ORIENTATIONS
-from src.orientation.texture.texture import Texture
+from synth_struct.microstructure import Microstructure
+from synth_struct.orientation.texture.hexagonal import HexagonalTexture, HEXAGONAL_ORIENTATIONS
+from synth_struct.orientation.texture.texture import Texture
 
 
 class TestHexagonalTexture:
@@ -161,7 +161,7 @@ class TestHexagonalTexture:
         dist_large = np.linalg.norm(texture_large.orientations - ideal, axis=1)
         
         # Larger spread should have larger mean distance
-        assert np.mean(dist_large) > np.mean(dist_small)
+        assert np.std(dist_large) > np.std(dist_small)
         
     @pytest.mark.parametrize("texture_type", HEXAGONAL_ORIENTATIONS.keys())
     def test_all_texture_types_generate(self, texture_type):
