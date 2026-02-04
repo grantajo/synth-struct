@@ -28,20 +28,35 @@ class HexagonalTexture(TextureGenerator):
     """
     
     def __init__(self, type=None, degspread=5.0, seed=None):
-        if type not in HEXAGONAL_TEXTURES:
-            raise ValueError(f"Unkown hexagonal texture type {type}")
+        if type not in HEXAGONAL_ORIENTATIONS:
+            raise ValueError(f"Unknown hexagonal texture type {type}")
         self.type = type
         self.degspread = degspread
         self.seed = seed
+        
+    def generate(self, micro):
+        """Generate a Texture for the given microstructure."""
+        if self.seed is not None:
+            np.random.seed(self.seed)
+            
+        from .texture import Texture
+        
+        orientations = self._generate_orientations(micro)
+        
+        return Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='hexagonal'
+        )
         
     def _generate_orientations(self, micro):
         """
         Returns a (num_grains, 3) array of Euler angles
         """
         n = micro.num_grains
-        base_orienation = HEXAGONAL_TEXTURES[self.type]
+        base_orientation = HEXAGONAL_ORIENTATIONS[self.type]
         
-        if self.spread == 0:
+        if self.degspread == 0:
             orientations = np.tile(base_orientation, (n, 1))
         else:
             orientations = np.random.normal(
@@ -53,3 +68,5 @@ class HexagonalTexture(TextureGenerator):
         orientations = orientations % (2*np.pi)
         
         return orientations
+        
+        

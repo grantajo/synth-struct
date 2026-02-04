@@ -96,11 +96,11 @@ class EllipsoidalGenerator(MicrostructureGenerator):
                 
                 if self.orientation == 'random':
                     angles = np.random.uniform(0, 2*np.pi, 3)
-                    R = self._euler_to_rotation_matrix_3d(angles)
+                    R = euler_to_rotation_matrix(angles)
                 elif self.orientation == 'x':
-                    R = self._rotation_z_to_x()
+                    R = rotation_z_to_x()
                 elif self.orientation == 'y':
-                    R = self._rotation_z_to_y()
+                    R = rotation_z_to_y()
                 elif self.orientation == 'z':
                     R = np.eye(3)
                 else:
@@ -115,11 +115,11 @@ class EllipsoidalGenerator(MicrostructureGenerator):
                 
                 if self.orientation == 'random':
                     angle = np.random.uniform(0, 2*np.pi)
-                    R = self._rotation_matrix_2d(angle)
+                    R = create_rotation_matrix_2d(angle)
                 elif self.orientation == 'x':
-                    R = self._rotation_matrix_2d(0)
+                    R = create_rotation_matrix_2d(0)
                 elif self.orientation == 'y':
-                    R = self._rotation_matrix_2d(np.pi/2)
+                    R = create_rotation_matrix_2d(np.pi/2)
                 else:
                     R = np.eye(2)
                     

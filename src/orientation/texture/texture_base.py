@@ -25,3 +25,5 @@ class TextureGenerator(ABC):
         """
         
         raise NotImplementedError
+        
+        

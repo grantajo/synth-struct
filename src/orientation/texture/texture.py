@@ -28,7 +28,7 @@ class Texture:
     orientations: np.ndarray
     representation: str
     symmetry: str
-    metadata: Dict = field(default_factor=dict)
+    metadata: Dict = field(default_factory=dict)
     
     def __post_init__(self):
         self._validate()
@@ -38,7 +38,7 @@ class Texture:
             raise TypeError("Orientations must be a NumPy array")
             
         if self.orientations.ndim < 2:
-            raise ValueError("Orienations must have shape (n, ...) where n is number of grains")
+            raise ValueError("Orientations must have shape (n, ...) where n is number of grains")
             
         if self.representation not in {"euler", "quat", "rotmat"}:
             raise ValueError(f"Unknown representation '{self.representation}'. "
@@ -50,7 +50,7 @@ class Texture:
             
     @property
     def n_orientations(self) -> int:
-        return self.orienations.shape[0]
+        return self.orientations.shape[0]
         
     
     def to_representation(self, representation: str) -> "Texture":
@@ -85,7 +85,7 @@ class Texture:
         
         else:
             raise ValueError(f"Conversion from '{self.representation}' to "
-                             f"'{representation}' not supported."
+                             f"'{representation}' not supported.")
                              
         return Texture(
             orientations=new_orientations,
@@ -108,7 +108,7 @@ class Texture:
         """
         
         return Texture(
-            orientations=self.orienations[indices],
+            orientations=self.orientations[indices],
             representation=self.representation,
             symmetry=self.symmetry,
             metadata=self.metadata.copy()

@@ -35,19 +35,35 @@ class CubicTexture(TextureGenerator):
     
     def __init__(self, type=None, degspread=5.0, seed=None):
         if type not in CUBIC_TEXTURES:
-            raise ValueError(f"Unkown cubic texture type {type}")
+            raise ValueError(f"Unknown cubic texture type {type}")
         self.type = type
         self.degspread = degspread
         self.seed = seed
+        
+    def generate(self, micro):
+        """Generate a Texture for the given microstructure."""
+        if self.seed:
+            np.random.seed(self.seed)
+            
+        from .texture import Texture
+        
+        orientations = self._generate_orientations(micro)
+        
+        return Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic'
+        )
+        
         
     def _generate_orientations(self, micro):
         """
         Returns a (num_grains, 3) array of Euler angles
         """
         n = micro.num_grains
-        base_orienation = CUBIC_TEXTURES[self.type]
+        base_orientation = CUBIC_TEXTURES[self.type]
         
-        if self.spread == 0:
+        if self.degspread == 0:
             orientations = np.tile(base_orientation, (n, 1))
         else:
             orientations = np.random.normal(

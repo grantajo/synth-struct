@@ -61,8 +61,6 @@ class ColumnarGenerator(MicrostructureGenerator):
         if ndim != 3:
             raise ValueError("Columnar grains only supported for 3D microstructures")
         
-        micro.num_grains = self.num_grains
-        
         # Generate random seed points
         self.seeds = get_seed_coordinates(self.num_grains, micro.dimensions, self.seed)
         

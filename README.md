@@ -36,8 +36,7 @@ To do for branch 'change-to-nparrays'
 
 Currently doing on 'change-to-nparrays'
 - Creating test files
-  - generators (ellipsoidal, columnar, mixed, lath)
-  - orientations (rotation_converter, textures)
+  - finish texture generators
 - Add in crytallography plotting
 - Add in IPF, pole figure, and ODF examples
   - Figure out how to handle hexagonal directions for pole figures and ODFs
@@ -47,7 +46,9 @@ Currently doing on 'change-to-nparrays'
 
 
 Done:
-- Added in some basic tests for microstructure, micro_utils, and voronoi generator
+- Added tests for generator basics
+- Added tests for texture basics
+  - Added tests for cubic and hexagonal (one test not passing still)
 
 
 File structure: 
@@ -85,7 +86,7 @@ synth_struct/
 │   │   ├── gen_plot.py # General plotting functions (Grain IDs, etc.)  
 │   │   ├── ipf_maps.py # # IPF color maps  
 │   │   ├── pole_figures.py # Pole figures  
-│   │   ├── odf_plots.py # Orientation distribution functions
+│   │   ├── odf_plots.py # Orientation distribution functions  
 │   │   └── ipfcolorkeys.py # IPF color key plotting
 │   └── io/  
 │       ├── __init__.py  
@@ -101,6 +102,7 @@ synth_struct/
 ├── tests/  
 │   ├── __init__.py  
 │   ├── test_microstructure.py  
+│   ├── test_micro_utils.py
 │   ├── test_rotations.py  
 │   ├── test_stiffness.py  
 │   ├── test_texture.py  

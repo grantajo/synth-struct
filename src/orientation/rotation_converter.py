@@ -37,6 +37,9 @@ def euler_to_quat(euler_angles):
     if single_input:
         euler_angles = euler_angles[np.newaxis, :]
         
+    N = len(euler_angles)
+    quat = np.zeros((N, 4))
+        
     phi1 = euler_angles[:, 0]
     Phi =  euler_angles[:, 1]
     phi2 = euler_angles[:, 2]
@@ -116,9 +119,12 @@ def quat_to_euler(quats):
     if single_input:
         quats = quats[np.newaxis, :]
         
+    N = len(quats)
+        
     # Normalize quaternions
     norm = np.linalg.norm(quats, axis=1, keepdims=True)
     quats = quats / norm
+    
     
     q0 = quats[:, 0]
     q1 = quats[:, 1]
@@ -129,6 +135,8 @@ def quat_to_euler(quats):
     q12 = q1**2 + q2**2
     chi = np.sqrt(q03*q12)
     
+    euler_angles = np.zeros((N, 3))    
+        
     # Case 1: chi == 0 and q12 == 0:
     mask1 = (chi == 0) & (q12 == 0)
     euler_angles[mask1, 0] = np.arctan2(-2*q0[mask1]*q3[mask1], q0[mask1]**2 - q3[mask1]**2)
@@ -143,10 +151,10 @@ def quat_to_euler(quats):
     
     # Case 3: General case
     mask3 = ~mask1 & ~mask2
-    euler_angles[mask2, 0] = np.arctan2(( q1[mask3]*q3[mask3] - q0[mask3]*q2[mask3]) / chi[mask3], 
+    euler_angles[mask3, 0] = np.arctan2(( q1[mask3]*q3[mask3] - q0[mask3]*q2[mask3]) / chi[mask3], 
                                         (-q0[mask3]*q1[mask3] - q2[mask3]*q3[mask3]) / chi[mask3])
-    euler_angles[mask2, 1] = np.arctan2(2*chi[mask3], q03[mask3] - q12[mask3])
-    euler_angles[mask2, 2] = np.arctan2((q0[mask3]*q2[mask3] + q1[mask3]*q3[mask3]) / chi[mask3], 
+    euler_angles[mask3, 1] = np.arctan2(2*chi[mask3], q03[mask3] - q12[mask3])
+    euler_angles[mask3, 2] = np.arctan2((q0[mask3]*q2[mask3] + q1[mask3]*q3[mask3]) / chi[mask3], 
                                         (q2[mask3]*q3[mask3] - q0[mask3]*q1[mask3]) / chi[mask3])
     
     # Normalize Euler angles

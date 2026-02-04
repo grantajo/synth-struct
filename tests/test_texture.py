@@ -1,425 +1,397 @@
 # synth_struct/tests/test_texture.py
 
-import sys
-sys.path.insert(0, '../src')
-
 import numpy as np
-import unittest
-from microstructure import Microstructure
-from texture import Texture
+import pytest
+from src.orientation.texture.texture import Texture
 
 
-class TestApplyTextureToRegion(unittest.TestCase):
+class TestTexture:
     
-    def setUp(self):
-        """Set up test microstructure"""
-        self.micro = Microstructure(dimensions=(20, 20, 20), resolution=1.0)
-        self.micro.gen_voronoi(num_grains=50, seed=42)
-        self.micro.orientations = Texture.random_orientations(50, seed=42)
-        
-        # Store original orientations for comparison
-        self.original_orientations = {k: v.copy() for k, v in self.micro.orientations.items()}
-    
-    # ============ Test Basic Functionality ============
-    def test_apply_to_entire_microstructure(self):
-        """Test applying texture to entire microstructure (region_grain_ids=None)"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            region_grain_ids=None,
-            texture_type='cube',
-            degspread=10
+    def test_initialization_euler(self):
+        """Test Texture initialization with Euler angles"""
+        orientations = np.random.rand(10, 3) * 2 * np.pi
+        texture = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic'
         )
         
-        # All grains should be modified
-        self.assertEqual(len(orientations), len(self.micro.orientations))
+        assert texture.representation == 'euler'
+        assert texture.symmetry == 'cubic'
+        assert texture.n_orientations == 10
+        np.testing.assert_array_equal(texture.orientations, orientations)
         
-        # Check that orientations changed
-        changed = sum(1 for gid in orientations.keys() 
-                     if not np.allclose(orientations[gid], self.original_orientations[gid]))
-        self.assertGreater(changed, 0)
-    
-    def test_apply_to_specific_region(self):
-        """Test applying texture to specific grains only"""
-        # Select first 10 grains
-        region_grains = list(self.micro.orientations.keys())[:10]
+    def test_initialization_quat(self):
+        """Test Texture initialization with quaternions"""
+        orientations = np.random.rand(10, 4)
+        orientations = orientations / np.linalg.norm(orientations, axis=1, keepdims=True)
         
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            region_grain_ids=region_grains,
-            texture_type='brass',
-            degspread=15
+        texture = Texture(
+            orientations=orientations,
+            representation='quat',
+            symmetry='hexagonal'
         )
         
-        # Only region grains should change
-        for gid in region_grains:
-            self.assertFalse(np.allclose(orientations[gid], self.original_orientations[gid]))
+        assert texture.representation == 'quat'
+        assert texture.symmetry == 'hexagonal'
+        assert texture.n_orientations == 10
         
-        # Grains outside region should remain unchanged
-        for gid in list(self.micro.orientations.keys())[10:]:
-            np.testing.assert_array_almost_equal(
-                orientations[gid], 
-                self.original_orientations[gid]
-            )
-    
-    def test_empty_region(self):
-        """Test with empty region list"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            region_grain_ids=[],
-            texture_type='cube',
-            degspread=10
+    def test_initialization_rotmat(self):
+        """Test Texture initialization with rotation matrices"""
+        orientations = np.array([np.eye(3) for _ in range(10)])
+        
+        texture = Texture(
+            orientations=orientations,
+            representation='rotmat',
+            symmetry='cubic'
         )
         
-        # No orientations should change
-        for gid in orientations.keys():
-            np.testing.assert_array_almost_equal(
-                orientations[gid],
-                self.original_orientations[gid]
-            )
-    
-    # ============ Test All Texture Types ============
-    def test_cube_texture(self):
-        """Test cube texture {001}<100>"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='cube',
-            degspread=5
+        assert texture.representation == 'rotmat'
+        assert texture.symmetry == 'cubic'
+        assert texture.n_orientations == 10
+        
+    def test_initialization_with_metadata(self):
+        """Test Texture initialization with metadata"""
+        orientations = np.random.rand(5, 3)
+        metadata = {'source': 'EBSD', 'sample_id': 'S001'}
+        
+        texture = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic',
+            metadata=metadata
         )
         
-        # Check that orientations are near [0, 0, 0]
-        mean_orientation = np.array([0.0, 0.0, 0.0])
-        for gid, angles in orientations.items():
-            deviation = np.linalg.norm(angles - mean_orientation)
-            self.assertLess(deviation, np.radians(20))  # Within reasonable spread
-    
-    def test_goss_texture(self):
-        """Test Goss texture {011}<100>"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='goss',
-            degspread=5
-        )
+        assert texture.metadata == metadata
+        assert texture.metadata['source'] == 'EBSD'
         
-        # Check Phi is near 45 degrees
-        for gid, angles in orientations.items():
-            self.assertAlmostEqual(angles[1], np.radians(45), delta=np.radians(20))
-    
-    def test_brass_texture(self):
-        """Test brass texture {011}<211>"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='brass',
-            degspread=5
-        )
-        
-        mean_orientation = np.array([np.radians(35.26), np.radians(45), 0.0])
-        for gid, angles in orientations.items():
-            deviation = np.linalg.norm(angles - mean_orientation)
-            self.assertLess(deviation, np.radians(20))
-    
-    def test_copper_texture(self):
-        """Test copper texture {112}<111>"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='copper',
-            degspread=5
-        )
-        
-        # Check orientation components
-        for gid, angles in orientations.items():
-            self.assertAlmostEqual(angles[0], np.radians(90), delta=np.radians(20))
-            self.assertAlmostEqual(angles[1], np.radians(35.26), delta=np.radians(20))
-    
-    def test_s_texture(self):
-        """Test S texture {123}<634>"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='s',
-            degspread=5
-        )
-        
-        mean_orientation = np.array([np.radians(58.98), np.radians(36.70), np.radians(63.43)])
-        for gid, angles in orientations.items():
-            deviation = np.linalg.norm(angles - mean_orientation)
-            self.assertLess(deviation, np.radians(20))
-    
-    def test_rotated_cube_texture(self):
-        """Test rotated cube texture {001}<110>"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='rotated_cube',
-            degspread=5
-        )
-        
-        for gid, angles in orientations.items():
-            self.assertAlmostEqual(angles[0], np.radians(45), delta=np.radians(20))
-    
-    def test_rotated_goss_texture(self):
-        """Test rotated Goss texture {011}<011>"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='rotated_goss',
-            degspread=5
-        )
-        
-        for gid, angles in orientations.items():
-            self.assertAlmostEqual(angles[1], np.radians(45), delta=np.radians(20))
-            self.assertAlmostEqual(angles[2], np.radians(45), delta=np.radians(20))
-    
-    def test_p_texture(self):
-        """Test P texture {011}<122>"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='p',
-            degspread=5
-        )
-        
-        for gid, angles in orientations.items():
-            self.assertAlmostEqual(angles[0], np.radians(70.53), delta=np.radians(20))
-    
-    def test_basal_texture(self):
-        """Test basal texture (HCP)"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='basal',
-            degspread=5
-        )
-        
-        mean_orientation = np.array([0.0, 0.0, 0.0])
-        for gid, angles in orientations.items():
-            deviation = np.linalg.norm(angles - mean_orientation)
-            self.assertLess(deviation, np.radians(20))
-    
-    def test_prismatic_texture(self):
-        """Test prismatic texture (HCP)"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='prismatic',
-            degspread=5
-        )
-        
-        for gid, angles in orientations.items():
-            self.assertAlmostEqual(angles[1], np.radians(90), delta=np.radians(20))
-    
-    def test_random_texture(self):
-        """Test random texture"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='random'
-        )
-        
-        # Check that orientations are uniformly distributed
-        phi1_values = [angles[0] for angles in orientations.values()]
-        
-        # Should have some variety (not all clustered)
-        self.assertGreater(np.std(phi1_values), 0.5)
-        
-        # Check bounds
-        for gid, angles in orientations.items():
-            self.assertGreaterEqual(angles[0], 0)
-            self.assertLessEqual(angles[0], 2*np.pi)
-            self.assertGreaterEqual(angles[1], 0)
-            self.assertLessEqual(angles[1], np.pi)
-    
-    # ============ Test Degspread Parameter ============
-    def test_small_degspread(self):
-        """Test that small degspread creates tight clustering"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='cube',
-            degspread=1  # Very tight
-        )
-        
-        mean_orientation = np.array([0.0, 0.0, 0.0])
-        deviations = [np.linalg.norm(angles - mean_orientation) 
-                     for angles in orientations.values()]
-        
-        # All should be very close to ideal orientation
-        self.assertLess(np.max(deviations), np.radians(5))
-    
-    def test_large_degspread(self):
-        """Test that large degspread creates wider scatter"""
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='cube',
-            degspread=30  # Wide spread
-        )
-        
-        mean_orientation = np.array([0.0, 0.0, 0.0])
-        deviations = [np.linalg.norm(angles - mean_orientation) 
-                     for angles in orientations.values()]
-        
-        # Should have more scatter
-        self.assertGreater(np.std(deviations), np.radians(5))
-    
-    def test_degspread_comparison(self):
-        """Test that larger degspread gives larger scatter"""
-        orientations_tight = Texture.apply_texture_to_region(
-            self.micro.orientations.copy(),
-            texture_type='brass',
-            degspread=5
-        )
-        
-        orientations_wide = Texture.apply_texture_to_region(
-            self.micro.orientations.copy(),
-            texture_type='brass',
-            degspread=20
-        )
-        
-        mean_orientation = np.array([np.radians(35.26), np.radians(45), 0.0])
-        
-        std_tight = np.std([np.linalg.norm(angles - mean_orientation) 
-                           for angles in orientations_tight.values()])
-        std_wide = np.std([np.linalg.norm(angles - mean_orientation) 
-                          for angles in orientations_wide.values()])
-        
-        self.assertLess(std_tight, std_wide)
-    
-    # ============ Test Error Handling ============
-    def test_invalid_texture_type(self):
-        """Test that invalid texture type raises error"""
-        with self.assertRaises(ValueError) as context:
-            Texture.apply_texture_to_region(
-                self.micro.orientations,
-                texture_type='invalid_texture'
-            )
-        
-        self.assertIn('Unknown texture type', str(context.exception))
-    
-    def test_nonexistent_grain_ids(self):
-        """Test behavior with grain IDs that don't exist"""
-        # This should not raise an error, just skip those grains
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            region_grain_ids=[999, 1000, 1001],  # Don't exist
-            texture_type='cube'
-        )
-        
-        # Original grains should be unchanged
-        for gid in self.micro.orientations.keys():
-            np.testing.assert_array_almost_equal(
-                orientations[gid],
-                self.original_orientations[gid]
+    def test_invalid_orientations_type(self):
+        """Test that non-array orientations raise TypeError"""
+        with pytest.raises(TypeError, match="must be a NumPy array"):
+            Texture(
+                orientations=[[1, 2, 3], [4, 5, 6]],  # List, not array
+                representation='euler',
+                symmetry='cubic'
             )
             
-        # The nonexistent grain IDs should not be added to the dictionary
-        self.assertNotIn(999, orientations)
-        self.assertNotIn(1000, orientations)
-        self.assertNotIn(1001, orientations)
-    
-    # ============ Test Multiple Regions ============
-    def test_multiple_regions_different_textures(self):
-        """Test applying different textures to different regions"""
-        # Region 1: First 15 grains - Cube texture
-        region1 = list(self.micro.orientations.keys())[:15]
-        orientations = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            region_grain_ids=region1,
-            texture_type='cube',
-            degspread=5
+    def test_invalid_orientations_shape(self):
+        """Test that 1D orientations raise ValueError"""
+        with pytest.raises(ValueError, match="must have shape"):
+            Texture(
+                orientations=np.array([1, 2, 3]),  # 1D array
+                representation='euler',
+                symmetry='cubic'
+            )
+            
+    def test_invalid_representation(self):
+        """Test that invalid representation raises ValueError"""
+        orientations = np.random.rand(5, 3)
+        
+        with pytest.raises(ValueError, match="Unknown representation"):
+            Texture(
+                orientations=orientations,
+                representation='invalid',
+                symmetry='cubic'
+            )
+            
+    def test_invalid_symmetry_type(self):
+        """Test that non-string symmetry raises TypeError"""
+        orientations = np.random.rand(5, 3)
+        
+        with pytest.raises(TypeError, match="symmetry must be a string"):
+            Texture(
+                orientations=orientations,
+                representation='euler',
+                symmetry=123  # Not a string
+            )
+            
+    def test_copy(self):
+        """Test that copy creates independent copy"""
+        orientations = np.random.rand(5, 3)
+        metadata = {'test': 'data'}
+        
+        texture1 = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic',
+            metadata=metadata
         )
         
-        # Region 2: Next 15 grains - Brass texture
-        region2 = list(self.micro.orientations.keys())[15:30]
-        orientations = Texture.apply_texture_to_region(
-            orientations,
-            region_grain_ids=region2,
-            texture_type='brass',
-            degspread=5
+        texture2 = texture1.copy()
+        
+        # Modify original
+        texture1.orientations[0, 0] = 999
+        texture1.metadata['new_key'] = 'new_value'
+        
+        # Copy should be unchanged
+        assert texture2.orientations[0, 0] != 999
+        assert 'new_key' not in texture2.metadata
+        
+    def test_subset(self):
+        """Test subset extraction"""
+        orientations = np.random.rand(10, 3)
+        texture = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic'
         )
         
-        # Check region 1 has cube texture
-        cube_mean = np.array([0.0, 0.0, 0.0])
-        for gid in region1:
-            deviation = np.linalg.norm(orientations[gid] - cube_mean)
-            self.assertLess(deviation, np.radians(20))
+        indices = np.array([0, 2, 4, 6])
+        subset_texture = texture.subset(indices)
         
-        # Check region 2 has brass texture
-        brass_mean = np.array([np.radians(35.26), np.radians(45), 0.0])
-        for gid in region2:
-            deviation = np.linalg.norm(orientations[gid] - brass_mean)
-            self.assertLess(deviation, np.radians(20))
-    
-    # ============ Test Return Value ============
-    def test_returns_modified_dict(self):
-        """Test that function returns the orientations dictionary"""
-        result = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='cube'
+        assert subset_texture.n_orientations == 4
+        np.testing.assert_array_equal(
+            subset_texture.orientations,
+            orientations[indices]
+        )
+        assert subset_texture.representation == 'euler'
+        assert subset_texture.symmetry == 'cubic'
+        
+    def test_subset_preserves_metadata(self):
+        """Test that subset preserves metadata"""
+        orientations = np.random.rand(10, 3)
+        metadata = {'source': 'test'}
+        
+        texture = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic',
+            metadata=metadata
         )
         
-        self.assertIsInstance(result, dict)
-        self.assertEqual(len(result), len(self.micro.orientations))
-    
-    def test_modifies_in_place(self):
-        """Test that function modifies the original dictionary"""
-        original_id = id(self.micro.orientations)
+        subset_texture = texture.subset(np.array([0, 1, 2]))
         
-        result = Texture.apply_texture_to_region(
-            self.micro.orientations,
-            texture_type='cube'
+        assert subset_texture.metadata == metadata
+        
+    def test_euler_to_quat_conversion(self):
+        """Test conversion from Euler to quaternion"""
+        orientations = np.random.rand(5, 3) * 2 * np.pi
+        texture_euler = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic'
         )
         
-        # Should be the same object
-        self.assertEqual(id(result), original_id)
-
-
-class TestTextureIntegration(unittest.TestCase):
-    """Integration tests with realistic workflows"""
-    
-    def test_realistic_workflow_single_texture(self):
-        """Test realistic workflow: create microstructure with single texture"""
-        micro = Microstructure(dimensions=(50, 50, 50), resolution=1.0)
-        micro.gen_voronoi(num_grains=100, seed=42)
+        texture_quat = texture_euler.to_representation('quat')
         
-        # Initialize with random, then apply texture to all
-        micro.orientations = Texture.random_orientations(100, seed=42)
-        micro.orientations = Texture.apply_texture_to_region(
-            micro.orientations,
-            texture_type='brass',
-            degspread=10
+        assert texture_quat.representation == 'quat'
+        assert texture_quat.orientations.shape == (5, 4)
+        assert texture_quat.symmetry == 'cubic'
+        
+        # Quaternions should be normalized
+        norms = np.linalg.norm(texture_quat.orientations, axis=1)
+        np.testing.assert_array_almost_equal(norms, np.ones(5))
+        
+    def test_euler_to_rotmat_conversion(self):
+        """Test conversion from Euler to rotation matrix"""
+        orientations = np.random.rand(5, 3) * 2 * np.pi
+        texture_euler = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic'
         )
         
-        self.assertEqual(len(micro.orientations), 100)
-    
-    def test_realistic_workflow_regional_textures(self):
-        """Test realistic workflow: different textures in different regions"""
-        micro = Microstructure(dimensions=(50, 50, 50), resolution=1.0)
-        micro.gen_voronoi(num_grains=100, seed=42)
-        micro.orientations = Texture.random_orientations(100, seed=42)
+        texture_rotmat = texture_euler.to_representation('rotmat')
         
-        # Bottom half: brass texture
-        bottom_grains = []
-        for gid in micro.orientations.keys():
-            coords = np.where(micro.grain_ids == gid)
-            if len(coords[0]) > 0 and np.mean(coords[0]) < 25:
-                bottom_grains.append(gid)
+        assert texture_rotmat.representation == 'rotmat'
+        assert texture_rotmat.orientations.shape == (5, 3, 3)
         
-        micro.orientations = Texture.apply_texture_to_region(
-            micro.orientations,
-            region_grain_ids=bottom_grains,
-            texture_type='brass',
-            degspread=10
+        # Rotation matrices should be orthogonal
+        for R in texture_rotmat.orientations:
+            identity = np.dot(R.T, R)
+            np.testing.assert_array_almost_equal(identity, np.eye(3))
+            
+    def test_quat_to_euler_conversion(self):
+        """Test conversion from quaternion to Euler"""
+        from src.orientation.rotation_converter import euler_to_quat
+        
+        original_euler = np.random.rand(5, 3) * 2 * np.pi
+        orientations = euler_to_quat(original_euler)
+        
+        texture_quat = Texture(
+            orientations=orientations,
+            representation='quat',
+            symmetry='cubic'
         )
         
-        # Top half: goss texture
-        top_grains = []
-        for gid in micro.orientations.keys():
-            coords = np.where(micro.grain_ids == gid)
-            if len(coords[0]) > 0 and np.mean(coords[0]) >= 25:
-                top_grains.append(gid)
+        texture_euler = texture_quat.to_representation('euler')
         
-        micro.orientations = Texture.apply_texture_to_region(
-            micro.orientations,
-            region_grain_ids=top_grains,
-            texture_type='goss',
-            degspread=15
+        assert texture_euler.representation == 'euler'
+        assert texture_euler.orientations.shape == (5, 3)
+        
+    def test_quat_to_rotmat_conversion(self):
+        """Test conversion from quaternion to rotation matrix"""
+        orientations = np.random.rand(5, 4)
+        orientations = orientations / np.linalg.norm(orientations, axis=1, keepdims=True)
+        
+        texture_quat = Texture(
+            orientations=orientations,
+            representation='quat',
+            symmetry='cubic'
         )
         
-        self.assertGreater(len(bottom_grains), 0)
-        self.assertGreater(len(top_grains), 0)
-        self.assertEqual(len(bottom_grains) + len(top_grains), 100)
-
-
-if __name__ == '__main__':
-    unittest.main(verbosity=2)
+        texture_rotmat = texture_quat.to_representation('rotmat')
+        
+        assert texture_rotmat.representation == 'rotmat'
+        assert texture_rotmat.orientations.shape == (5, 3, 3)
+        
+    def test_rotmat_to_euler_conversion(self):
+        """Test conversion from rotation matrix to Euler"""
+        orientations = np.array([np.eye(3) for _ in range(5)])
+        
+        texture_rotmat = Texture(
+            orientations=orientations,
+            representation='rotmat',
+            symmetry='cubic'
+        )
+        
+        texture_euler = texture_rotmat.to_representation('euler')
+        
+        assert texture_euler.representation == 'euler'
+        assert texture_euler.orientations.shape == (5, 3)
+        
+    def test_rotmat_to_quat_conversion(self):
+        """Test conversion from rotation matrix to quaternion"""
+        orientations = np.array([np.eye(3) for _ in range(5)])
+        
+        texture_rotmat = Texture(
+            orientations=orientations,
+            representation='rotmat',
+            symmetry='cubic'
+        )
+        
+        texture_quat = texture_rotmat.to_representation('quat')
+        
+        assert texture_quat.representation == 'quat'
+        assert texture_quat.orientations.shape == (5, 4)
+        
+    def test_conversion_preserves_symmetry(self):
+        """Test that conversions preserve symmetry"""
+        orientations = np.random.rand(5, 3) * 2 * np.pi
+        texture = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='hexagonal'
+        )
+        
+        texture_quat = texture.to_representation('quat')
+        texture_rotmat = texture.to_representation('rotmat')
+        
+        assert texture_quat.symmetry == 'hexagonal'
+        assert texture_rotmat.symmetry == 'hexagonal'
+        
+    def test_conversion_preserves_metadata(self):
+        """Test that conversions preserve metadata"""
+        orientations = np.random.rand(5, 3) * 2 * np.pi
+        metadata = {'source': 'test', 'value': 42}
+        
+        texture = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic',
+            metadata=metadata
+        )
+        
+        texture_quat = texture.to_representation('quat')
+        
+        assert texture_quat.metadata == metadata
+        
+        # Original metadata should be independent
+        texture_quat.metadata['new_key'] = 'new_value'
+        assert 'new_key' not in texture.metadata
+        
+    def test_same_representation_conversion(self):
+        """Test conversion to same representation returns copy"""
+        orientations = np.random.rand(5, 3) * 2 * np.pi
+        texture = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic'
+        )
+        
+        texture2 = texture.to_representation('euler')
+        
+        assert texture2.representation == 'euler'
+        np.testing.assert_array_equal(texture2.orientations, texture.orientations)
+        
+        # Should be a copy, not the same object
+        texture2.orientations[0, 0] = 999
+        assert texture.orientations[0, 0] != 999
+        
+    def test_round_trip_conversion_euler_quat(self):
+        """Test round-trip conversion Euler -> Quat -> Euler"""
+        from src.orientation.rotation_converter import normalize_angle, euler_to_rotation_matrix
+        
+        original = np.random.rand(5, 3) * 2 * np.pi
+        texture = Texture(
+            orientations=original,
+            representation='euler',
+            symmetry='cubic'
+        )
+        
+        texture_quat = texture.to_representation('quat')
+        texture_back = texture_quat.to_representation('euler')
+        
+        # Should be approximately equal (within numerical precision)
+        # Note: Euler angles are modulo 2π, so normalize
+        R_original = euler_to_rotation_matrix(original)
+        R_back = euler_to_rotation_matrix(texture_back.orientations)
+        
+        np.testing.assert_array_almost_equal(R_original, R_back, decimal=5)
+        
+    def test_round_trip_conversion_euler_rotmat(self):
+        """Test round-trip conversion Euler -> RotMat -> Euler"""
+        from src.orientation.rotation_converter import normalize_angle, euler_to_rotation_matrix
+        
+        original = np.random.rand(5, 3) * 2 * np.pi
+        texture = Texture(
+            orientations=original,
+            representation='euler',
+            symmetry='cubic'
+        )
+        
+        texture_rotmat = texture.to_representation('rotmat')
+        texture_back = texture_rotmat.to_representation('euler')
+        
+        R_original = euler_to_rotation_matrix(original)
+        R_back = euler_to_rotation_matrix(texture_back.orientations)
+        
+        np.testing.assert_array_almost_equal(R_original, R_back, decimal=5)
+        
+    @pytest.mark.parametrize("symmetry", ['cubic', 'hexagonal', 'tetragonal', 'orthorhombic'])
+    def test_various_symmetries(self, symmetry):
+        """Test that various symmetry strings are accepted"""
+        orientations = np.random.rand(5, 3)
+        texture = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry=symmetry
+        )
+        
+        assert texture.symmetry == symmetry
+        
+    def test_large_number_of_orientations(self):
+        """Test with large number of orientations"""
+        orientations = np.random.rand(1000, 3) * 2 * np.pi
+        texture = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic'
+        )
+        
+        assert texture.n_orientations == 1000
+        
+        # Test conversion still works
+        texture_quat = texture.to_representation('quat')
+        assert texture_quat.n_orientations == 1000
+        
+    def test_single_orientation(self):
+        """Test with single orientation"""
+        orientations = np.random.rand(1, 3) * 2 * np.pi
+        texture = Texture(
+            orientations=orientations,
+            representation='euler',
+            symmetry='cubic'
+        )
+        
+        assert texture.n_orientations == 1
