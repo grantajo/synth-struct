@@ -1,5 +1,9 @@
 This is a microstructure generator that outputs an HDF5 file with the grain structure and the orientations.
 
+install:
+When in project root run:  
+pip install -e .
+
 Things to be added:
 - Add grain structures with grain size better distribution
 - Fix HDF5 writer so that a software can read it

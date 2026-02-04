@@ -10,3 +10,4 @@
 /tests/__pycache__/
 **/__pycache__/
 /src/orientation/texture/__pycache__/
+*.egg-info/
