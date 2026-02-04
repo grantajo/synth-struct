@@ -35,7 +35,6 @@ To do for branch 'change-to-nparrays'
 
 
 Currently doing on 'change-to-nparrays'
-- Changing filepaths so that src isn't a used directory
 - Creating test files
   - finish texture generators
 - Add in crytallography plotting
@@ -47,67 +46,71 @@ Currently doing on 'change-to-nparrays'
 
 
 Done:
-- Added tests for generator basics
-- Added tests for texture basics
-  - Added tests for cubic and hexagonal (one test not passing still)
+- Changed src directory for package managment
+- Fixed hexagonal test
 
 
 File structure: 
 synth_struct/  
-├── src/  
-│   ├── __init__.py  
-│   ├── micro_utils.py # Utility functions such as getting the grains IDs from a specific region  
-│   ├── microstructure.py # Houses the Microstructure base class  
-│   ├── generators/  
-│   │   ├── __init__.py  
-│   │   ├── gen_base.py # Houses the MicrostructureGenerator base class  
-│   │   ├── gen_utils.py # Utility functions  
-│   │   ├── voronoi.py  
-│   │   ├── ellipsoidal.py  
-│   │   ├── columnar.py  
-│   │   └── mixed.py  
-│   ├── orientation/  
-│   │   ├── __init__.py  
-│   │   ├── rotation_converter.py # Conversions between orientation standards (eu, quat, rotmats)  
-│   │   └── texture/  
-│   │       ├── __init__.py  
-│   │       ├── texture_base.py # Houses base TextureGenerator  
-│   │       ├── texture.py # Does this actually do anything?  
-│   │       ├── random.py  
-│   │       ├── cubic.py  
-│   │       ├── hexagonal.py  
-│   │       └── custom.py # Custom texture components  
-│   ├── stiffness/  
-│   │   ├── __init__.py  
-│   │   ├── stif_utils.py # Helper functions for stiffness rotations  
-│   │   └── stiffness.py # Rotates the stiffness matrix for each grain based on the orientation of the grain  
-│   ├── plotting/  
-│   │   ├── __init__.py  
-│   │   ├── plot_utils.py # Helper functions for plotting  
-│   │   ├── gen_plot.py # General plotting functions (Grain IDs, etc.)  
-│   │   ├── ipf_maps.py # # IPF color maps  
-│   │   ├── pole_figures.py # Pole figures  
-│   │   ├── odf_plots.py # Orientation distribution functions  
-│   │   └── ipfcolorkeys.py # IPF color key plotting
-│   └── io/  
-│       ├── __init__.py  
-│       ├── write_utils.py # Helper functions for outputting files  
-│       ├── vtk_writer.py # Write a mesh to VTK file  
-│       └── hdf5_writer.py # Write to HDF5 file  
-├── examples/  
-│   ├── __init__.py  
-│   ├── basic_example_2d.py # Basic examples  
-│   ├── basic_example_3d.py # Basic examples  
-│   ├── shapes.py # Examples for each of the microstructure generator types  
-│   └── vis_example.py # Examples for plotting  
-├── tests/  
-│   ├── __init__.py  
-│   ├── test_microstructure.py  
-│   ├── test_micro_utils.py
-│   ├── test_rotations.py  
-│   ├── test_stiffness.py  
-│   ├── test_texture.py  
-├── output/  
-└── README.md  
+├── README.md  
+├── examples  
+│   ├── __init__.py  
+│   ├── basic_example_2d.py  
+│   ├── basic_example_3d.py  
+│   ├── mask_box.py  
+│   ├── mask_custom.py  
+│   ├── mask_cylinder.py  
+│   ├── mask_layer.py  
+│   ├── mask_sphere.py  
+│   ├── shapes.py  
+│   └── vis_example.py  
+├── output  
+├── pyproject.toml  
+├── src  
+│   ├── synth_struct  
+│   │   ├── __init__.py  
+│   │   ├── generators  
+│   │   │   ├── __init__.py  
+│   │   │   ├── columnar.py  
+│   │   │   ├── ellipsoidal.py  
+│   │   │   ├── gen_base.py  
+│   │   │   ├── gen_utils.py  
+│   │   │   ├── lath.py  
+│   │   │   ├── lath_updated.py  
+│   │   │   ├── mixed.py  
+│   │   │   └── voronoi.py  
+│   │   ├── io  
+│   │   │   └── hdf5_writer.py  
+│   │   ├── micro_utils.py  
+│   │   ├── microstructure.py  
+│   │   ├── orientation  
+│   │   │   ├── __init__.py  
+│   │   │   ├── rotation_converter.py  
+│   │   │   └── texture  
+│   │   ├── plotting  
+│   │   │   ├── __init__.py  
+│   │   │   ├── gen_plot.py  
+│   │   │   ├── ipf_maps.py  
+│   │   │   ├── ipfcolorkeys.py  
+│   │   │   ├── odf_plot.py  
+│   │   │   ├── orix_utils.py  
+│   │   │   ├── plot_utils.py  
+│   │   │   └── pole_figures.py  
+│   │   └── stiffness  
+│   │       ├── __init__.py  
+│   │       └── stiffness.py  
+└── tests  
+    ├── __init__.py  
+    ├── test_columnar.py  
+    ├── test_ellipsoidal.py  
+    ├── test_generator_base.py  
+    ├── test_micro_utils.py  
+    ├── test_microstructure.py  
+    ├── test_mixed.py  
+    ├── test_texture.py  
+    ├── test_texture_base.py  
+    ├── test_texture_cubic.py  
+    ├── test_texture_hexagonal.py  
+    └── test_voronoi.py  
 
 
