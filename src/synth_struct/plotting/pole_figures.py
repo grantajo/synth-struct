@@ -235,7 +235,7 @@ def create_standard_pole_figures(
     plt.tight_layout()
 
     if filename:
-        plt.savefig(f"../output/{filename}", dpi=dpi, bbox_inches="tight")
+        plt.savefig(f"../output/{filename}", dpi=150, bbox_inches="tight")
         print(f"Saved pole figures to ../output/{filename}")
 
     return fig, axes

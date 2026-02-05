@@ -4,7 +4,6 @@
 Useful utility functions for microstructure generators
 """
 
-import time
 import numpy as np
 
 
@@ -46,12 +45,10 @@ def aniso_voronoi_assignment(
         rotations: list of rotation matrices - One per grain
         chunk_size: int - Number of voxels to process per chunk
     """
-    ndim = len(micro.dimensions)
     total_voxels = int(np.prod(micro.dimensions))
     grain_ids_flat = np.zeros(total_voxels, dtype=np.int32)
 
     print("  Performing anisotropic Voronoi tessellation...")
-    start_time = time.time()
 
     for start in range(0, total_voxels, chunk_size):
         end = min(start + chunk_size, total_voxels)
