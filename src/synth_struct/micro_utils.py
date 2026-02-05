@@ -6,8 +6,8 @@ A series of functions to help with microstructure development
 1. Get grain IDs from a region of a Microstructure
 """
 
-import numpy as np
 from typing import Optional, List, Union
+import numpy as np
 
 
 def get_grains_in_region(micro, region_type: str = "box", **kwargs) -> np.ndarray:

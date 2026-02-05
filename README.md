@@ -39,6 +39,7 @@ To do for branch 'change-to-nparrays'
 
 
 Currently doing on 'change-to-nparrays'
+- Fix plotting save locations (ipfcolorkeys)
 - Creating test files
   - finish texture generators
 - Add in crytallography plotting

@@ -22,6 +22,7 @@ class Microstructure:
         self.dimensions = tuple(dimensions)
         self.resolution = resolution
         self.units = units
+        self.symmetry = symmetry
 
         self.grain_ids = np.zeros(
             self.dimensions, dtype=np.int32
@@ -43,6 +44,3 @@ class Microstructure:
 
     def get_field(self, name):
         return self.fields[name]
-
-    def get_num_grains(self):
-        return self.num_grains  # exclude background (0)
