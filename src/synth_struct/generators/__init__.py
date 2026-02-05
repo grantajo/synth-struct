@@ -8,10 +8,9 @@ from .mixed import MixedGenerator
 from .lath import LathGenerator
 
 __all__ = [
-    "VoronoiGenerator"
+    "VoronoiGenerator",
     "EllipsoidalGenerator",
     "ColumnarGenerator",
     "MixedGenerator",
-    "LathGenerator"
+    "LathGenerator",
 ]
-

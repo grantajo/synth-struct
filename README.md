@@ -50,8 +50,7 @@ Currently doing on 'change-to-nparrays'
 
 
 Done:
-- Changed src directory for package managment
-- Fixed hexagonal test
+- Used linters and formatters to fix some errors.
 
 
 File structure: 
