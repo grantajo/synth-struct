@@ -1,0 +1,230 @@
+This is a potential implementation of a C++ replacment for aniso_voronoi_assignment
+
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <omp.h>
+
+// Function to calculate the anisotropic Voronoi distance for a single voxel
+double aniso_voronoi_distance(const double* voxel_coords, const double* seed,
+                             const double* scale_factor, const double** rotation) {
+    // Calculate the difference between voxel and seed
+    double diff[3];
+    for (int i = 0; i < 3; ++i) {
+        diff[i] = voxel_coords[i] - seed[i];
+    }
+
+    // Rotate the difference by the inverse of the rotation matrix
+    for (int i = 0; i < 3; ++i) {
+        for (int j = 0; j < 3; ++j) {
+            diff[j] += rotation[i][j] * diff[i];
+        }
+    }
+
+    // Scale the rotated difference by the scale factor
+    for (int i = 0; i < 3; ++i) {
+        diff[i] /= scale_factor[i];
+    }
+
+    // Calculate the squared distance
+    double dist = 0.0;
+    for (int i = 0; i < 3; ++i) {
+        dist += diff[i] * diff[i];
+    }
+
+    return dist;
+}
+
+// Function to perform anisotropic Voronoi assignment in C++
+void aniso_voronoi_assignment(int* grain_ids, const int* micro_dimensions,
+                                const double** seeds, const double** scale_factors,
+                                const double*** rotations, int chunk_size) {
+    const int ndim = 3; // Assuming 3D for simplicity
+    const int total_voxels = std::prod(micro_dimensions);
+
+    #pragma omp parallel for num_threads(omp_get_max_threads())
+    for (int start = 0; start < total_voxels; start += chunk_size) {
+        int end = std::min(start + chunk_size, total_voxels);
+
+        // Extract the chunk of voxel coordinates
+        int* chunk_coords = new int[end - start];
+        for (int i = start; i < end; ++i) {
+            chunk_coords[i - start] = i;
+        }
+
+        #pragma omp parallel for num_threads(omp_get_max_threads())
+        for (int i = 0; i < end - start; ++i) {
+            int voxel_index = chunk_coords[i];
+            double* voxel_coords = new double[ndim];
+            for (int j = 0; j < ndim; ++j) {
+                voxel_coords[j] = micro_dimensions[j] * (voxel_index / (double)micro_dimensions[j]);
+            }
+
+            int grain_id = -1;
+            double min_dist = std::numeric_limits<double>::max();
+            for (int j = 0; j < num_grains; ++j) {
+                const double* seed = seeds[j];
+                const double* scale_factor = scale_factors[j];
+                const double** rotation = rotations[j];
+
+                double dist = aniso_voronoi_distance(voxel_coords, seed, scale_factor, rotation);
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    grain_id = j + 1; // Adjusting for 1-based indexing
+                }
+            }
+
+            grain_ids[voxel_index] = grain_id;
+        }
+
+        delete[] chunk_coords;
+    }
+
+    std::cout << "Done!" << std::endl;
+}
+
+int main() {
+    // Example usage
+    int micro_dimensions[] = {10, 10, 10}; // Size of the microstructure
+    double seeds[][3] = {{1.5, 2.5, 3.5}, {4.5, 5.5, 6.5}};
+    double scale_factors[][3] = {{0.9, 1.1, 0.8}, {1.2, 0.8, 0.7}};
+    double rotations[2][3][3] = {
+        {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}, // Identity rotation
+        {{0.5, -0.5, 0}, {0.5, 0.5, 0}, {0, 0, 1}} // Rotation by 45 degrees
+    };
+
+    int num_grains = sizeof(seeds) / sizeof(seeds[0]);
+    const int chunk_size = 10000;
+
+    int* grain_ids = new int[std::prod(micro_dimensions)];
+    aniso_voronoi_assignment(grain_ids, micro_dimensions, seeds, scale_factors, rotations, chunk_size);
+
+    // Use the grain_ids array as needed
+
+    delete[] grain_ids;
+    return 0;
+    
+Try 2 with Eigen library
+
+### Step 1: Include Eigen Headers
+
+First, ensure that you have included the necessary Eigen headers in your `main.cpp` file.
+
+```cpp
+#include <iostream>
+#include <vector>
+#include <cmath>
+#include <omp.h>
+#include <Eigen/Dense>
+
+using namespace std;
+using namespace Eigen;
+```
+
+### Step 2: Use Eigen Matrix and Vector Types
+
+In your code, use Eigen's `MatrixXd` for matrix operations and `Vector3d` for 3D vectors.
+
+```cpp
+double aniso_voronoi_distance(const Vector3d& voxel_coords, const Vector3d& seed,
+                             const double& scale_factor, const Matrix3d& rotation) {
+    // Calculate the difference between voxel and seed
+    Vector3d diff = voxel_coords - seed;
+
+    // Rotate the difference by the inverse of the rotation matrix
+    diff = rotation * diff;
+
+    // Scale the rotated difference by the scale factor
+    for (int i = 0; i < 3; ++i) {
+        diff(i) /= scale_factor;
+    }
+
+    // Calculate the squared distance
+    return diff.squaredNorm();
+}
+```
+
+### Step 3: Modify the Main Function
+
+Update the main function to use Eigen types and matrices.
+
+```cpp
+int main() {
+    // Example usage
+    const int ndim = 3; // Assuming 3D for simplicity
+    const int total_voxels = 10000; // Size of the microstructure
+
+    Array<int, Dynamic, 1> grain_ids(total_voxels);
+
+    // Create random seed positions and scale factors
+    VectorXd seeds = VectorXd::Random(num_grains, ndim).array() * 10.0;
+    ArrayXd scale_factors = (VectorXd::Random(num_grains, 1) + 1.0).array() * 0.9;
+
+    // Create random rotations
+    Matrix3d identity_rotation = Matrix3d::Identity();
+    std::vector<Matrix3d> rotations;
+    for (int i = 0; i < num_grains; ++i) {
+        double angle = M_PI * static_cast<double>(rand()) / RAND_MAX;
+        double cos_angle = cos(angle);
+        double sin_angle = sin(angle);
+
+        // Rotation matrix around the x-axis
+        Matrix3d rotation = MatrixXd::Identity();
+        rotation(1, 1) = cos_angle;
+        rotation(1, 2) = -sin_angle;
+        rotation(2, 1) = sin_angle;
+        rotation(2, 2) = cos_angle;
+
+        rotations.push_back(rotation);
+    }
+
+    int chunk_size = 10000;
+
+    #pragma omp parallel for num_threads(omp_get_max_threads())
+    for (int start = 0; start < total_voxels; start += chunk_size) {
+        int end = std::min(start + chunk_size, total_voxels);
+
+        // Extract the chunk of voxel coordinates
+        Array<int, Dynamic, 1> chunk_coords;
+        for (int i = start; i < end; ++i) {
+            chunk_coords.push_back(i);
+        }
+
+        #pragma omp parallel for num_threads(omp_get_max_threads())
+        for (int i = 0; i < chunk_coords.size(); ++i) {
+            int voxel_index = chunk_coords[i];
+            Vector3d voxel_coords = Vector3d::Ones() * (voxel_index / total_voxels);
+
+            int grain_id = -1;
+            double min_dist = std::numeric_limits<double>::max();
+            for (int j = 0; j < num_grains; ++j) {
+                const Vector3d& seed = seeds.row(j);
+                const double& scale_factor = scale_factors(j);
+                const Matrix3d& rotation = rotations[j];
+
+                double dist = aniso_voronoi_distance(voxel_coords, seed, scale_factor, rotation);
+                if (dist < min_dist) {
+                    min_dist = dist;
+                    grain_id = j + 1; // Adjusting for 1-based indexing
+                }
+            }
+
+            grain_ids(voxel_index) = grain_id;
+        }
+
+    }
+
+    std::cout << "Done!" << std::endl;
+
+    return 0;
+}
+```
+
+### Step 4: Link Eigen
+
+Make sure you link against the Eigen library when compiling your program. You can do this by adding `-lEigen3` to your compiler flags.
+
+```sh
+g++ -o aniso_voronoi aniso_voronoi.cpp -lm -lpthread -lOpenMP -leigen3
+```
+
