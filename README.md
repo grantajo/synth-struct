@@ -31,6 +31,7 @@ Dependencies
 Optional:
 - g++
 - Eigen (libeigen3-dev)
+- pybind11
 
 
 To do for branch 'change-to-nparrays'
@@ -74,6 +75,7 @@ synth_struct/
 │   └── vis_example.py  
 ├── output  
 ├── pyproject.toml  
+├── setup.py
 ├── src  
 │   ├── synth_struct  
 │   │   ├── __init__.py  
@@ -87,6 +89,9 @@ synth_struct/
 │   │   │   ├── lath_updated.py  
 │   │   │   ├── mixed.py  
 │   │   │   └── voronoi.py  
+│   │   ├── _cpp_exensions  
+│   │   │   ├── __init__.py  
+│   │   │   └── aniso_voronoi_eigen.cpp  
 │   │   ├── io  
 │   │   │   └── hdf5_writer.py  
 │   │   ├── micro_utils.py  
@@ -95,6 +100,13 @@ synth_struct/
 │   │   │   ├── __init__.py  
 │   │   │   ├── rotation_converter.py  
 │   │   │   └── texture  
+│   │   │      ├── __init__.py  
+│   │   │      ├── cubic.py
+│   │   │      ├── hexagonal.py  
+│   │   │      ├── random.py  
+│   │   │      ├── texture.py
+│   │   │      ├── texture_base.py
+│   │   │      └── custom.py
 │   │   ├── plotting  
 │   │   │   ├── __init__.py  
 │   │   │   ├── gen_plot.py  
