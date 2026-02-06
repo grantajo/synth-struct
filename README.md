@@ -28,6 +28,10 @@ Dependencies
 - matplotlib-scalebar
 - orix
 
+Optional:
+- g++
+- Eigen (libeigen3-dev)
+
 
 To do for branch 'change-to-nparrays'
 - Update examples

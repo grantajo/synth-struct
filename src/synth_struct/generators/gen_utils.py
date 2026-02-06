@@ -5,6 +5,8 @@ Useful utility functions for microstructure generators
 """
 
 import numpy as np
+from .._cpp_extensions import aniso_voronoi_assignment as cpp_aniso_voronoi
+from .._cpp_extensions import EIGEN_AVAILABLE
 
 
 def get_seed_coordinates(num_grains, dimensions, seed=None):
@@ -30,7 +32,7 @@ def get_seed_coordinates(num_grains, dimensions, seed=None):
 
 
 def aniso_voronoi_assignment(
-    micro, seeds, scale_factors, rotations, chunk_size=500_000
+    micro, seeds, scale_factors, rotations, chunk_size=500_000, use_cpp=True
 ):
     """
     Assign voxels using anisotropic distance metric.
@@ -44,36 +46,51 @@ def aniso_voronoi_assignment(
         scale_factors: np.ndarray of shape (num_grains, ndim) - Scaling per axis
         rotations: list of rotation matrices - One per grain
         chunk_size: int - Number of voxels to process per chunk
+        use_cpp: bool - Use C++ implementation if available
     """
-    total_voxels = int(np.prod(micro.dimensions))
-    grain_ids_flat = np.zeros(total_voxels, dtype=np.int32)
-
-    print("  Performing anisotropic Voronoi tessellation...")
-
-    for start in range(0, total_voxels, chunk_size):
-        end = min(start + chunk_size, total_voxels)
-
-        chunk_indices = np.arange(start, end)
-        chunk_coords = np.column_stack(
-            np.unravel_index(chunk_indices, micro.dimensions)
+    if use_cpp and EIGEN_AVAILABLE and cpp_aniso_voronoi is not None:
+        # Use C++ Eigen implementation
+        dimensions = np.array(micro.dimensions, dtype=np.int32)
+        seeds_float = np.ascontiguousarray(seeds.astype(np.float32))
+        scales_float = np.ascontiguousarray(scale_factors.astype(np.float32))
+        rotations_float = [np.ascontiguousarray(R.astype(np.float32)) for R in rotations]
+        
+        grain_ids_flat = cpp_aniso_voronoi(
+            dimensions, seeds_float, scales_float, rotations_float, chunk_size
         )
-        chunk_coords = chunk_coords.astype(float)
+        
+        micro.grain_ids = grain_ids_flat.reshape(micro.dimensions)
+    
+    else:
+        total_voxels = int(np.prod(micro.dimensions))
+        grain_ids_flat = np.zeros(total_voxels, dtype=np.int32)
 
-        distances = np.zeros((len(chunk_coords), len(seeds)))
+        print("  Performing anisotropic Voronoi tessellation (Python)...")
 
-        for i, (seed, scale, R) in enumerate(zip(seeds, scale_factors, rotations)):
-            diff = chunk_coords - seed
-            diff_rotated = diff @ R.T  # R^T * (p-s)
-            diff_scaled = diff_rotated / scale[np.newaxis, :]
+        for start in range(0, total_voxels, chunk_size):
+            end = min(start + chunk_size, total_voxels)
 
-            distances[:, i] = np.sum(diff_scaled**2, axis=1)
+            chunk_indices = np.arange(start, end)
+            chunk_coords = np.column_stack(
+                np.unravel_index(chunk_indices, micro.dimensions)
+            )
+            chunk_coords = chunk_coords.astype(float)
 
-        grain_assignment = np.argmin(distances, axis=1) + 1
-        grain_ids_flat[start:end] = grain_assignment
+            distances = np.zeros((len(chunk_coords), len(seeds)))
 
-        if (start // chunk_size) % 10 == 0:
-            progress = 100 * end / total_voxels
-            print(f"  Progress: {progress:.1f}%")
+            for i, (seed, scale, R) in enumerate(zip(seeds, scale_factors, rotations)):
+                diff = chunk_coords - seed
+                diff_rotated = diff @ R.T  # R^T * (p-s)
+                diff_scaled = diff_rotated / scale[np.newaxis, :]
 
-    micro.grain_ids = grain_ids_flat.reshape(micro.dimensions)
-    print("Done!")
+                distances[:, i] = np.sum(diff_scaled**2, axis=1)
+
+            grain_assignment = np.argmin(distances, axis=1) + 1
+            grain_ids_flat[start:end] = grain_assignment
+
+            if (start // chunk_size) % 10 == 0:
+                progress = 100 * end / total_voxels
+                print(f"  Progress: {progress:.1f}%")
+
+        micro.grain_ids = grain_ids_flat.reshape(micro.dimensions)
+        print("Done!")

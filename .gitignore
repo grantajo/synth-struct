@@ -13,4 +13,11 @@
 *.egg-info/
 .ruff_cache/
 .pytest_cache/
-
+*.so
+*.pyd
+*.dylib
+build/
+dist/
+**/*.pyc
+src/synth_struct/_cpp_extensions/*.so
+src/synth_struct/_cpp_extensions/*.pyd

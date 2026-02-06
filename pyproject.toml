@@ -1,7 +1,7 @@
 # synth_struct/pyproject.toml
 
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "wheel", "pybind11>=2.10.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -18,3 +18,5 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+synth_struct = ["_cpp_extensions/*.so", "_cpp_extensions/*.pyd"]

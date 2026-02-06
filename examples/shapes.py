@@ -290,7 +290,7 @@ def main():
     print(f"All examples saved to: {output_dir}")
     print("=" * 60)
 
-    plt.show()
+    #plt.show()
 
 
 if __name__ == "__main__":

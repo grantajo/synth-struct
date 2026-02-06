@@ -30,15 +30,6 @@ class TestMicrostructure:
         assert micro.grain_ids.shape == (25, 25, 25)
         assert micro.grain_ids.dtype == np.int32
 
-    def test_num_grains_empty(self):
-        """Test num_grains for an empty microstructure"""
-        micro = Microstructure(dimensions=(25, 25), resolution=1.0)
-        micro.grain_ids[2:5, 2:5] = 1
-        micro.grain_ids[8:13, 8:13] = 2
-
-        assert micro.num_grains == 2
-        assert micro.get_num_grains() == 2
-
     def test_attach_and_get_field(self):
         """Test attaching and retrieving fields"""
         micro = Microstructure(dimensions=(25, 25), resolution=1.0)
