@@ -11,3 +11,6 @@
 **/__pycache__/
 /src/orientation/texture/__pycache__/
 *.egg-info/
+.ruff_cache/
+.pytest_cache/
+
