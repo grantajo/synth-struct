@@ -44,7 +44,6 @@ class VoronoiGenerator(MicrostructureGenerator):
         if self.seed:
             np.random.seed(self.seed)
 
-
         # Generate random seed points
         self.seeds = get_seed_coordinates(self.num_grains, micro.dimensions, self.seed)
         tree = cKDTree(self.seeds)
