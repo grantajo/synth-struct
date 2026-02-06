@@ -53,14 +53,16 @@ def aniso_voronoi_assignment(
         dimensions = np.array(micro.dimensions, dtype=np.int32)
         seeds_float = np.ascontiguousarray(seeds.astype(np.float32))
         scales_float = np.ascontiguousarray(scale_factors.astype(np.float32))
-        rotations_float = [np.ascontiguousarray(R.astype(np.float32)) for R in rotations]
-        
+        rotations_float = [
+            np.ascontiguousarray(R.astype(np.float32)) for R in rotations
+        ]
+
         grain_ids_flat = cpp_aniso_voronoi(
             dimensions, seeds_float, scales_float, rotations_float, chunk_size
         )
-        
+
         micro.grain_ids = grain_ids_flat.reshape(micro.dimensions)
-    
+
     else:
         total_voxels = int(np.prod(micro.dimensions))
         grain_ids_flat = np.zeros(total_voxels, dtype=np.int32)
