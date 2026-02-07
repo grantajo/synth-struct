@@ -4,6 +4,21 @@ install:
 When in project root run:  
 pip install -e .
 
+
+Dependencies
+- Numpy
+- Scipy
+- h5py
+- matplotlib
+- matplotlib-scalebar
+- orix
+
+Optional:
+- g++
+- Eigen (libeigen3-dev)
+- pybind11
+
+
 Things to be added:
 - Add grain structures with grain size better distribution
 - Fix HDF5 writer so that a software can read it
@@ -19,19 +34,6 @@ Long term additions:
 - Add in ability to have orientation gradients within grains, subgrains and GNDs
 - Add in ability to create a mesh with the microstructure
 - See what adding in ODF textures would be like and what would be gained from it
- 
-Dependencies
-- Numpy
-- Scipy
-- h5py
-- matplotlib
-- matplotlib-scalebar
-- orix
-
-Optional:
-- g++
-- Eigen (libeigen3-dev)
-- pybind11
 
 
 To do for branch 'change-to-nparrays'
@@ -44,9 +46,8 @@ To do for branch 'change-to-nparrays'
 
 
 Currently doing on 'change-to-nparrays'
+- Finish and run tests for stiffness tensors
 - Fix plotting save locations (ipfcolorkeys)
-- Creating test files
-  - finish texture generators
 - Add in crytallography plotting
 - Add in IPF, pole figure, and ODF examples
   - Figure out how to handle hexagonal directions for pole figures and ODFs
@@ -56,7 +57,7 @@ Currently doing on 'change-to-nparrays'
 
 
 Done:
-- Used linters and formatters to fix some errors.
+- Adding in Isotropic, Cubic, and Hexagonal stiffness tensor generators.
 
 
 File structure: 
