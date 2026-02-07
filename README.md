@@ -1,25 +1,42 @@
-This is a microstructure generator that outputs an HDF5 file with the grain structure and the orientations.
+# This is a microstructure generator that outputs an HDF5 file with the grain structure and the orientations.
 
 install:
 When in project root run:  
 pip install -e .
 
 
-Dependencies
+## Dependencies
 - Numpy
 - Scipy
 - h5py
 - matplotlib
 - matplotlib-scalebar
 - orix
-
-Optional:
+### Optional:
 - g++
 - Eigen (libeigen3-dev)
 - pybind11
 
 
-Things to be added:
+## Todo Lists:
+### Short-term todo:
+- Finish stiffness tests
+- New texture examples
+
+
+### Things to be added:
+- Update examples
+  - stiffness
+  - plotting EBSD-like
+  - get grain and change texture
+- Finish and run tests for stiffness tensors
+- New lath generator
+- Fix plotting save locations (ipfcolorkeys)
+- Add in crytallography plotting
+- Add in IPF, pole figure, and ODF examples
+  - Figure out how to handle hexagonal directions for pole figures and ODFs
+  - Add in ability to do ODF contour plots
+  - Update ipfcolorkeys.py
 - Add grain structures with grain size better distribution
 - Fix HDF5 writer so that a software can read it
 - Integrate with orix for better orientation information and plotting
@@ -30,37 +47,15 @@ Things to be added:
 - Make sure there is the ability to have a second phase with a different stiffness tensor
     - Add in ability to have precipitates
  
-Long term additions:
-- Add in ability to have orientation gradients within grains, subgrains and GNDs
+### Long term additions:
+- Add grain structures with grain size better distribution
+- Add HDF5 and VTK writers
 - Add in ability to create a mesh with the microstructure
+- Add in ability to have orientation gradients within grains, subgrains and GNDs
 - See what adding in ODF textures would be like and what would be gained from it
 
 
-To do for branch 'change-to-nparrays'
-- Update examples
-  - plotting
-  - get grains and change texture
-- Update plotting
-- Update tests
-- Update lath generator to spatially put colonies together
-
-
-Currently doing on 'change-to-nparrays'
-- Finish and run tests for stiffness tensors
-- Fix plotting save locations (ipfcolorkeys)
-- Add in crytallography plotting
-- Add in IPF, pole figure, and ODF examples
-  - Figure out how to handle hexagonal directions for pole figures and ODFs
-  - Add in ability to do ODF contour plots
-  - Update ipfcolorkeys.py
-- Add in texture examples
-
-
-Done:
-- Adding in Isotropic, Cubic, and Hexagonal stiffness tensor generators.
-
-
-File structure: 
+## File structure: 
 synth_struct/  
 ├── README.md  
 ├── examples  

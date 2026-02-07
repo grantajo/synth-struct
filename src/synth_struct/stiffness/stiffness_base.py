@@ -3,22 +3,23 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 
+
 class StiffnessGenerator(ABC):
     """
     Abstract base class for all stiffness generators.
-    StiffnessGenerators generate stiffness objects from a 
+    StiffnessGenerators generate stiffness objects from a
     Microstructure and Texture, but do not modify the Microstructure
     """
-    
+
     @abstractmethod
     def generate(self, micro, texture):
         """
         Generate a Stiffness object for the given Microstructure and Texture
-        
+
         Args:
         - micro: Microstructure object
         - texture: Texture object containing orientations
-        
+
         Returns:
         - Stiffness: Stiffness object with rotated stiffness tensors
         """
