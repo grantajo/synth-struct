@@ -6,17 +6,17 @@ pip install -e .
 
 
 Dependencies
-- Numpy
-- Scipy
-- h5py
-- matplotlib
-- matplotlib-scalebar
-- orix
+- Numpy (conda install numpy)
+- Scipy (conda install scipy)
+- h5py (conda install h5py)
+- matplotlib (conda install matplotlib)
+- matplotlib-scalebar (conda install matplotlib-scalebar)
+- orix (conda install orix=0.14.0) or latest version
 
-Optional:
-- g++
-- Eigen (libeigen3-dev)
-- pybind11
+Optional (C++ integrations for speeding bottlenecks):
+- g++ (apt install build-essential gcc)
+- Eigen (apt install libeigen3-dev)
+- pybind11 (conda install pybind11)
 
 
 Things to be added:
