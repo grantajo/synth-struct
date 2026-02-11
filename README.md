@@ -3,33 +3,33 @@ This is a code base that generates microstrcutures that are intended to be used 
 mechanical simulations, such as ultrasonic, crystal plasticity, etc.
 
 ## Dependencies
-- Numpy (conda install numpy)
-- Scipy (conda install scipy)
-- h5py (conda install h5py)
-- matplotlib (conda install matplotlib)
-- matplotlib-scalebar (conda install matplotlib-scalebar)
-- orix (conda install orix=0.14.0) or latest version
+### Create a virtual environment
+`conda create --name synth_struct`
+`conda activate synth_struct`
+### Install dependencies in virtual environment
+- Numpy  
+`conda install numpy`
+- Scipy  
+`conda install scipy`
+- h5py  
+`conda install h5py`
+- matplotlib  
+`conda install matplotlib`
+- matplotlib-scalebar  
+`conda install matplotlib-scalebar`
+- orix  
+`conda install orix=0.14.0` or latest version
 ### Optional:
-- g++ (apt install build-essential gcc)
-- Eigen (apt install libeigen3-dev)
-- pybind11 (conda install pybind11)
+- g++  
+`sudo apt install build-essential gcc`
+- Eigen  
+`apt install libeigen3-dev`
+- pybind11  
+`conda install pybind11`
 
 ## Installation
-When in project root run:
+When in project root run:  
 `pip install -e .`
-
-
-## Dependencies
-- Numpy (conda install numpy)
-- Scipy (conda install scipy)
-- h5py (conda install h5py)
-- matplotlib (conda install matplotlib)
-- matplotlib-scalebar (conda install matplotlib-scalebar)
-- orix (conda install orix=0.14.0) or latest version
-### Optional:
-- g++ (apt install build-essential gcc)
-- Eigen (apt install libeigen3-dev)
-- pybind11 (conda install pybind11)
 
 
 ## Todo Lists:
@@ -40,28 +40,30 @@ When in project root run:
 
 ### Things to be added:
 - Update examples
-  - stiffness
-  - plotting EBSD-like
-  - get grain and change texture
+    - stiffness
+    - plotting EBSD-like
+    - get grain and change texture
 - Finish and run tests for stiffness tensors
 - New lath generator
 - Fix plotting save locations (ipfcolorkeys)
 - Add in crytallography plotting
 - Add in IPF, pole figure, and ODF examples
-  - Figure out how to handle hexagonal directions for pole figures and ODFs
-  - Add in ability to do ODF contour plots
-  - Update ipfcolorkeys.py
+    - Figure out how to handle hexagonal directions for pole figures and ODFs
+    - Add in ability to do ODF contour plots
+    - Update ipfcolorkeys.py
 - Add grain structures with grain size better distribution
 - Fix HDF5 writer so that a software can read it
 - Integrate with orix for better orientation information and plotting
-  - Redo IPF maps
-  - Add in IPFs and ODFs
-  - Add in ability to have the colorkey shown in an IPF map
+    - Redo IPF maps
+    - Add in IPFs and ODFs
+    - Add in ability to have the colorkey shown in an IPF map
 - Add in ability to have porosity
-- Make sure there is the ability to have a second phase with a different stiffness tensor
-    - Add in ability to have precipitates
+
  
 ### Long term additions:
+- Make sure there is the ability to have a second phase with a different stiffness tensor
+    - Add in ability to have precipitates
+    - Add in porosity
 - Add grain structures with grain size better distribution
 - Add HDF5 and VTK writers
 - Add in ability to create a mesh with the microstructure
