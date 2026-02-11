@@ -1,5 +1,9 @@
 # synth_struct/src/synth_struct/generators/gen_base.py
 
+"""
+This holds the MicrostructureGenerator class and associated basic functions.
+"""
+
 import numpy as np
 
 
@@ -22,7 +26,9 @@ class MicrostructureGenerator:
         self._allocate_grain_arrays(micro)
 
     def _generate_internal(self, micro):
-        """Internal generation logic. Must be implemented by subclasses."""
+        """
+        Internal generation logic. Must be implemented by subclasses.
+        """
 
         raise NotImplementedError("Subclasses must implement the generate() method.")
 

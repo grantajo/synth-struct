@@ -1,5 +1,13 @@
 # synth_struct/src/orientation/texture/hexagonal.py
 
+"""
+This holds the HexagonalTexture Generator.
+
+There are two basic textures for hexagonal:
+- basal
+- prismatic
+"""
+
 import numpy as np
 from .texture_base import TextureGenerator
 

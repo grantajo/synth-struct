@@ -1,14 +1,8 @@
 # synth_struct/src/synth_struct/orientation/rotation_converter.py
-"""
-To import from a src file, use
-from ..orientations.rotation_converter import (functions here)
-"""
-
-import numpy as np
 
 """
-This file holds a set of conversion functions between Euler angles, 
-quaternions, and orientation matrices
+This file holds a set of conversion functions between Euler angles,
+quaternions, and rotation matrices
 
 These are based on Rowenhorst et al. 2015. Modelling Simul. Materi. Sci. Eng.
 doi: 10.1088/0965-0393/23/8/083501
@@ -16,11 +10,11 @@ doi: 10.1088/0965-0393/23/8/083501
 Bunge Euler convention is always ZXZ
 """
 
-# eu2quat, eu2om, quat2eu, om2eu, quat2om, om2quat
+import numpy as np
 
 
 def normalize_angle(angles):
-    """Normalize Euelr angles to be within [0, 2π)"""
+    """Normalize Eueler angles to be within [0, 2π)"""
     return angles % (2 * np.pi)
 
 
@@ -285,11 +279,6 @@ def rotation_matrix_to_quat(R):
     quats = quats / norm
 
     return quats[0] if single_input else quats
-
-
-"""
-Additional utility functions for microstructure generation
-"""
 
 
 def create_rotation_matrix_2d(angle):

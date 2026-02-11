@@ -1,5 +1,9 @@
 # synth_struct/src/orientation/texture/__init__.py
 
+"""
+Texture generators
+"""
+
 from .texture import Texture
 from .texture_base import TextureGenerator
 from .cubic import CubicTexture

@@ -1,5 +1,13 @@
 # synth_struct/src/synth_struct/generators/ellipsoidal.py
 
+"""
+This class holds the EllipsoidalGenerator class that generates an
+anisotropic Voronoi generation that has grains elongated in a
+given direction, can be 2D or 3D.
+"""
+
+import numpy as np
+
 from .gen_base import MicrostructureGenerator
 from .gen_utils import get_seed_coordinates, aniso_voronoi_assignment
 from ..orientation import (
@@ -8,7 +16,6 @@ from ..orientation import (
     rotation_z_to_x,
     rotation_z_to_y,
 )
-import numpy as np
 
 
 class EllipsoidalGenerator(MicrostructureGenerator):

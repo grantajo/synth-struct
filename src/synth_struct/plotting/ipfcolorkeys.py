@@ -1,23 +1,21 @@
 # synth_struct/src/synth_struct/plotting/ipfcolorkeys.py
 
-import sys
-
-sys.path.insert(0, "../src")
-import os
-
-import matplotlib.pyplot as plt
-
-from orix import plot
-from orix.quaternion import symmetry
-
-outdir = "../output/IPFColorKeys"
-os.makedirs(outdir, exist_ok=True)
-
 """
 This file saves all of the IPF Color Keys from orix to a folder in the output directory
 """
 
-# Create
+import sys
+import os
+
+import matplotlib.pyplot as plt
+from orix import plot
+from orix.quaternion import symmetry
+
+sys.path.insert(0, "../src")
+outdir = "../output/IPFColorKeys"
+os.makedirs(outdir, exist_ok=True)
+
+# List of all the point groups
 pg_laue = [
     symmetry.Ci,  #
     symmetry.C2h,
@@ -31,6 +29,7 @@ pg_laue = [
     symmetry.Oh,
 ]
 
+# Plot all of the IPF color maps
 for pg in pg_laue:
     ipfkey = plot.IPFColorKeyTSL(pg)
     fig = ipfkey.plot(return_figure=True)

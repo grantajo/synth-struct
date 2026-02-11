@@ -1,9 +1,16 @@
 # synth_struct/src/synth_struct/generators/mixed.py
 
+"""
+This class holds the MixedGenerator class that generates an
+anisotropic Voronoi generation that generates a microstructure
+with both equiaxed and elongated grains, can be 2D or 3D.
+"""
+
+import numpy as np
+
 from .gen_base import MicrostructureGenerator
 from .gen_utils import get_seed_coordinates, aniso_voronoi_assignment
 from ..orientation import euler_to_rotation_matrix, create_rotation_matrix_2d
-import numpy as np
 
 
 class MixedGenerator(MicrostructureGenerator):

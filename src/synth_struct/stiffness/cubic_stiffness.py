@@ -1,13 +1,9 @@
 # synth_struct/src/synth_struct/stiffness/cubic_stiffness.py
 
-from __future__ import annotations
-import numpy as np
-from .stiffness_base import StiffnessGenerator
-from .stiffness import Stiffness
-from .stiffness_utils import rotate_stiffness_tensors_batch
-
 """
-Cubic Stiffness Tensor:
+Rotation calculator for local stiffness tensors in a cubic system.
+
+Base Cubic Stiffness Tensor:
 [C11, C12, C12,   0,   0,   0],
 [C12, C11, C12,   0,   0,   0],
 [C12, C12, C11,   0,   0,   0],
@@ -15,6 +11,14 @@ Cubic Stiffness Tensor:
 [  0,   0,   0,   0, C44,   0],
 [  0,   0,   0,   0,   0, C44],
 """
+
+from __future__ import annotations
+
+import numpy as np
+
+from .stiffness_base import StiffnessGenerator
+from .stiffness import Stiffness
+from .stiffness_utils import rotate_stiffness_tensors_batch
 
 
 class CubicStiffnessGenerator(StiffnessGenerator):
@@ -39,7 +43,9 @@ class CubicStiffnessGenerator(StiffnessGenerator):
         self._base_tensor = self._create_base_tensor()
 
     def _create_base_tensor(self) -> np.ndarray:
-        """Create the base stiffness tensor for cubic symmetry."""
+        """
+        Create the base stiffness tensor for cubic symmetry.
+        """
         C = np.zeros((6, 6))
         C[0, 0] = C[1, 1] = C[2, 2] = self.C11
         C[0, 1] = C[0, 2] = C[1, 2] = self.C12

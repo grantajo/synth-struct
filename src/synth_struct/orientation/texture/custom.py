@@ -1,12 +1,24 @@
 # synth_struct/src/orientation/texture/custom.py
 
-import numpy as np
+"""
+This holds the CustomTexture Generator.
+
+This is where the user can decide on a texture based on
+two directions (parallel to RD and parallel to RD)
+"""
+
 import warnings
+
+import numpy as np
+
 from .texture_base import TextureGenerator
 from ..rotation_converter import rotation_matrix_to_euler
 
 
 def _normalize(v):
+    """
+    Normalize a vector before rotation and translation
+    """
     v = np.array(v, dtype=float)
     norm = np.linalg.norm(v)
 

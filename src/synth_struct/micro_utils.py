@@ -69,7 +69,8 @@ def get_grains_in_region(micro, region_type: str = "box", **kwargs) -> np.ndarra
             raise ValueError("'mask' parameter is required for custom_mask region type")
         if mask.shape != micro.grain_ids.shape:
             raise ValueError(
-                f"Mask shape {mask.shape} doesn't match microstructure shape {micro.grain_ids.shape}"
+                f"Mask shape {mask.shape} doesn't match microstructure "
+                f"shape {micro.grain_ids.shape}"
             )
 
     else:

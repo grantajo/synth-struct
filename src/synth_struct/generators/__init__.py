@@ -1,5 +1,8 @@
 # synth_struct/src/synth_struct/generators/__init__.py
 
+"""
+Synthetic microstructure generators
+"""
 
 from .voronoi import VoronoiGenerator
 from .ellipsoidal import EllipsoidalGenerator

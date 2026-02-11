@@ -1,5 +1,19 @@
 # synth_struct/src/orientation/texture/cubic.py
 
+"""
+This holds the CubicTexture Generator.
+
+There are several basic textures for cubic:
+- cube
+- goss
+- brass
+- copper
+- s
+- p
+- rotated_cube
+- rotated_goss
+"""
+
 import numpy as np
 from .texture_base import TextureGenerator
 

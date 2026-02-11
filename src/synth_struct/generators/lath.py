@@ -1,15 +1,23 @@
 # synth_struct/src/synth_struct/generators/lath.py
 
-from .gen_base import MicrostructureGenerator
-from .gen_utils import aniso_voronoi_assignment
-from ..orientation import euler_to_rotation_matrix
-import numpy as np
-
 """
+This class holds the LathGenerator class that generates an
+anisotropic Voronoi generation that has basketweave and colony
+grain morphologies
+
+Currently this generator has problems with its generation and
+should be reimplemented
+
 Possible improvements:
 - Second phases between laths
 - Spatial clustering of colonies
 """
+
+import numpy as np
+
+from .gen_base import MicrostructureGenerator
+from .gen_utils import aniso_voronoi_assignment
+from ..orientation import euler_to_rotation_matrix
 
 
 class LathGenerator(MicrostructureGenerator):
@@ -87,9 +95,7 @@ class LathGenerator(MicrostructureGenerator):
         if self.seed:
             np.random.seed(self.seed)
 
-        ndim = len(micro.dimensions)
-
-        if ndim != 3:
+        if len(micro.dimensions) != 3:
             raise ValueError("Lath microstructures only supported for 3D")
 
         # Determine which grains are basketweave vs colony
@@ -101,7 +107,7 @@ class LathGenerator(MicrostructureGenerator):
         self._generate_colony_structure(micro.dimensions)
 
         # Generate lath parameters
-        self.scale_factors, self.rotations = self._generate_lath_params(ndim)
+        self.scale_factors, self.rotations = self._generate_lath_params()
 
         # Perform weighted Voronoi tessellation
         aniso_voronoi_assignment(
@@ -163,15 +169,11 @@ class LathGenerator(MicrostructureGenerator):
                 self.colony_ids[grain_idx] = colony_id
                 grain_idx += 1
 
-    def _generate_lath_params(self, ndim):
+    def _generate_lath_params(self):
         """
         Generate scale factors and rotation matrices for lath grains.
 
         Laths within the same colony have similar orientations.
-
-        Args:
-        - num_grains: int - Number of laths
-        - ndim: int - Number fo dimensions (must be 3)
 
         Returns:
         - scale_factors: np.ndarray of shape (num_grains, 3)

@@ -1,5 +1,9 @@
 # synth_struct/src/synth_struct/plotting/__init__.py
 
+"""
+Plotting functions
+"""
+
 from .plot_utils import (
     shuffle_display_grain_ids,
     get_colony_colormap,

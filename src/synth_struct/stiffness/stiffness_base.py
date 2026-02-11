@@ -1,5 +1,11 @@
 # synth_struct/src/synth_struct/stiffness/stiffness_base.py
 
+"""
+StiffnessGenerator class
+
+Instantiates stiffness rotation generators (not really a generator, but oh well)
+"""
+
 from __future__ import annotations
 from abc import ABC, abstractmethod
 

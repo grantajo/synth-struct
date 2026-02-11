@@ -1,5 +1,11 @@
 # synth_struct/src/synth_struct/stiffness/stiffness.py
 
+"""
+Stiffness class
+
+Initiates a data class that holds the stiffnesses of grains
+"""
+
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Dict

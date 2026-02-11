@@ -5,6 +5,7 @@ Useful utility functions for microstructure generators
 """
 
 import numpy as np
+
 from .._cpp_extensions import aniso_voronoi_assignment as cpp_aniso_voronoi
 from .._cpp_extensions import EIGEN_AVAILABLE
 

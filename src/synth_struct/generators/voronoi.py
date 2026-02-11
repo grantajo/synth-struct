@@ -1,11 +1,15 @@
 # synth_struct/src/synth_struct/generators/voronoi.py
 
-from .gen_base import MicrostructureGenerator
-from .gen_utils import get_seed_coordinates
+"""
+This class holds the VoronoiGenerator class that generates an
+isotropic Voronoi microstructure.
+"""
 
 import numpy as np
-
 from scipy.spatial import cKDTree
+
+from .gen_base import MicrostructureGenerator
+from .gen_utils import get_seed_coordinates
 
 
 class VoronoiGenerator(MicrostructureGenerator):

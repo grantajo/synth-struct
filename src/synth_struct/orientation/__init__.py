@@ -1,5 +1,9 @@
 # synth_struct/src/synth_struct/orientation/__init__.py
 
+"""
+Rotation conversion functions
+"""
+
 from .rotation_converter import (
     normalize_angle,
     euler_to_quat,

@@ -33,6 +33,14 @@ The first time running an example, the code may take slightly longer than normal
 
 ## Todo Lists:
 ### Short-term todo:
+- Check the following:
+    - Potential bugs:
+        - gen_base:56 - Missing 'seeds' member
+        - custom:91 - Too many positional arguments for method call
+        - custom:112 - Missing num_grains member
+        - custom:50 - Accessing 'uvw' before it's defined on line 54
+    - Medium priority:
+        - ipf_maps:150 - Using mutable [] as default argument
 - Finish stiffness tests
 - Update examples
     - Textures 

@@ -1,13 +1,9 @@
 # synth_struct/src/synth_struct/stiffness/hexagonal_stiffness.py
 
-from __future__ import annotations
-import numpy as np
-from .stiffness_base import StiffnessGenerator
-from .stiffness import Stiffness
-from .stiffness_utils import rotate_stiffness_tensors_batch
-
 """
-Hexagonal Stiffness Tensor:
+Rotation calculator for local stiffness tensors in a Hexagonal system.
+
+Base Hexagonal Stiffness Tensor:
 [C11, C12, C13,   0,   0,   0],
 [C12, C11, C13,   0,   0,   0],
 [C13, C13, C33,   0,   0,   0],
@@ -15,6 +11,14 @@ Hexagonal Stiffness Tensor:
 [  0,   0,   0,   0, C44,   0],
 [  0,   0,   0,   0,   0, C66]
 """
+
+from __future__ import annotations
+
+import numpy as np
+
+from .stiffness_base import StiffnessGenerator
+from .stiffness import Stiffness
+from .stiffness_utils import rotate_stiffness_tensors_batch
 
 
 class HexagonalStiffnessGenerator(StiffnessGenerator):

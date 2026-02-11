@@ -1,9 +1,15 @@
 # synth_struct/src/orientation/texture/texture.py
 
+"""
+Texture class for instantiating a texture for the TextureGenerators
+"""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Dict
+
+import numpy as np
 
 from ..rotation_converter import (
     euler_to_quat,
@@ -13,8 +19,6 @@ from ..rotation_converter import (
     rotation_matrix_to_euler,
     rotation_matrix_to_quat,
 )
-
-import numpy as np
 
 
 @dataclass
@@ -54,6 +58,9 @@ class Texture:
 
     @property
     def n_orientations(self) -> int:
+        """
+        Returns number of orientations
+        """
         return self.orientations.shape[0]
 
     def to_representation(self, representation: str) -> "Texture":
@@ -99,6 +106,9 @@ class Texture:
         )
 
     def copy(self) -> "Texture":
+        """
+        Creates a copy of the texture for analysis
+        """
         return Texture(
             orientations=self.orientations.copy(),
             representation=self.representation,
@@ -110,7 +120,6 @@ class Texture:
         """
         Return a texture corresponding to a subset of grains.
         """
-
         return Texture(
             orientations=self.orientations[indices],
             representation=self.representation,

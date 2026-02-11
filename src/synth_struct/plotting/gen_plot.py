@@ -1,14 +1,15 @@
 # synth_struct/src/synth_struct/plotting/gen_plot.py
 
-import numpy as np
-import matplotlib.pyplot as plt
-from .plot_utils import shuffle_display_grain_ids, create_grain_boundary_overlay
-
 """
 This is a series of plotting functions to help with plotting.
 
 This is for general plotting, such as Grain IDs, etc.
 """
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+from .plot_utils import shuffle_display_grain_ids, create_grain_boundary_overlay
 
 
 class Plotter:

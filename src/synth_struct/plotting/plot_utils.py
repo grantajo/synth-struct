@@ -1,10 +1,10 @@
 # synth_struct/src/synth_struct/plotting/plot_utils.py
 
-import numpy as np
-
 """
 Utility functions for preparing microstructure data for visualization.
 """
+
+import numpy as np
 
 
 def shuffle_display_grain_ids(grain_ids, num_grains, seed=None):

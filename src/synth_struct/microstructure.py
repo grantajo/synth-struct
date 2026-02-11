@@ -51,4 +51,7 @@ class Microstructure:
         self.fields[name] = array
 
     def get_field(self, name):
+        """
+        Get the data from an attached field in the Microstructure class
+        (orientations, stiffnesses, etc.)"""
         return self.fields[name]

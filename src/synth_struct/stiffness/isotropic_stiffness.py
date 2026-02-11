@@ -1,13 +1,9 @@
 # synth_struct/src/synth_struct/stiffness/isotropic_stiffness.py
 
-from __future__ import annotations
-import numpy as np
-from .stiffness_base import StiffnessGenerator
-from .stiffness import Stiffness
-from .stiffness_utils import rotate_stiffness_tensors_batch
-
 """
-Isotropic Stiffness Tensor
+Rotation calculator for local stiffness tensors in an isotropic system.
+
+Base Isotropic Stiffness Tensor
 [  c, lam, lam,  0,  0,  0],
 [lam,   c, lam,  0,  0,  0],
 [lam, lam,   c,  0,  0,  0],
@@ -19,6 +15,14 @@ lam = E * nu / ((1 + nu) * (1 - 2 * nu))
 mu = E / (2 * (1 + nu))
 c = lam + 2 * mu
 """
+
+from __future__ import annotations
+
+import numpy as np
+
+from .stiffness_base import StiffnessGenerator
+from .stiffness import Stiffness
+from .stiffness_utils import rotate_stiffness_tensors_batch
 
 
 class IsotropicStiffnessGenerator(StiffnessGenerator):
