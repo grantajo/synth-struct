@@ -1,8 +1,22 @@
-# This is a microstructure generator that outputs an HDF5 file with the grain structure and the orientations.
+# synth_struct
+This is a code base that generates microstrcutures that are intended to be used in
+mechanical simulations, such as ultrasonic, crystal plasticity, etc.
 
-install:
-When in project root run:  
-pip install -e .
+## Dependencies
+- Numpy (conda install numpy)
+- Scipy (conda install scipy)
+- h5py (conda install h5py)
+- matplotlib (conda install matplotlib)
+- matplotlib-scalebar (conda install matplotlib-scalebar)
+- orix (conda install orix=0.14.0) or latest version
+### Optional:
+- g++ (apt install build-essential gcc)
+- Eigen (apt install libeigen3-dev)
+- pybind11 (conda install pybind11)
+
+## Installation
+When in project root run:
+`pip install -e .`
 
 
 ## Dependencies
@@ -97,12 +111,12 @@ synth_struct/
 │   │   │   ├── rotation_converter.py  
 │   │   │   └── texture  
 │   │   │      ├── __init__.py  
-│   │   │      ├── cubic.py
+│   │   │      ├── cubic.py  
 │   │   │      ├── hexagonal.py  
 │   │   │      ├── random.py  
-│   │   │      ├── texture.py
-│   │   │      ├── texture_base.py
-│   │   │      └── custom.py
+│   │   │      ├── texture.py  
+│   │   │      ├── texture_base.py  
+│   │   │      └── custom.py  
 │   │   ├── plotting  
 │   │   │   ├── __init__.py  
 │   │   │   ├── gen_plot.py  
