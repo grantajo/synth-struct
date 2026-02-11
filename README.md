@@ -4,55 +4,60 @@ mechanical simulations, such as ultrasonic, crystal plasticity, etc.
 
 ## Installation
 ### Create a virtual environment
-`conda create --name synth_struct`  
-`conda activate synth_struct`  
+Run the following commands to create a virtual environment<br>
+`conda create --name synth`<br>
+`conda activate synth`<br>
 ### Install dependencies in virtual environment
-|      Package        |                  Installation                    |        Optional?       |
-|:-------------------:|:------------------------------------------------:|:----------------------:|
-|       numpy         |              `conda install numpy`               |        Required        |
-|       scipy         |              `conda install scipy`               |        Required        |
-|     matplotlib      |           `conda install matplotlib`             |        Required        |
-| matplotlib-scalebar |       `conda install matplotlib-scalebar`        | Required for plotting  |
-|       orix          |`conda install orix=0.14.0` <br> or latest version| Required for plotting  |
-|      pybind11       |             `conda install pybind11`             |Required for C++ speedup|
-|        g++          |        `apt install build-essential gcc`         |Required for C++ speedup|
-|       Eigen         |            `apt install libeigen3-dev`           |Required for C++ speedup|
+|Package              |Installation                       |Requirement             |
+|:-------------------:|:---------------------------------:|:----------------------:|
+|numpy                |`conda install numpy`              |Required                |
+|scipy                |`conda install scipy`              |Required                |
+|matplotlib           |`conda install matplotlib`         |Required                |
+|matplotlib-scalebar  |`conda install matplotlib-scalebar`|Required for plotting   |
+|orix                 |`conda install orix=0.14.0`        |Required for plotting   |
+|pybind11             |`conda install pybind11`           |Required for C++ speedup|
+|g++                  |`apt install build-essential gcc`  |Required for C++ speedup|
+|Eigen                |`apt install libeigen3-dev`        |Required for C++ speedup|
+|pytest               |`conda install pytest`             |Required for tests      |
 
-## Compiling the project
-When in project root run:  
+### Install the project
+When in project root run:<br>
 `pip install -e .`
 
+### Testing Installation
+Once installed, run the following command to run the tests<br>
+`pytest tests/`<br>
+
+### Installation notes
+The first time running an example, the code may take slightly longer than normal due
 
 ## Todo Lists:
 ### Short-term todo:
 - Finish stiffness tests
-- New texture examples
-
+- Update examples
+    - Textures 
+    - Location-specific textures
+    - Stiffness
 
 ### Things to be added:
-- Update examples
-    - stiffness
-    - plotting EBSD-like
-    - get grain and change texture
-- Finish and run tests for stiffness tensors
-- New lath generator
-- Fix plotting save locations (ipfcolorkeys)
-- Add in crytallography plotting
-- Add grain structures with grain size better distribution
-- Fix HDF5 writer so that a software can read it
+- Add in docstrings
 - Integrate with orix for better orientation information and plotting
     - Redo IPF maps
     - Add in IPFs and ODFs
     - Add in ability to have the colorkey shown in an IPF map
     - Figure out how to handle hexagonal directions for pole figures and ODFs
     - Add in ability to do ODF contour plots
-
+    - Fix plotting save locations (ipfcolorkeys)
+    - Add in plotting examples
+- Add grain structures with grain size better distribution
+- Fix HDF5 writer so that a software can read it
  
 ### Long term additions:
 - Make sure there is the ability to have a second phase with a different stiffness tensor
     - Add in ability to have precipitates
     - Add in porosity
 - Add grain structures with grain size better distribution
+- New lath generator (CA see generators/lath_updated.py)
 - Add HDF5 and VTK writers
 - Add in ability to create a mesh with the microstructure
 - Add in ability to have orientation gradients within grains, subgrains and GNDs
@@ -60,77 +65,77 @@ When in project root run:
 
 
 ## File structure: 
-synth_struct/  
-├── README.md  
-├── examples  
-│   ├── __init__.py  
-│   ├── basic_example_2d.py  
-│   ├── basic_example_3d.py  
-│   ├── mask_box.py  
-│   ├── mask_custom.py  
-│   ├── mask_cylinder.py  
-│   ├── mask_layer.py  
-│   ├── mask_sphere.py  
-│   ├── shapes.py  
-│   └── vis_example.py  
-├── output  
-├── pyproject.toml  
-├── setup.py
-├── src  
-│   ├── synth_struct  
-│   │   ├── __init__.py  
-│   │   ├── generators  
-│   │   │   ├── __init__.py  
-│   │   │   ├── columnar.py  
-│   │   │   ├── ellipsoidal.py  
-│   │   │   ├── gen_base.py  
-│   │   │   ├── gen_utils.py  
-│   │   │   ├── lath.py  
-│   │   │   ├── lath_updated.py  
-│   │   │   ├── mixed.py  
-│   │   │   └── voronoi.py  
-│   │   ├── _cpp_exensions  
-│   │   │   ├── __init__.py  
-│   │   │   └── aniso_voronoi_eigen.cpp  
-│   │   ├── io  
-│   │   │   └── hdf5_writer.py  
-│   │   ├── micro_utils.py  
-│   │   ├── microstructure.py  
-│   │   ├── orientation  
-│   │   │   ├── __init__.py  
-│   │   │   ├── rotation_converter.py  
-│   │   │   └── texture  
-│   │   │      ├── __init__.py  
-│   │   │      ├── cubic.py  
-│   │   │      ├── hexagonal.py  
-│   │   │      ├── random.py  
-│   │   │      ├── texture.py  
-│   │   │      ├── texture_base.py  
-│   │   │      └── custom.py  
-│   │   ├── plotting  
-│   │   │   ├── __init__.py  
-│   │   │   ├── gen_plot.py  
-│   │   │   ├── ipf_maps.py  
-│   │   │   ├── ipfcolorkeys.py  
-│   │   │   ├── odf_plot.py  
-│   │   │   ├── orix_utils.py  
-│   │   │   ├── plot_utils.py  
-│   │   │   └── pole_figures.py  
-│   │   └── stiffness  
-│   │       ├── __init__.py  
-│   │       └── stiffness.py  
-└── tests  
-    ├── __init__.py  
-    ├── test_columnar.py  
-    ├── test_ellipsoidal.py  
-    ├── test_generator_base.py  
-    ├── test_micro_utils.py  
-    ├── test_microstructure.py  
-    ├── test_mixed.py  
-    ├── test_texture.py  
-    ├── test_texture_base.py  
-    ├── test_texture_cubic.py  
-    ├── test_texture_hexagonal.py  
-    └── test_voronoi.py  
+synth_struct/<br>
+├── README.md<br>
+├── examples/<br>
+│   ├── __init__.py<br>
+│   ├── basic_example_2d.py<br>
+│   ├── basic_example_3d.py<br>
+│   ├── mask_box.py<br>
+│   ├── mask_custom.py<br>
+│   ├── mask_cylinder.py<br>
+│   ├── mask_layer.py<br>
+│   ├── mask_sphere.py<br>
+│   ├── shapes.py<br>
+│   └── vis_example.py<br>
+├── output<br>
+├── pyproject.toml<br>
+├── setup.py<br>
+├── src/<br>
+│   ├── synth_struct/<br>
+│   │   ├── __init__.py<br>
+│   │   ├── generators/<br>
+│   │   │   ├── __init__.py<br>
+│   │   │   ├── columnar.py<br>
+│   │   │   ├── ellipsoidal.py<br>
+│   │   │   ├── gen_base.py<br>
+│   │   │   ├── gen_utils.py<br>
+│   │   │   ├── lath.py<br>
+│   │   │   ├── lath_updated.py<br>
+│   │   │   ├── mixed.py<br>
+│   │   │   └── voronoi.py<br>
+│   │   ├── _cpp_exensions/<br>
+│   │   │   ├── __init__.py<br>
+│   │   │   └── aniso_voronoi_eigen.cpp<br>
+│   │   ├── io/<br>
+│   │   │   └── hdf5_writer.py<br>
+│   │   ├── micro_utils.py<br>
+│   │   ├── microstructure.py<br>
+│   │   ├── orientation/<br>
+│   │   │   ├── __init__.py<br>
+│   │   │   ├── rotation_converter.py<br>
+│   │   │   └── texture/<br>
+│   │   │      ├── __init__.py<br>
+│   │   │      ├── cubic.py<br>
+│   │   │      ├── hexagonal.py<br>
+│   │   │      ├── random.py<br>
+│   │   │      ├── texture.py<br>
+│   │   │      ├── texture_base.py<br>
+│   │   │      └── custom.py<br>
+│   │   ├── plotting/<br>
+│   │   │   ├── __init__.py<br>
+│   │   │   ├── gen_plot.py<br>
+│   │   │   ├── ipf_maps.py<br>
+│   │   │   ├── ipfcolorkeys.py<br>
+│   │   │   ├── odf_plot.py<br>
+│   │   │   ├── orix_utils.py<br>
+│   │   │   ├── plot_utils.py<br>
+│   │   │   └── pole_figures.py<br>
+│   │   └── stiffness/<br>
+│   │       ├── __init__.py<br>
+│   │       └── stiffness.py<br>
+└── tests/<br>
+    ├── __init__.py<br>
+    ├── test_columnar.py<br>
+    ├── test_ellipsoidal.py<br>
+    ├── test_generator_base.py<br>
+    ├── test_micro_utils.py<br>
+    ├── test_microstructure.py<br>
+    ├── test_mixed.py<br>
+    ├── test_texture.py<br>
+    ├── test_texture_base.py<br>
+    ├── test_texture_cubic.py<br>
+    ├── test_texture_hexagonal.py<br>
+    └── test_voronoi.py<br>
 
 

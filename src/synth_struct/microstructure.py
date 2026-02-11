@@ -1,5 +1,13 @@
 # synth_struct/src/synth_struct/microstructure.py
 
+"""
+Microstructure representation for voxel-based synthetic materials.
+
+Provides the ``Microstructure`` class, a container for 2D and 3D
+voxelized grain structures with associated physical scaling,
+crystallographic symmetry, and attached data fields.
+"""
+
 import numpy as np
 
 
