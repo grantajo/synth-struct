@@ -2,24 +2,23 @@
 This is a code base that generates microstrcutures that are intended to be used in
 mechanical simulations, such as ultrasonic, crystal plasticity, etc.
 
-## Dependencies
+## Installation
 ### Create a virtual environment
 `conda create --name synth_struct`  
 `conda activate synth_struct`  
 ### Install dependencies in virtual environment
-|      Package        |                Installation                 |        Optional?       |
-|:-------------------:|:-------------------------------------------:|:----------------------:|
-|       numpy         |            `conda install numpy`            |        Required        |
-|       scipy         |            `conda install scipy`            |        Required        |
-|     matplotlib      |         `conda install matplotlib`          |        Required        |
-| matplotlib-scalebar |     `conda install matplotlib-scalebar`     | Required for plotting  |
-|       orix          |`conda install orix=0.14.0` or latest version| Required for plotting  |
-|:-------------------:|:-------------------------------------------:|:----------------------:|
-|      pybind11       |           `conda install pybind11`          |Required for C++ speedup|
-|        g++          |      `apt install build-essential gcc`      |Required for C++ speedup|
-|       Eigen         |          `apt install libeigen3-dev`        |Required for C++ speedup|
+|      Package        |                  Installation                    |        Optional?       |
+|:-------------------:|:------------------------------------------------:|:----------------------:|
+|       numpy         |              `conda install numpy`               |        Required        |
+|       scipy         |              `conda install scipy`               |        Required        |
+|     matplotlib      |           `conda install matplotlib`             |        Required        |
+| matplotlib-scalebar |       `conda install matplotlib-scalebar`        | Required for plotting  |
+|       orix          |`conda install orix=0.14.0` <br> or latest version| Required for plotting  |
+|      pybind11       |             `conda install pybind11`             |Required for C++ speedup|
+|        g++          |        `apt install build-essential gcc`         |Required for C++ speedup|
+|       Eigen         |            `apt install libeigen3-dev`           |Required for C++ speedup|
 
-## Installation
+## Compiling the project
 When in project root run:  
 `pip install -e .`
 
@@ -39,17 +38,14 @@ When in project root run:
 - New lath generator
 - Fix plotting save locations (ipfcolorkeys)
 - Add in crytallography plotting
-- Add in IPF, pole figure, and ODF examples
-    - Figure out how to handle hexagonal directions for pole figures and ODFs
-    - Add in ability to do ODF contour plots
-    - Update ipfcolorkeys.py
 - Add grain structures with grain size better distribution
 - Fix HDF5 writer so that a software can read it
 - Integrate with orix for better orientation information and plotting
     - Redo IPF maps
     - Add in IPFs and ODFs
     - Add in ability to have the colorkey shown in an IPF map
-- Add in ability to have porosity
+    - Figure out how to handle hexagonal directions for pole figures and ODFs
+    - Add in ability to do ODF contour plots
 
  
 ### Long term additions:
