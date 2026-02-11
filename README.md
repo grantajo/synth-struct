@@ -4,28 +4,20 @@ mechanical simulations, such as ultrasonic, crystal plasticity, etc.
 
 ## Dependencies
 ### Create a virtual environment
-`conda create --name synth_struct`
-`conda activate synth_struct`
+`conda create --name synth_struct`  
+`conda activate synth_struct`  
 ### Install dependencies in virtual environment
-- Numpy  
-`conda install numpy`
-- Scipy  
-`conda install scipy`
-- h5py  
-`conda install h5py`
-- matplotlib  
-`conda install matplotlib`
-- matplotlib-scalebar  
-`conda install matplotlib-scalebar`
-- orix  
-`conda install orix=0.14.0` or latest version
-### Optional:
-- g++  
-`sudo apt install build-essential gcc`
-- Eigen  
-`apt install libeigen3-dev`
-- pybind11  
-`conda install pybind11`
+|      Package        |                Installation                 |        Optional?       |
+|:-------------------:|:-------------------------------------------:|:----------------------:|
+|       numpy         |            `conda install numpy`            |        Required        |
+|       scipy         |            `conda install scipy`            |        Required        |
+|     matplotlib      |         `conda install matplotlib`          |        Required        |
+| matplotlib-scalebar |     `conda install matplotlib-scalebar`     | Required for plotting  |
+|       orix          |`conda install orix=0.14.0` or latest version| Required for plotting  |
+|:-------------------:|:-------------------------------------------:|:----------------------:|
+|      pybind11       |           `conda install pybind11`          |Required for C++ speedup|
+|        g++          |      `apt install build-essential gcc`      |Required for C++ speedup|
+|       Eigen         |          `apt install libeigen3-dev`        |Required for C++ speedup|
 
 ## Installation
 When in project root run:  
