@@ -1,10 +1,15 @@
 # synth_struct/examples/shapes.py
 
+"""
+This example creates a microstructure with each of the various Microstructure generator classes
+
+Generates both 2D and 3D examples for each type.
+"""
+
 import sys
 from pathlib import Path
 
-project_root = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(project_root))
+import matplotlib.pyplot as plt
 
 from synth_struct.microstructure import Microstructure
 from synth_struct.generators.voronoi import VoronoiGenerator
@@ -14,14 +19,9 @@ from synth_struct.generators.mixed import MixedGenerator
 from synth_struct.generators.lath import LathGenerator
 from synth_struct.plotting.gen_plot import Plotter
 
-import matplotlib.pyplot as plt
 
-"""
-This example creates a microstructure with each of the various Microstructure generator classes
-
-Generates both 2D and 3D examples for each type.
-"""
-
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
 
 def main():
     repo_root = project_root
@@ -283,7 +283,8 @@ def main():
     colony_info = gen.get_colony_info()
     print(f"    Colonies: {colony_info['num_colonies']}")
     print(
-        f"    Avg laths per colony: {len(colony_info['colony_ids']) / colony_info['num_colonies']:.1f}"
+        f"    Avg laths per colony: {len(colony_info['colony_ids']) 
+        f"/ colony_info['num_colonies']:.1f}"
     )
 
     print("\n" + "=" * 60)

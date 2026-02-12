@@ -64,16 +64,24 @@ class CubicTexture(TextureGenerator):
         """
         Returns a (num_grains, 3) array of Euler angles
         """
-        n = micro.num_grains
+        if isinstance(micro, np.ndarray):
+            n = len(micro)
+        else:
+            n = micro.num_grains
+        
         base_orientation = CUBIC_TEXTURES[self.type]
+        
+        orientations = np.zeros((n + 1, 3))
 
         if self.degspread == 0:
-            orientations = np.tile(base_orientation, (n, 1))
+            orientations[1:] = np.tile(base_orientation, (n, 1))
         else:
-            orientations = np.random.normal(
+            orientations[1:] = np.random.normal(
                 loc=base_orientation, scale=np.radians(self.degspread), size=(n, 3)
             )
 
-        orientations = orientations % (2 * np.pi)
+        orientations[1:] = orientations[1:] % (2 * np.pi)
 
         return orientations
+        
+        

@@ -16,7 +16,7 @@ class Microstructure:
     Data container for a synthetic microstructure
     """
 
-    def __init__(self, dimensions, resolution, units="micron", symmetry=None):
+    def __init__(self, dimensions, resolution, units="um", symmetry=None):
         """
         Initiation of a Microstructure class
 

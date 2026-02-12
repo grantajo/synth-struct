@@ -5,8 +5,8 @@ sys.path.insert(0, "../src")
 import matplotlib.pyplot as plt
 
 
-from microstructure import Microstructure
-from texture import Texture
+from synth_struct.microstructure import Microstructure
+from synth_struct.orientation.texture import Texture
 from plotting import OrixVisualizer
 
 """

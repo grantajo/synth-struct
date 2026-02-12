@@ -1,20 +1,21 @@
 # synth_struct/examples/basic_2d_example.py
 
+"""
+This is a simple example to create a 2D microstructure.
+"""
+
 import sys
 import time
 from pathlib import Path
 
-project_root = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(project_root))
+import matplotlib.pyplot as plt
 
 from synth_struct.microstructure import Microstructure
 from synth_struct.generators.voronoi import VoronoiGenerator
 
-import matplotlib.pyplot as plt
 
-"""
-This is a simple example to create a 2D microstructure.
-"""
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
 
 start_time = time.time()
 

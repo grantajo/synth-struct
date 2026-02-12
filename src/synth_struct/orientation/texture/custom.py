@@ -87,12 +87,14 @@ class CustomTexture(TextureGenerator):
 
         # Convert to Euler angles
         euler = rotation_matrix_to_euler(R)
-
+        
+        orientations = np.zeros((n + 1, 3))
+        
         if self.degspread:
-            orientations = self._apply_scatter(euler, n)
+            orientations[1:] = self._apply_scatter(euler, n)
         else:
             # Repeat base orienation for all grains
-            orientations = np.tile(euler, (n, 1))
+            orientations[1:] = np.tile(euler, (n, 1))
 
         return orientations
 

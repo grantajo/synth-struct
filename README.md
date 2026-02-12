@@ -34,15 +34,16 @@ The first time running an example, the code may take slightly longer than normal
 
 ## Todo Lists:
 ### Short-term todo:
-    - Medium priority:
-        - ipf_maps:150 - Using mutable [] as default argument
+- Fix textures and finish example (middle_orientation)
+- Medium priority:
+    - ipf_maps:150 - Using mutable [] as default argument
 - Update examples
     - Textures 
     - Location-specific textures
     - Stiffness
 
 ### Things to be added:
-- Add in docstrings
+- Add function to apply a texture to a region
 - Integrate with orix for better orientation information and plotting
     - Redo IPF maps
     - Add in IPFs and ODFs
