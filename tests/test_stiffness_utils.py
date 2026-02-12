@@ -85,11 +85,17 @@ class TestRotateStiffnessTensor:
         
         assert C_rotated.shape == (6, 6)
 
-    def test_bond_transformation_matrix_symmetry(self):
-        """Test that the transformation preserves certain symmetries"""
-        C = np.eye(6) * 100
+    def test_isotropic_rotation_immutability(self):
+        """Test that isotropic does not change with rotation"""
+        lam = 50.0
+        mu = 30.0
         
-        # Small rotation
+        C = np.zeros((6, 6))
+        
+        C[0:3, 0:3] = lam
+        C[0, 0] = C[1, 1] = C[2, 2] = lam + 2 * mu
+        C[3, 3] = C[4, 4] = C[5, 5] = mu
+        
         angle = 0.1
         R = np.array([
             [np.cos(angle), -np.sin(angle), 0],
@@ -100,7 +106,23 @@ class TestRotateStiffnessTensor:
         C_rotated = rotate_stiffness_tensor(C, R)
         
         # Should be close to original for small rotation
-        np.testing.assert_array_almost_equal(C_rotated, C, decimal=1)
+        np.testing.assert_array_almost_equal(C_rotated, C, decimal=10)
+
+    def test_transformation_matrix_symmetry(self):
+        """Test that the transformation preserves symmetry of stiffness tensor"""
+        C = np.random.rand(6, 6)
+        C = (C + C.T) / 2 # Make the matrix symmetric
+        
+        angle = 1.0
+        R = np.array([
+            [np.cos(angle), -np.sin(angle), 0],
+            [np.sin(angle), np.cos(angle), 0],
+            [0, 0, 1]
+        ])
+        
+        C_rotated = rotate_stiffness_tensor(C, R)
+        
+        np.testing.assert_array_almost_equal(C_rotated, C_rotated.T, decimal=10)
 
 
 class TestRotateStiffnessTensorsBatch:
@@ -143,7 +165,7 @@ class TestRotateStiffnessTensorsBatch:
 
     def test_invalid_base_tensor_shape(self):
         """Test that invalid base tensor shape raises ValueError"""
-        C_base = np.random.rand(6, 6, 6)  # Wrong shape
+        C_base = np.random.rand(6, 5, 6)  # Wrong shape
         R_matrices = np.array([np.eye(3) for _ in range(5)])
         
         with pytest.raises(ValueError, match="must have shape"):

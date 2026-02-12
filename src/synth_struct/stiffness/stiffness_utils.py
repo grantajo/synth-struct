@@ -92,25 +92,34 @@ def rotate_stiffness_tensors_batch(
     """
     n = R_matrices.shape[0]
 
-    # Handle both single base tensor and multiple base tensors
-    if C_base.ndim == 2:
-        # Single base tensor - broadcast to all
-        C_rotated = np.empty((n, 6, 6))
-        for i in range(n):
-            C_rotated[i] = rotate_stiffness_tensor(C_base, R_matrices[i])
-    elif C_base.ndim == 3:
-        # Multiple base tensors
+    # Check that C_base is correct size
+    if C_base.ndim == 2:  # There is only one base C
+        if C_base.shape != (6, 6):
+            raise ValueError(
+                f"C_base must have shape (6, 6) or (n, 6, 6), " f"got {C_base.shape}"
+            )
+    elif C_base.ndim == 3:  # There are multiple base C's
+        if C_base.shape[1:] != (6, 6):
+            raise ValueError(
+                f"C_base must have shape (6, 6) or (n, 6, 6), " f"got {C_base.shape}"
+            )
         if C_base.shape[0] != n:
             raise ValueError(
                 f"Number of base tensors ({C_base.shape[0]}) must match "
                 f"number of rotation matrices ({n})"
             )
-        C_rotated = np.empty((n, 6, 6))
-        for i in range(n):
-            C_rotated[i] = rotate_stiffness_tensor(C_base[i], R_matrices[i])
     else:
         raise ValueError(
-            f"C_base must have shape (6, 6) or (n, 6, 6), got {C_base.shape}"
+            f"C_base must have shape (6, 6) or (n, 6, 6), " f"got {C_base.shape}"
         )
+
+    # Handle tensor rotations
+    C_rotated = np.empty((n, 6, 6))
+    if C_base.ndim == 2:
+        for i in range(n):
+            C_rotated[i] = rotate_stiffness_tensor(C_base, R_matrices[i])
+    else:
+        for i in range(n):
+            C_rotated[i] = rotate_stiffness_tensor(C_base[i], R_matrices[i])
 
     return C_rotated
