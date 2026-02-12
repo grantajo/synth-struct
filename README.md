@@ -7,6 +7,7 @@ mechanical simulations, such as ultrasonic, crystal plasticity, etc.
 Run the following commands to create a virtual environment<br>
 `conda create --name synth`<br>
 `conda activate synth`<br>
+
 ### Install dependencies in virtual environment
 |Package              |Installation                       |Requirement             |
 |:-------------------:|:---------------------------------:|:----------------------:|
@@ -35,7 +36,6 @@ The first time running an example, the code may take slightly longer than normal
 ### Short-term todo:
 - Check the following:
     - Potential bugs:
-        - gen_base:56 - Missing 'seeds' member
         - custom:91 - Too many positional arguments for method call
         - custom:112 - Missing num_grains member
         - custom:50 - Accessing 'uvw' before it's defined on line 54
@@ -61,7 +61,7 @@ The first time running an example, the code may take slightly longer than normal
 - Fix HDF5 writer so that a software can read it
  
 ### Long term additions:
-- Make sure there is the ability to have a second phase with a different stiffness tensor
+- Add in second phases
     - Add in ability to have precipitates
     - Add in porosity
 - Add grain structures with grain size better distribution

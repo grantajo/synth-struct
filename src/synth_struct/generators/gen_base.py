@@ -17,6 +17,14 @@ class MicrostructureGenerator:
     Provides shared utilities like allocating per-grain arrays
     """
 
+    def __init__(self):
+        """
+        Initialize base attributes that subclasses will populate.
+        """
+        self.seeds = None
+        self.scale_factors = None
+        self.rotations = None
+
     def generate(self, micro):
         """
         Generate grains in the given Microstructure
@@ -53,4 +61,6 @@ class MicrostructureGenerator:
         """
         Return the coordinates of the Voronoi seed points
         """
+        if not hasattr(self, "seeds"):
+            raise AttributeError("Seeds have not been generated yet. Call generate().")
         return self.seeds

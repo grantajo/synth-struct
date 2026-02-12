@@ -45,6 +45,7 @@ class CustomTexture(TextureGenerator):
 
     def __init__(self, hkl, uvw, degspread=5.0, seed=None):
         self.hkl = _normalize(hkl)
+        self.uvw = _normalize(uvw)
         uvw_normalized = _normalize(uvw)
 
         dot_product = np.abs(np.dot(self.hkl, self.uvw))
@@ -88,14 +89,14 @@ class CustomTexture(TextureGenerator):
         euler = rotation_matrix_to_euler(R)
 
         if self.degspread:
-            orientations = self._apply_scatter(euler, n, self.degspread, self.seed)
+            orientations = self._apply_scatter(euler, n)
         else:
             # Repeat base orienation for all grains
             orientations = np.tile(euler, (n, 1))
 
         return orientations
 
-    def _apply_scatter(self, base_euler):
+    def _apply_scatter(self, base_euler, n):
         """
         Apply Gaussian scatter around base orientation.
 
@@ -109,14 +110,12 @@ class CustomTexture(TextureGenerator):
         if self.seed:
             np.random.seed(self.seed)
 
-        n = self.num_grains
-
         perturbations = np.random.normal(0.0, self.degspread, size=(n, 3))
 
-        orientations = base_euler, +perturbations
+        orientations = base_euler + perturbations
 
         orientations[:, 0] %= 360.0
-        orientations[:, 1] %= np.clip(orientations[:, 1], 0.0, 180.0)
+        orientations[:, 1] = np.clip(orientations[:, 1], 0.0, 180.0)
         orientations[:, 2] %= 360.0
 
         return orientations
