@@ -68,8 +68,12 @@ class CustomTexture(TextureGenerator):
         """
         Returns a (num_grains, 3) array of Euler angles
         """
-
-        n = micro.num_grains
+        if isinstance(micro, np.ndarray):
+            n = len(micro)
+            include_background = False
+        else:
+            n = micro.num_grains
+            include_background = True
 
         # Construct orthonormal crystal basis
         # cRD = uvw (rolling direction)
@@ -88,13 +92,18 @@ class CustomTexture(TextureGenerator):
         # Convert to Euler angles
         euler = rotation_matrix_to_euler(R)
         
-        orientations = np.zeros((n + 1, 3))
+        if include_background:
+            orientations = np.zeros((n + 1, 3))
+            start_idx = 1
+        else:
+            orientations = np.zeros((n, 3))
+            start_idx = 0
         
         if self.degspread:
-            orientations[1:] = self._apply_scatter(euler, n)
+            orientations[start_idx:] = self._apply_scatter(euler, n)
         else:
             # Repeat base orienation for all grains
-            orientations[1:] = np.tile(euler, (n, 1))
+            orientations[start_idx:] = np.tile(euler, (n, 1))
 
         return orientations
 

@@ -66,21 +66,28 @@ class CubicTexture(TextureGenerator):
         """
         if isinstance(micro, np.ndarray):
             n = len(micro)
+            include_background = False
         else:
             n = micro.num_grains
+            include_background = True
         
         base_orientation = CUBIC_TEXTURES[self.type]
         
-        orientations = np.zeros((n + 1, 3))
+        if include_background:
+            orientations = np.zeros((n + 1, 3))
+            start_idx = 1
+        else:
+            orientations = np.zeros((n, 3))
+            start_idx = 0
 
         if self.degspread == 0:
-            orientations[1:] = np.tile(base_orientation, (n, 1))
+            orientations[start_idx:] = np.tile(base_orientation, (n, 1))
         else:
-            orientations[1:] = np.random.normal(
+            orientations[start_idx:] = np.random.normal(
                 loc=base_orientation, scale=np.radians(self.degspread), size=(n, 3)
             )
 
-        orientations[1:] = orientations[1:] % (2 * np.pi)
+        orientations[start_idx:] = orientations[start_idx:] % (2 * np.pi)
 
         return orientations
         

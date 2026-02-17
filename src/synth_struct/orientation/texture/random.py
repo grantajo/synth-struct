@@ -49,12 +49,20 @@ class RandomTexture(TextureGenerator):
         """
         if isinstance(micro, np.ndarray):
             n = len(micro)
+            include_background = False
         else:
             n = micro.num_grains
-
-        orientations = np.ndarray((n + 1, 3))
-        orientations[1:, 0] = np.random.uniform(0.0, 2 * np.pi, n)
-        orientations[1:, 1] = np.arccos(np.random.uniform(-1.0, 1.0, n))
-        orientations[1:, 2] = np.random.uniform(0.0, 2 * np.pi, n)
+            include_background = True
+        
+        if include_background:
+            orientations = np.zeros((n + 1, 3))
+            start_idx = 1
+        else:
+            orientations = np.zeros((n, 3))
+            start_idx = 0
+        
+        orientations[start_idx:, 0] = np.random.uniform(0.0, 2 * np.pi, n)
+        orientations[start_idx:, 1] = np.arccos(np.random.uniform(-1.0, 1.0, n))
+        orientations[start_idx:, 2] = np.random.uniform(0.0, 2 * np.pi, n)
 
         return orientations

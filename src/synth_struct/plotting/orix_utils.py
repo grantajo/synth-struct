@@ -57,13 +57,7 @@ def create_crystal_map(micro, crystal_structure="cubic", grain_subset=None):
     num_points = len(grain_ids_flat)
 
     # Initialize quaternion array
-    quaternion_array = np.zeros((num_points, 4))
-
-    for i, grain_id in enumerate(grain_ids_flat):
-        if grain_id > 0 and grain_id in quaternions:
-            quaternion_array[i] = quaternions[grain_id]
-        else:
-            quaternion_array[i] = [1, 0, 0, 0]
+    quaternion_array = quaternions[grain_ids_flat]
 
     orientations = Orientation(quaternion_array, symmetry=symmetry)
 

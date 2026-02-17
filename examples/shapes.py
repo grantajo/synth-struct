@@ -283,8 +283,8 @@ def main():
     colony_info = gen.get_colony_info()
     print(f"    Colonies: {colony_info['num_colonies']}")
     print(
-        f"    Avg laths per colony: {len(colony_info['colony_ids']) 
-        f"/ colony_info['num_colonies']:.1f}"
+        f"    Avg laths per colony: {len(colony_info['colony_ids'])}" 
+        f" {colony_info['num_colonies']:.1f}"
     )
 
     print("\n" + "=" * 60)

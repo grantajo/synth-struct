@@ -33,19 +33,21 @@ Once installed, run the following command to run the tests<br>
 The first time running an example, the code may take slightly longer than normal due
 
 ## Todo Lists:
+### Just finished
+- Fixed how textures work with a grain region instead of a full Microstructure
+- Updated location-specific texture example (middle_orientation.py)
+- Fixed bug with how orix was taking in quaternions for IPF maps
+
+
 ### Short-term todo:
-- Fix textures and finish example (middle_orientation)
 - Medium priority:
     - ipf_maps:150 - Using mutable [] as default argument
 - Update examples
-    - Textures 
-    - Location-specific textures
+    - Textures
     - Stiffness
 
 ### Things to be added:
-- Add function to apply a texture to a region
 - Integrate with orix for better orientation information and plotting
-    - Redo IPF maps
     - Add in IPFs and ODFs
     - Add in ability to have the colorkey shown in an IPF map
     - Figure out how to handle hexagonal directions for pole figures and ODFs
