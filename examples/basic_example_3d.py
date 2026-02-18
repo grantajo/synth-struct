@@ -61,7 +61,7 @@ axes[2].set_title(f"YZ Slice (x={x_slice})")
 plt.tight_layout()
 
 repo_root = Path(__file__).resolve().parent.parent
-output_dir = repo_root / "output"
+output_dir = repo_root / "output/basic_examples"
 output_dir.mkdir(exist_ok=True)
 plt.savefig(output_dir / "3d_slices.png", dpi=150)
 

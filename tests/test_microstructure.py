@@ -13,7 +13,7 @@ class TestMicrostructure:
 
         assert micro.dimensions == (50, 50)
         assert micro.resolution == (1.0)
-        assert micro.units == "micron"
+        assert micro.units == "um"
 
         assert micro.grain_ids.shape == (50, 50)
         assert micro.grain_ids.dtype == np.int32

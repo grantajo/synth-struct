@@ -70,9 +70,9 @@ class CubicTexture(TextureGenerator):
         else:
             n = micro.num_grains
             include_background = True
-        
+
         base_orientation = CUBIC_TEXTURES[self.type]
-        
+
         if include_background:
             orientations = np.zeros((n + 1, 3))
             start_idx = 1
@@ -90,5 +90,3 @@ class CubicTexture(TextureGenerator):
         orientations[start_idx:] = orientations[start_idx:] % (2 * np.pi)
 
         return orientations
-        
-        

@@ -25,7 +25,7 @@ sys.path.insert(0, str(project_root))
 
 def main():
     repo_root = project_root
-    output_dir = repo_root / "output"
+    output_dir = repo_root / "output/shapes"
     output_dir.mkdir(exist_ok=True)
 
     print("=" * 60)
@@ -291,7 +291,7 @@ def main():
     print(f"All examples saved to: {output_dir}")
     print("=" * 60)
 
-    #plt.show()
+    plt.show()
 
 
 if __name__ == "__main__":

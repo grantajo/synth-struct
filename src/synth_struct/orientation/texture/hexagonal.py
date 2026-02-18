@@ -57,17 +57,17 @@ class HexagonalTexture(TextureGenerator):
             include_background = False
         else:
             n = micro.num_grains
-            include_background = True        
-        
+            include_background = True
+
         base_orientation = HEXAGONAL_ORIENTATIONS[self.type]
-        
+
         if include_background:
             orientations = np.zeros((n + 1, 3))
             start_idx = 1
         else:
             orientations = np.zeros((n, 3))
             start_idx = 0
-        
+
         if self.degspread == 0:
             orientations[start_idx:] = np.tile(base_orientation, (n, 1))
         else:

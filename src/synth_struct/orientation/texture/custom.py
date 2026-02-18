@@ -91,14 +91,14 @@ class CustomTexture(TextureGenerator):
 
         # Convert to Euler angles
         euler = rotation_matrix_to_euler(R)
-        
+
         if include_background:
             orientations = np.zeros((n + 1, 3))
             start_idx = 1
         else:
             orientations = np.zeros((n, 3))
             start_idx = 0
-        
+
         if self.degspread:
             orientations[start_idx:] = self._apply_scatter(euler, n)
         else:

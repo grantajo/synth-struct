@@ -62,7 +62,7 @@ class TestCubicTexture:
         gen = CubicTexture(type="cube", seed=42)
         texture = gen.generate(micro)
 
-        assert texture.n_orientations == 3
+        assert texture.n_orientations == 3 + 1 # Add on background orientation
 
     def test_zero_spread(self):
         """Test that zero spread produces exact ideal orientation"""
@@ -173,7 +173,7 @@ class TestCubicTexture:
         texture = gen.generate(micro)
 
         assert isinstance(texture, Texture)
-        assert texture.n_orientations == 2
+        assert texture.n_orientations == 2 + 1 # Include background orientation
 
     def test_ideal_orientations_in_dict(self):
         """Test that CUBIC_TEXTURES contains expected ideal orientations"""
@@ -199,8 +199,8 @@ class TestCubicTexture:
         gen = CubicTexture(type="cube", degspread=5.0, seed=42)
         texture = gen.generate(micro)
 
-        assert texture.n_orientations == 1
-        assert texture.orientations.shape == (1, 3)
+        assert texture.n_orientations == 1 + 1 # Include background orientation
+        assert texture.orientations.shape == (1 + 1, 3) # Include background orientation
 
     def test_many_grains_microstructure(self):
         """Test generation for microstructure with many grains"""
@@ -214,8 +214,8 @@ class TestCubicTexture:
         gen = CubicTexture(type="s", degspread=5.0, seed=42)
         texture = gen.generate(micro)
 
-        assert texture.n_orientations == 100
-        assert texture.orientations.shape == (100, 3)
+        assert texture.n_orientations == 100 + 1 # Include background orientation
+        assert texture.orientations.shape == (100 + 1, 3) # Include background orientation
 
     def test_orientation_clustered_around_ideal(self):
         """Test that orientations are clustered around the ideal"""

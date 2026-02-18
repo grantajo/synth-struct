@@ -81,7 +81,7 @@ def get_grains_in_region(micro, region_type: str = "box", **kwargs) -> np.ndarra
 
     # Get unique grain IDs in the masked region
     grains_in_region = np.unique(micro.grain_ids[mask])
-    
+
     # Remove background
     grains_in_region = grains_in_region[grains_in_region > 0]
 

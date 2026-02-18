@@ -21,19 +21,24 @@ import synth_struct.plotting.ipf_maps as IPFplot
 
 """
 Cubic textures:
-    "cube"
-    "goss"
-    "brass"
-    "copper"
-    "s"
-    "p"
-    "rotated_cube"
-    "rotated_goss"
+"cube"
+"goss"
+"brass"
+"copper"
+"s"
+"p"
+"rotated_cube"
+"rotated_goss"
 """
 
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
-print("="*10, "Middle Orientation Example","="*10)
+
+repo_root = project_root
+output_dir = repo_root / "output/middle_texture"
+output_dir.mkdir(exist_ok=True)
+
+print("="*15, "Middle Orientation Example","="*15)
 
 # Variables for microstructure generation
 dims = (200, 200, 200)
@@ -64,21 +69,28 @@ micro.orientations[middle_grains] = middle_texture.orientations
 
 print(f"Middle region contains {len(middle_grains)} grains")
 
+print()
 
-print("Plotting microstructure")
+#
+# Plotting
+# 
 
-
+print("Plotting microstructure:")
 # Plot the microstructure grain IDs
+print("  Plotting grain IDs")
 fig1 = plt.figure(figsize=(15,5))
 Plotter.plot_3d_slices(fig1, micro)
-print("  Done plotting grain IDs")
+plt.savefig(output_dir / "middle_grain_structure.png", dpi=150, bbox_inches="tight")
+print("    Done plotting grain IDs")
 
 
 # Plot the IPF-Z maps
-fig2, axes = plt.subplots(1, 3, figsize=(18, 6))
+print("  Plotting IPF maps")
+fig2, axes = plt.subplots(1, 3, figsize=(15,5))
 IPFplot.plot_multiple_ipf_maps(axes, micro)
-print("  Done plotting grain IPF-Zs")
+print("    Done plotting IPF maps")
 plt.tight_layout()
+plt.savefig(output_dir / "middle_texture_IPFs.png", dpi=150, bbox_inches="tight")
 
 plt.show()
 

@@ -47,7 +47,7 @@ plt.colorbar(label="Grain ID")
 plt.title("2D Example")
 
 repo_root = Path(__file__).resolve().parent.parent
-output_dir = repo_root / "output"
+output_dir = repo_root / "output/basic_examples"
 output_dir.mkdir(exist_ok=True)
 plt.savefig(output_dir / "2d_slice.png", dpi=150)
 
