@@ -37,18 +37,13 @@ Once installed, run the following command to run the tests<br>
 `pytest tests/`<br>
 
 ### Installation notes
-The first time running an example, the code may take slightly longer than normal due
+The first time running an example, the code may take slightly longer than normal due to the program compiling on first run
 
 ## Todo Lists:
 ### Just finished
-- Fixed how textures work with a grain region instead of a full Microstructure
-- Updated location-specific texture example (middle_orientation.py)
-- Fixed bug with how orix was taking in quaternions for IPF maps
-
+- Some formatting and fixed a bug with ipf_maps
 
 ### Short-term todo:
-- Medium priority:
-    - ipf_maps:150 - Using mutable [] as default argument
 - Update examples
     - Textures
     - Stiffness

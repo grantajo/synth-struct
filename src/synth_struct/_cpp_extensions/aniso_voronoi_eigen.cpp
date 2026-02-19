@@ -1,4 +1,9 @@
 // /synth_struct/src/synth_struct/_cpp_extensions/aniso_voronoi_eigen.cpp
+
+// This is a C++ implementation of an anisotropic voronoi assignment
+// This code uses the Eigen library to quickly calculate Voronoi
+// assignments.
+
 #include <pybind11/pybind11.h>
 #include <pybind11/numpy.h>
 #include <Eigen/Dense>

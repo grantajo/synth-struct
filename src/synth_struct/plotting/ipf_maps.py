@@ -148,7 +148,7 @@ def plot_ipf_map(
 
 
 def plot_multiple_ipf_maps(
-    axes, micro, directions=["x", "y", "z"], crystal_structure="cubic", **kwargs
+    axes, micro, directions=None, crystal_structure="cubic", **kwargs
 ):
     """
     Plot multiple IPF maps (different directions on provided axes.
@@ -168,9 +168,12 @@ def plot_multiple_ipf_maps(
 
     Example:
         fig, axes = plt.subplots(1, 3, figsize=(18,6))
-        plot_multiple_ipf_maps(axes, micro, directions=['x', 'y', 'z'])
+        plot_multiple_ipf_maps(axes, micro)
         plt.tight_layout()
     """
+
+    if directions is None:
+        directions = ["x", "y", "z"]
 
     if len(axes) != len(directions):
         raise ValueError(
