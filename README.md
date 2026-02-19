@@ -21,6 +21,13 @@ Run the following commands to create a virtual environment<br>
 |Eigen                |`apt install libeigen3-dev`        |Required for C++ speedup|
 |pytest               |`conda install pytest`             |Required for tests      |
 
+### Clone repository
+Clone the repository from Github
+
+### Make output directory
+`cd synth-struct`<br>
+`mkdir output`
+
 ### Install the project
 When in project root run:<br>
 `pip install -e .`
