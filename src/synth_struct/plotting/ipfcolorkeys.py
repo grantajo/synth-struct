@@ -10,6 +10,10 @@ from orix.quaternion import symmetry
 
 
 def plotIPFcolorkeys(outdir):
+    """
+    This plots all of the IPF colorkeys for each of the symmetry groups.
+    """
+
     # List of all the point groups
     pg_laue = [
         symmetry.Ci,  #

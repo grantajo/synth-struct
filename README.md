@@ -52,9 +52,9 @@ The first time running an example, the code may take slightly longer than normal
 - Integrate with orix for better orientation information and plotting
     - Add in IPFs and ODFs
     - Add in ability to have the colorkey shown in an IPF map
+        - Add in ability to plot a single given colorkey with ipfcolorkeys.py
     - Figure out how to handle hexagonal directions for pole figures and ODFs
     - Add in ability to do ODF contour plots
-    - Fix plotting save locations (ipfcolorkeys)
     - Add in plotting examples
 - Add grain structures with grain size better distribution
 - Fix HDF5 writer so that a software can read it
