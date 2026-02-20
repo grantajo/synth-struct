@@ -1,4 +1,4 @@
-# synth_struct/examples/basic_2d_example.py
+# synth-struct/examples/basic_2d_example.py
 
 """
 This is a simple example to create a 2D microstructure.

@@ -27,6 +27,7 @@ from .ipf_maps import (
     plot_ipf_map,
     plot_multiple_ipf_maps,
     create_ipf_map_figure,
+    plot_multiple_ipf_slices,
 )
 from .pole_figures import (
     plot_pole_figure,
@@ -57,4 +58,5 @@ __all__ = [
     "create_standard_pole_figures",
     "plot_odf",
     "create_odf_figure",
+    "plot_multiple_ipf_slices",
 ]

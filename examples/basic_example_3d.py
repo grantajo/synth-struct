@@ -1,4 +1,4 @@
-# synth_struct/examples/basic_example_3d.py
+# synth-struct/examples/basic_example_3d.py
 
 """
 This is a simple example to create a 3D microstructure and visualize slices.

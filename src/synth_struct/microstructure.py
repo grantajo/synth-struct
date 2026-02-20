@@ -8,6 +8,8 @@ voxelized grain structures with associated physical scaling,
 crystallographic symmetry, and attached data fields.
 """
 
+import copy
+
 import numpy as np
 
 
@@ -44,6 +46,14 @@ class Microstructure:
         """Number of grain excluding the background"""
         return int(self.grain_ids.max())
 
+    @property
+    def orientations(self):
+        return self.fields.get("orientations")
+
+    @orientations.setter
+    def orientations(self, value):
+        self.fields["orientations"] = value
+
     def attach_field(self, name, array):
         """
         Attach per-grain or per-voxel data (orientations, stiffnesses, etc.)
@@ -55,3 +65,18 @@ class Microstructure:
         Get the data from an attached field in the Microstructure class
         (orientations, stiffnesses, etc.)"""
         return self.fields[name]
+
+    def copy(self):
+        """
+        Return a deep copy of the Microstructure
+        """
+        new_micro = Microstructure(
+            dimensions=self.dimensions,
+            resolution=self.resolution,
+            units=self.units,
+            symmetry=self.symmetry,
+        )
+        new_micro.grain_ids = self.grain_ids.copy()
+        new_micro.fields = {k: v.copy() for k, v in self.fields.items()}
+        new_micro.metadata = copy.deepcopy(self.metadata)
+        return new_micro

@@ -151,7 +151,7 @@ def plot_multiple_ipf_maps(
     axes, micro, directions=None, crystal_structure="cubic", **kwargs
 ):
     """
-    Plot multiple IPF maps (different directions on provided axes.
+    Plot multiple IPF maps (different directions on provided axes).
 
     Useful for comparing how grain orientations appear when viewed
     along different sample directions.
@@ -189,6 +189,60 @@ def plot_multiple_ipf_maps(
             micro,
             direction=direction,
             crystal_structure=crystal_structure,
+            show_title=True,
+            **kwargs,
+        )
+        images.append(im)
+
+    return images
+
+
+def plot_multiple_ipf_slices(
+    axes,
+    micro,
+    slice_indices=None,
+    direction="z",
+    slice_direction="z",
+    crystal_structure="cubic",
+    **kwargs,
+):
+    """
+    Plot IPF maps for multiple slices of a 3D microstructure
+
+    Args:
+    - axes: list of matplotlib axes
+    - micro: Microstructure object
+    - slice_indices: list of int - Slice indices to plot. If None, uses evenly spaced slices
+    - direction: str - IPF direction ('x', 'y', or 'z')
+    - slice_direction: str - Which axis to slice along ('x', 'y', or 'z')
+    - crystal_structure: str - Crystal structure type
+    - **kwargs: Additional arguments passed to plot_ipf_map
+
+    Returns:
+    - List of AxesImage objects
+    """
+
+    dim_map = {"x": 0, "y": 1, "z": 2}
+    n_slices = micro.dimensions[dim_map[slice_direction.lower()]]
+
+    if slice_indices is None:
+        slice_indices = [n_slices * i // len(axes) for i in range(len(axes))]
+
+    if len(axes) != len(slice_indices):
+        raise ValueError(
+            f"Number of axes ({len(axes)}) must match "
+            f"number of slice_indices ({len(slice_indices)})"
+        )
+
+    images = []
+    for ax, slice_idx in zip(axes, slice_indices):
+        im = plot_ipf_map(
+            ax,
+            micro,
+            direction=direction,
+            crystal_structure=crystal_structure,
+            slice_idx=slice_idx,
+            slice_direction=slice_direction,
             show_title=True,
             **kwargs,
         )

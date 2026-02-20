@@ -42,15 +42,14 @@ than normal due to the program compiling on first run
 
 ## Todo Lists:
 ### Just finished
-- Commented out plt.show() for examples
-- Made examples CLI output look prettier
-- Fixed a bug in cubic and hexagonal textures and fixed associated tests
+- Started mask shapes examples
+    - There is a bug in the cylindrical mask
+    - There is a bug in the layers (the orientation of the layers is incorrect)
 
 ### Short-term todo:
 - More examples
     - Textures
-    - Mask shapes
-    - Stiffness
+    - Stiffness (what do I even do for this?)
 
 ### Things to be added:
 - Continue orix integration

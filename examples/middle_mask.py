@@ -1,4 +1,4 @@
-# /synth_struct/examples/middle_mask.py
+# /synth-struct/examples/middle_mask.py
 
 """
 This is an example of creating a 3D microstructure and changing the orientation

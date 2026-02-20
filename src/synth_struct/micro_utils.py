@@ -211,8 +211,8 @@ def _create_cylinder_mask(
     micro,
     center: Optional[Union[List, np.ndarray]] = None,
     radius: Optional[float] = None,
-    z_min: Optional[int] = None,
-    z_max: Optional[int] = None,
+    c_min: Optional[int] = None,
+    c_max: Optional[int] = None,
     axis: str = "z",
 ) -> np.ndarray:
     """
@@ -222,7 +222,7 @@ def _create_cylinder_mask(
     - micro: Microstructure instance
     - center: Center coordinates in plane perpendicular to axis
     - radius: Cylinder radius
-    - z_min, z_max: Bounds along cylinder axis
+    - c_min, c_max: Bounds along cylinder axis
     - axis: Cylinder axis ('x', 'y', or 'z', default: 'z')
 
     Returns:
@@ -254,8 +254,8 @@ def _create_cylinder_mask(
                 f"Center for z-axis cylinder must have 2 coordinates (x, y), got {len(center)}"
             )
 
-        z_min = z_min if z_min is not None else 0
-        z_max = z_max if z_max is not None else nz
+        z_min = c_min if c_min is not None else 0
+        z_max = c_max if c_max is not None else nz
 
         radial_dist = np.sqrt((x - center[0]) ** 2 + (y - center[1]) ** 2)
         mask = (radial_dist <= radius) & (z >= z_min) & (z < z_max)
@@ -272,8 +272,8 @@ def _create_cylinder_mask(
                 f"Center for y-axis cylinder must have 2 coordinates (x, z), got {len(center)}"
             )
 
-        y_min = z_min if z_min is not None else 0
-        y_max = z_max if z_max is not None else ny
+        y_min = c_min if c_min is not None else 0
+        y_max = c_max if c_max is not None else ny
 
         radial_dist = np.sqrt((x - center[0]) ** 2 + (z - center[1]) ** 2)
         mask = (radial_dist <= radius) & (y >= y_min) & (y < y_max)
@@ -290,8 +290,8 @@ def _create_cylinder_mask(
                 f"Center for x-axis cylinder must have 2 coordinates (y, z), got {len(center)}"
             )
 
-        x_min = z_min if z_min is not None else 0
-        x_max = z_max if z_max is not None else nx
+        x_min = c_min if c_min is not None else 0
+        x_max = c_max if c_max is not None else nx
 
         radial_dist = np.sqrt((y - center[0]) ** 2 + (z - center[1]) ** 2)
         mask = (radial_dist <= radius) & (x >= x_min) & (x < x_max)

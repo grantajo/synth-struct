@@ -21,3 +21,4 @@ dist/
 **/*.pyc
 src/synth_struct/_cpp_extensions/*.so
 src/synth_struct/_cpp_extensions/*.pyd
+code_test.py
