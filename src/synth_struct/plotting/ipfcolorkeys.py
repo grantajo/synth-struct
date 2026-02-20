@@ -9,7 +9,7 @@ from orix import plot
 from orix.quaternion import symmetry
 
 
-def plotIPFcolorkeys(outdir):
+def plot_all_colorkeys(outdir):
     """
     This plots all of the IPF colorkeys for each of the symmetry groups.
     """

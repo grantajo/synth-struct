@@ -4,6 +4,7 @@
 This example plots all of the IPF colorkeys for future reference.
 """
 
+import sys
 from pathlib import Path
 
 import matplotlib.pyplot as plt
@@ -17,6 +18,9 @@ sys.path.insert(0, str(project_root))
 outdir = project_root / "output/IPFcolorkeys/"
 outdir.mkdir(exist_ok=True)
 
-ipfcolorkeys.plotIPFcolorkeys(outdir)
+print("=" * 17, "IPF Color Keys", "=" * 17)
 
+ipfcolorkeys.plot_all_colorkeys(outdir)
 
+print(f"Saved IPF color keys to: \n{outdir}")
+print("-" * 50)

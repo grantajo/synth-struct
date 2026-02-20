@@ -1,15 +1,15 @@
 # synth_struct/src/synth_struct/plotting/ipf_maps.py
 
+"""
+IPF (Inverse Pole Figure) colore map visualization.
+"""
+
 import matplotlib.pyplot as plt
 from matplotlib_scalebar.scalebar import ScaleBar
 from orix.vector import Vector3d
 from orix.plot import IPFColorKeyTSL
 
 from .orix_utils import create_crystal_map, get_crystal_map_slice
-
-"""
-IPF (Inverse Pole Figure) colore map visualization.
-"""
 
 
 def get_ipf_rgb(crystal_map, direction="z"):

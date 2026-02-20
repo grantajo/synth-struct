@@ -14,30 +14,30 @@ class TestHexagonalTexture:
 
     def test_initialization_default(self):
         """Test HexagonalTexture initialization with default parameters"""
-        gen = HexagonalTexture(type="basal")
+        gen = HexagonalTexture(texture_type="basal")
 
-        assert gen.type == "basal"
+        assert gen.texture_type == "basal"
         assert gen.degspread == 5.0
         assert gen.seed is None
 
     def test_initialization_custom(self):
         """Test HexagonalTexture initialization with custom parameters"""
-        gen = HexagonalTexture(type="prismatic", degspread=10.0, seed=42)
+        gen = HexagonalTexture(texture_type="prismatic", degspread=10.0, seed=42)
 
-        assert gen.type == "prismatic"
+        assert gen.texture_type == "prismatic"
         assert gen.degspread == 10.0
         assert gen.seed == 42
 
     def test_invalid_texture_type(self):
         """Test that invalid texture type raises ValueError"""
         with pytest.raises(ValueError, match="Unknown hexagonal texture type"):
-            HexagonalTexture(type="invalid_type")
+            HexagonalTexture(texture_type="invalid_type")
 
     @pytest.mark.parametrize("texture_type", ["basal", "prismatic"])
     def test_valid_texture_types(self, texture_type):
         """Test that all valid texture types are accepted"""
-        gen = HexagonalTexture(type=texture_type)
-        assert gen.type == texture_type
+        gen = HexagonalTexture(texture_type=texture_type)
+        assert gen.texture_type == texture_type
 
     def test_generate_returns_texture(self):
         """Test that generate returns a Texture object"""
@@ -45,7 +45,7 @@ class TestHexagonalTexture:
         micro.grain_ids[0:10, 0:10, 0:10] = 1
         micro.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen = HexagonalTexture(type="basal", seed=42)
+        gen = HexagonalTexture(texture_type="basal", seed=42)
         texture = gen.generate(micro)
 
         assert isinstance(texture, Texture)
@@ -59,7 +59,7 @@ class TestHexagonalTexture:
         micro.grain_ids[10:20, 10:20, 10:20] = 2
         micro.grain_ids[20:30, 20:30, 20:30] = 3
 
-        gen = HexagonalTexture(type="basal", seed=42)
+        gen = HexagonalTexture(texture_type="basal", seed=42)
         texture = gen.generate(micro)
 
         assert texture.n_orientations == 3 + 1 # Include background orientation
@@ -70,7 +70,7 @@ class TestHexagonalTexture:
         micro.grain_ids[0:10, 0:10, 0:10] = 1
         micro.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen = HexagonalTexture(type="basal", degspread=0.0, seed=42)
+        gen = HexagonalTexture(texture_type="basal", degspread=0.0, seed=42)
         texture = gen.generate(micro)
 
         ideal_orientation = HEXAGONAL_ORIENTATIONS["basal"]
@@ -87,7 +87,7 @@ class TestHexagonalTexture:
         for i in range(10):
             micro.grain_ids[i * 2 : (i + 1) * 2, 0:20, 0:20] = i + 1
 
-        gen = HexagonalTexture(type="basal", degspread=5.0, seed=42)
+        gen = HexagonalTexture(texture_type="basal", degspread=5.0, seed=42)
         texture = gen.generate(micro)
 
         # Should have variation (not all identical)
@@ -104,8 +104,8 @@ class TestHexagonalTexture:
         micro2.grain_ids[0:10, 0:10, 0:10] = 1
         micro2.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen1 = HexagonalTexture(type="prismatic", degspread=5.0, seed=123)
-        gen2 = HexagonalTexture(type="prismatic", degspread=5.0, seed=123)
+        gen1 = HexagonalTexture(texture_type="prismatic", degspread=5.0, seed=123)
+        gen2 = HexagonalTexture(texture_type="prismatic", degspread=5.0, seed=123)
 
         texture1 = gen1.generate(micro1)
         texture2 = gen2.generate(micro2)
@@ -122,8 +122,8 @@ class TestHexagonalTexture:
         micro2.grain_ids[0:10, 0:10, 0:10] = 1
         micro2.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen1 = HexagonalTexture(type="prismatic", degspread=5.0, seed=123)
-        gen2 = HexagonalTexture(type="prismatic", degspread=5.0, seed=456)
+        gen1 = HexagonalTexture(texture_type="prismatic", degspread=5.0, seed=123)
+        gen2 = HexagonalTexture(texture_type="prismatic", degspread=5.0, seed=456)
 
         texture1 = gen1.generate(micro1)
         texture2 = gen2.generate(micro2)
@@ -137,7 +137,7 @@ class TestHexagonalTexture:
         micro.grain_ids[10:20, 10:20, 10:20] = 2
 
         gen = HexagonalTexture(
-            type="prismatic", degspread=50.0, seed=42
+            texture_type="prismatic", degspread=50.0, seed=42
         )  # Large spread
         texture = gen.generate(micro)
 
@@ -152,10 +152,10 @@ class TestHexagonalTexture:
             micro.grain_ids[i : i + 1, 0:30, 0:30] = i + 1
 
         # Use prismatic which has no angles at 0
-        gen_small = HexagonalTexture(type="prismatic", degspread=2.0, seed=42)
+        gen_small = HexagonalTexture(texture_type="prismatic", degspread=2.0, seed=42)
         gen_large = HexagonalTexture(
-            type="prismatic", degspread=20.0, seed=43
-        )  # Larger spread
+            texture_type="prismatic", degspread=20.0, seed=43
+        )
 
         texture_small = gen_small.generate(micro)
         texture_large = gen_large.generate(micro)
@@ -176,7 +176,7 @@ class TestHexagonalTexture:
         micro.grain_ids[0:10, 0:10, 0:10] = 1
         micro.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen = HexagonalTexture(type=texture_type, seed=42)
+        gen = HexagonalTexture(texture_type=texture_type, seed=42)
         texture = gen.generate(micro)
 
         assert isinstance(texture, Texture)
@@ -210,7 +210,7 @@ class TestHexagonalTexture:
         micro = Microstructure(dimensions=(10, 10, 10), resolution=1.0)
         micro.grain_ids[:, :, :] = 1
 
-        gen = HexagonalTexture(type="basal", degspread=5.0, seed=42)
+        gen = HexagonalTexture(texture_type="basal", degspread=5.0, seed=42)
         texture = gen.generate(micro)
 
         assert texture.n_orientations == 1 + 1# Include background orientation
@@ -225,7 +225,7 @@ class TestHexagonalTexture:
             z = (i // 100) * 5
             micro.grain_ids[x : x + 5, y : y + 5, z : z + 5] = i + 1
 
-        gen = HexagonalTexture(type="basal", degspread=5.0, seed=42)
+        gen = HexagonalTexture(texture_type="basal", degspread=5.0, seed=42)
         texture = gen.generate(micro)
 
         assert texture.n_orientations == 100 + 1 # Include background orientation
@@ -238,7 +238,7 @@ class TestHexagonalTexture:
             micro.grain_ids[i : i + 1, 0:30, 0:30] = i + 1
 
         # Use basal to avoid wrapping complications (all zeros)
-        gen = HexagonalTexture(type="basal", degspread=5.0, seed=42)
+        gen = HexagonalTexture(texture_type="basal", degspread=5.0, seed=42)
         texture = gen.generate(micro)
 
         ideal = HEXAGONAL_ORIENTATIONS["basal"]
@@ -253,7 +253,7 @@ class TestHexagonalTexture:
         micro = Microstructure(dimensions=(10, 10, 10), resolution=1.0)
         micro.grain_ids[:, :, :] = 1
 
-        gen = HexagonalTexture(type="basal", degspread=-5.0, seed=42)
+        gen = HexagonalTexture(texture_type="basal", degspread=-5.0, seed=42)
 
         with pytest.raises(ValueError, match="scale < 0"):
             gen.generate(micro)
@@ -263,8 +263,8 @@ class TestHexagonalTexture:
         micro = Microstructure(dimensions=(10, 10, 10), resolution=1.0)
         micro.grain_ids[:, :, :] = 1
 
-        gen_basal = HexagonalTexture(type="basal", degspread=0.0, seed=42)
-        gen_prismatic = HexagonalTexture(type="prismatic", degspread=0.0, seed=42)
+        gen_basal = HexagonalTexture(texture_type="basal", degspread=0.0, seed=42)
+        gen_prismatic = HexagonalTexture(texture_type="prismatic", degspread=0.0, seed=42)
 
         texture_basal = gen_basal.generate(micro)
         texture_prismatic = gen_prismatic.generate(micro)

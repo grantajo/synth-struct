@@ -11,24 +11,24 @@ class TestCubicTexture:
 
     def test_initialization_default(self):
         """Test CubicTexture initialization with default parameters"""
-        gen = CubicTexture(type="cube")
+        gen = CubicTexture(texture_type="cube")
 
-        assert gen.type == "cube"
+        assert gen.texture_type == "cube"
         assert gen.degspread == 5.0
         assert gen.seed is None
 
     def test_initialization_custom(self):
         """Test CubicTexture initialization with custom parameters"""
-        gen = CubicTexture(type="goss", degspread=10.0, seed=42)
+        gen = CubicTexture(texture_type="goss", degspread=10.0, seed=42)
 
-        assert gen.type == "goss"
+        assert gen.texture_type == "goss"
         assert gen.degspread == 10.0
         assert gen.seed == 42
 
     def test_invalid_texture_type(self):
         """Test that invalid texture type raises ValueError"""
         with pytest.raises(ValueError, match="Unknown cubic texture type"):
-            CubicTexture(type="invalid_type")
+            CubicTexture(texture_type="invalid_type")
 
     @pytest.mark.parametrize(
         "texture_type",
@@ -36,8 +36,8 @@ class TestCubicTexture:
     )
     def test_valid_texture_types(self, texture_type):
         """Test that all valid texture types are accepted"""
-        gen = CubicTexture(type=texture_type)
-        assert gen.type == texture_type
+        gen = CubicTexture(texture_type=texture_type)
+        assert gen.texture_type == texture_type
 
     def test_generate_returns_texture(self):
         """Test that generate returns a Texture object"""
@@ -45,7 +45,7 @@ class TestCubicTexture:
         micro.grain_ids[0:10, 0:10, 0:10] = 1
         micro.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen = CubicTexture(type="cube", seed=42)
+        gen = CubicTexture(texture_type="cube", seed=42)
         texture = gen.generate(micro)
 
         assert isinstance(texture, Texture)
@@ -59,7 +59,7 @@ class TestCubicTexture:
         micro.grain_ids[10:20, 10:20, 10:20] = 2
         micro.grain_ids[20:30, 20:30, 20:30] = 3
 
-        gen = CubicTexture(type="cube", seed=42)
+        gen = CubicTexture(texture_type="cube", seed=42)
         texture = gen.generate(micro)
 
         assert texture.n_orientations == 3 + 1 # Add on background orientation
@@ -70,7 +70,7 @@ class TestCubicTexture:
         micro.grain_ids[0:10, 0:10, 0:10] = 1
         micro.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen = CubicTexture(type="cube", degspread=0.0, seed=42)
+        gen = CubicTexture(texture_type="cube", degspread=0.0, seed=42)
         texture = gen.generate(micro)
 
         ideal_orientation = CUBIC_TEXTURES["cube"]
@@ -87,7 +87,7 @@ class TestCubicTexture:
         for i in range(10):
             micro.grain_ids[i * 2 : (i + 1) * 2, 0:20, 0:20] = i + 1
 
-        gen = CubicTexture(type="cube", degspread=5.0, seed=42)
+        gen = CubicTexture(texture_type="cube", degspread=5.0, seed=42)
         texture = gen.generate(micro)
 
         # Should have variation (not all identical)
@@ -104,8 +104,8 @@ class TestCubicTexture:
         micro2.grain_ids[0:10, 0:10, 0:10] = 1
         micro2.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen1 = CubicTexture(type="brass", degspread=5.0, seed=123)
-        gen2 = CubicTexture(type="brass", degspread=5.0, seed=123)
+        gen1 = CubicTexture(texture_type="brass", degspread=5.0, seed=123)
+        gen2 = CubicTexture(texture_type="brass", degspread=5.0, seed=123)
 
         texture1 = gen1.generate(micro1)
         texture2 = gen2.generate(micro2)
@@ -122,8 +122,8 @@ class TestCubicTexture:
         micro2.grain_ids[0:10, 0:10, 0:10] = 1
         micro2.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen1 = CubicTexture(type="brass", degspread=5.0, seed=123)
-        gen2 = CubicTexture(type="brass", degspread=5.0, seed=456)
+        gen1 = CubicTexture(texture_type="brass", degspread=5.0, seed=123)
+        gen2 = CubicTexture(texture_type="brass", degspread=5.0, seed=456)
 
         texture1 = gen1.generate(micro1)
         texture2 = gen2.generate(micro2)
@@ -136,7 +136,7 @@ class TestCubicTexture:
         micro.grain_ids[0:10, 0:10, 0:10] = 1
         micro.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen = CubicTexture(type="copper", degspread=50.0, seed=42)  # Large spread
+        gen = CubicTexture(texture_type="copper", degspread=50.0, seed=42)  # Large spread
         texture = gen.generate(micro)
 
         # All angles should be in [0, 2π)
@@ -150,8 +150,8 @@ class TestCubicTexture:
             micro.grain_ids[i : i + 1, 0:30, 0:30] = i + 1
 
         # Use 's' texture (no angles near 0 or 2π)
-        gen_small = CubicTexture(type="s", degspread=2.0, seed=42)
-        gen_large = CubicTexture(type="s", degspread=15.0, seed=42)
+        gen_small = CubicTexture(texture_type="s", degspread=2.0, seed=42)
+        gen_large = CubicTexture(texture_type="s", degspread=15.0, seed=42)
 
         texture_small = gen_small.generate(micro)
         texture_large = gen_large.generate(micro)
@@ -169,7 +169,7 @@ class TestCubicTexture:
         micro.grain_ids[0:10, 0:10, 0:10] = 1
         micro.grain_ids[10:20, 10:20, 10:20] = 2
 
-        gen = CubicTexture(type=texture_type, seed=42)
+        gen = CubicTexture(texture_type=texture_type, seed=42)
         texture = gen.generate(micro)
 
         assert isinstance(texture, Texture)
@@ -196,7 +196,7 @@ class TestCubicTexture:
         micro = Microstructure(dimensions=(10, 10, 10), resolution=1.0)
         micro.grain_ids[:, :, :] = 1
 
-        gen = CubicTexture(type="cube", degspread=5.0, seed=42)
+        gen = CubicTexture(texture_type="cube", degspread=5.0, seed=42)
         texture = gen.generate(micro)
 
         assert texture.n_orientations == 1 + 1 # Include background orientation
@@ -211,7 +211,7 @@ class TestCubicTexture:
             z = (i // 100) * 5
             micro.grain_ids[x : x + 5, y : y + 5, z : z + 5] = i + 1
 
-        gen = CubicTexture(type="s", degspread=5.0, seed=42)
+        gen = CubicTexture(texture_type="s", degspread=5.0, seed=42)
         texture = gen.generate(micro)
 
         assert texture.n_orientations == 100 + 1 # Include background orientation
@@ -224,7 +224,7 @@ class TestCubicTexture:
             micro.grain_ids[i : i + 1, 0:30, 0:30] = i + 1
 
         # Use 's' texture (centered away from boundaries)
-        gen = CubicTexture(type="s", degspread=5.0, seed=42)
+        gen = CubicTexture(texture_type="s", degspread=5.0, seed=42)
         texture = gen.generate(micro)
 
         ideal = CUBIC_TEXTURES["s"]
@@ -242,7 +242,7 @@ class TestCubicTexture:
         micro = Microstructure(dimensions=(10, 10, 10), resolution=1.0)
         micro.grain_ids[:, :, :] = 1
 
-        gen = CubicTexture(type="cube", degspread=-5.0, seed=42)
+        gen = CubicTexture(texture_type="cube", degspread=-5.0, seed=42)
 
         with pytest.raises(ValueError, match="scale < 0"):
             gen.generate(micro)

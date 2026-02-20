@@ -13,9 +13,10 @@ import matplotlib.pyplot as plt
 from synth_struct.microstructure import Microstructure
 from synth_struct.generators.voronoi import VoronoiGenerator
 
-
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
+
+print("=" * 16, "Basic 3D Example", "=" * 16)
 
 start_time = time.time()
 
@@ -65,6 +66,8 @@ output_dir = repo_root / "output/basic_examples"
 output_dir.mkdir(exist_ok=True)
 plt.savefig(output_dir / "3d_slices.png", dpi=150)
 
-print(f"Saved visualization to {output_dir / '3d_slices.png'}")
+print("-" * 50)
+print(f"Saved visualization to:\n{output_dir / '3d_slices.png'}")
+print("-" * 50)
 
-plt.show()
+# plt.show()

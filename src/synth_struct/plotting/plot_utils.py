@@ -119,7 +119,7 @@ def create_grain_boundary_overlay(grain_ids):
         boundaries[:, :-1] |= grain_ids[:, :-1] != grain_ids[:, 1:]
         return boundaries
 
-    elif grain_ids.ndim == 3:
+    if grain_ids.ndim == 3:
         # 3D case - boundaries in any direction
         boundaries = np.zeros_like(grain_ids, dtype=bool)
         boundaries[:-1, :, :] |= grain_ids[:-1, :, :] != grain_ids[1:, :, :]
@@ -127,8 +127,7 @@ def create_grain_boundary_overlay(grain_ids):
         boundaries[:, :, :-1] |= grain_ids[:, :, :-1] != grain_ids[:, :, 1:]
         return boundaries
 
-    else:
-        raise ValueError(f"grain_ids must be 2D or 3D, got {grain_ids.ndim}D")
+    raise ValueError(f"grain_ids must be 2D or 3D, got {grain_ids.ndim}D")
 
 
 def get_grain_size_colormap(grain_ids, num_grains):

@@ -15,6 +15,8 @@ There are several basic textures for cubic:
 """
 
 import numpy as np
+
+from .texture import Texture
 from .texture_base import TextureGenerator
 
 CUBIC_TEXTURES = {
@@ -34,16 +36,16 @@ class CubicTexture(TextureGenerator):
     Generates a cubic texture for a given microstructure.
 
     Args:
-    - type: str
+    - texture_type: str
         One of 'cube', 'goss', 'brass', 'copper', 's', 'p', 'rotated_cube', 'rotated_goss'.
     - degspread: float - Gaussian spread around ideal orientation (degrees)
     - seed: int or None - Random seed for reproducibility
     """
 
-    def __init__(self, type=None, degspread=5.0, seed=None):
-        if type not in CUBIC_TEXTURES:
+    def __init__(self, texture_type=None, degspread=5.0, seed=None):
+        if texture_type not in CUBIC_TEXTURES:
             raise ValueError(f"Unknown cubic texture type {type}")
-        self.type = type
+        self.texture_type = texture_type
         self.degspread = degspread
         self.seed = seed
 
@@ -51,8 +53,6 @@ class CubicTexture(TextureGenerator):
         """Generate a Texture for the given microstructure."""
         if self.seed:
             np.random.seed(self.seed)
-
-        from .texture import Texture
 
         orientations = self._generate_orientations(micro)
 
@@ -71,7 +71,7 @@ class CubicTexture(TextureGenerator):
             n = micro.num_grains
             include_background = True
 
-        base_orientation = CUBIC_TEXTURES[self.type]
+        base_orientation = CUBIC_TEXTURES[self.texture_type]
 
         if include_background:
             orientations = np.zeros((n + 1, 3))

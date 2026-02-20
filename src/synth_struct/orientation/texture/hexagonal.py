@@ -9,6 +9,8 @@ There are two basic textures for hexagonal:
 """
 
 import numpy as np
+
+from .texture import Texture
 from .texture_base import TextureGenerator
 
 HEXAGONAL_ORIENTATIONS = {
@@ -22,16 +24,16 @@ class HexagonalTexture(TextureGenerator):
     Generates a hexagonal texture for a given microstructure.
 
     Args:
-    - type: str
+    - texture_type: str
         One of 'basal' or 'prismatic'.
     - degspread: float - Gaussian spread around ideal orientation (degrees)
     - seed: int or None - Random seed for reproducibility
     """
 
-    def __init__(self, type=None, degspread=5.0, seed=None):
-        if type not in HEXAGONAL_ORIENTATIONS:
+    def __init__(self, texture_type=None, degspread=5.0, seed=None):
+        if texture_type not in HEXAGONAL_ORIENTATIONS:
             raise ValueError(f"Unknown hexagonal texture type {type}")
-        self.type = type
+        self.texture_type = texture_type
         self.degspread = degspread
         self.seed = seed
 
@@ -39,8 +41,6 @@ class HexagonalTexture(TextureGenerator):
         """Generate a Texture for the given microstructure."""
         if self.seed is not None:
             np.random.seed(self.seed)
-
-        from .texture import Texture
 
         orientations = self._generate_orientations(micro)
 
@@ -59,7 +59,7 @@ class HexagonalTexture(TextureGenerator):
             n = micro.num_grains
             include_background = True
 
-        base_orientation = HEXAGONAL_ORIENTATIONS[self.type]
+        base_orientation = HEXAGONAL_ORIENTATIONS[self.texture_type]
 
         if include_background:
             orientations = np.zeros((n + 1, 3))

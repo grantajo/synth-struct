@@ -37,19 +37,23 @@ Once installed, run the following command to run the tests<br>
 `pytest tests/`<br>
 
 ### Installation notes
-The first time running an example, the code may take slightly longer than normal due to the program compiling on first run
+The first time running an example, the code may take slightly longer 
+than normal due to the program compiling on first run
 
 ## Todo Lists:
 ### Just finished
-- Some formatting and fixed a bug with ipf_maps
+- Commented out plt.show() for examples
+- Made examples CLI output look prettier
+- Fixed a bug in cubic and hexagonal textures and fixed associated tests
 
 ### Short-term todo:
-- Update examples
+- More examples
     - Textures
+    - Mask shapes
     - Stiffness
 
 ### Things to be added:
-- Integrate with orix for better orientation information and plotting
+- Continue orix integration
     - Add in IPFs and ODFs
     - Add in ability to have the colorkey shown in an IPF map
         - Add in ability to plot a single given colorkey with ipfcolorkeys.py
@@ -57,7 +61,9 @@ The first time running an example, the code may take slightly longer than normal
     - Add in ability to do ODF contour plots
     - Add in plotting examples
 - Add grain structures with grain size better distribution
-- Fix HDF5 writer so that a software can read it
+- Add in file output generators
+    - HDF5
+    - VTK meshing
  
 ### Long term additions:
 - Add in second phases

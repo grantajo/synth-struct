@@ -19,9 +19,9 @@ from synth_struct.generators.mixed import MixedGenerator
 from synth_struct.generators.lath import LathGenerator
 from synth_struct.plotting.gen_plot import Plotter
 
-
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
+
 
 def main():
     repo_root = project_root
@@ -29,7 +29,7 @@ def main():
     output_dir.mkdir(exist_ok=True)
 
     print("=" * 60)
-    print("Microstructure generator examples")
+    print("=" * 12, "Microstructure generator examples", "=" * 13)
     print("=" * 60)
 
     dims_2d = (200, 200)
@@ -54,7 +54,8 @@ def main():
     fig, ax = plt.subplots()
     Plotter.plot_grain_ids(ax, micro_2d)
     fig.savefig(output_dir / "voronoi_2d.png", dpi=100, bbox_inches="tight")
-    print(f"    Voronoi 2D saved to: {output_dir / 'voronoi_2d.png'}")
+    print(f"    Voronoi 2D saved to:")
+    print(f"    {output_dir / 'voronoi_2d.png'}")
 
     # 3D Voronoi
     print()
@@ -64,7 +65,8 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "voronoi_3d.png", dpi=100, bbox_inches="tight")
-    print(f"    Voronoi 3D saved to: {output_dir / 'voronoi_3d.png'}")
+    print(f"    Voronoi 3D saved to:")
+    print(f"    {output_dir / 'voronoi_3d.png'}")
 
     # ===========================
     # Ellipsoidal
@@ -90,7 +92,8 @@ def main():
     fig, ax = plt.subplots()
     Plotter.plot_grain_ids(ax, micro_2d)
     fig.savefig(output_dir / "ellipsoidal_2d.png", dpi=150, bbox_inches="tight")
-    print(f"    Ellipsoidal 2D saved to: {output_dir / 'ellipsoidal_2d.png'}")
+    print(f"    Ellipsoidal 2D saved to:")
+    print(f"    {output_dir / 'ellipsoidal_2d.png'}")
 
     print()
     print("Starting Ellipsoidal 3D")
@@ -107,7 +110,8 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "ellipsoidal_3d.png", dpi=150, bbox_inches="tight")
-    print(f"    Ellipsoidal 3D saved to: {output_dir / 'ellipsoidal_3d.png'}")
+    print(f"    Ellipsoidal 3D saved to:")
+    print(f"    {output_dir / 'ellipsoidal_3d.png'}")
 
     # ===========================
     # Columnar
@@ -132,7 +136,8 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "columnar_z.png", dpi=150, bbox_inches="tight")
-    print(f"    Columnar in Z-axis saved to: {output_dir / 'columnar_z.png'}")
+    print(f"    Columnar in Z-axis saved to:")
+    print(f"    {output_dir / 'columnar_z.png'}")
 
     print()
     print("Starting Columnar X-axis")
@@ -149,7 +154,8 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "columnar_x.png", dpi=150, bbox_inches="tight")
-    print(f"    Columnar in X-axis saved to: {output_dir / 'columnar_x.png'}")
+    print(f"    Columnar in X-axis saved to:")
+    print(f"    {output_dir / 'columnar_x.png'}")
 
     # ===========================
     # Mixed
@@ -173,7 +179,8 @@ def main():
     fig, ax = plt.subplots()
     Plotter.plot_grain_ids(ax, micro_2d)
     fig.savefig(output_dir / "mixed_2d.png", dpi=150, bbox_inches="tight")
-    print(f"    Mixed 2D saved to: {output_dir / 'mixed_2d.png'}")
+    print(f"    Mixed 2D saved to:")
+    print(f"    {output_dir / 'mixed_2d.png'}")
 
     # 3D Mixed
     print()
@@ -190,7 +197,8 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "mixed_3d.png", dpi=150, bbox_inches="tight")
-    print(f"    Mixed 3D saved to: {output_dir / 'mixed_3d.png'}")
+    print(f"    Mixed 3D saved to:")
+    print(f"    {output_dir / 'mixed_3d.png'}")
 
     # ===========================
     # Lath
@@ -219,7 +227,8 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "lath_colony.png", dpi=150, bbox_inches="tight")
-    print(f"  Pure Colony saved to: {output_dir / 'lath_colony.png'}")
+    print(f"  Pure Colony saved to:")
+    print(f"  {output_dir / 'lath_colony.png'}")
 
     # Get colony information
     colony_info = gen.get_colony_info()
@@ -248,7 +257,8 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "lath_basketweave.png", dpi=150, bbox_inches="tight")
-    print(f"  Pure Basketweave saved to: {output_dir / 'lath_basketweave.png'}")
+    print(f"  Pure Basketweave saved to:")
+    print(f"  {output_dir / 'lath_basketweave.png'}")
 
     # Get colony information
     colony_info = gen.get_colony_info()
@@ -277,21 +287,23 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "lath_mixed.png", dpi=150, bbox_inches="tight")
-    print(f"  Mixed Basketweave/Colony saved to: {output_dir / 'lath_mixed.png'}")
+    print(f"  Mixed Basketweave/Colony saved to:")
+    print(f"  {output_dir / 'lath_mixed.png'}")
 
     # Get colony information
     colony_info = gen.get_colony_info()
     print(f"    Colonies: {colony_info['num_colonies']}")
     print(
-        f"    Avg laths per colony: {len(colony_info['colony_ids'])}" 
+        f"    Avg laths per colony: {len(colony_info['colony_ids'])}"
         f" {colony_info['num_colonies']:.1f}"
     )
 
-    print("\n" + "=" * 60)
-    print(f"All examples saved to: {output_dir}")
+    print()
+    print("=" * 60)
+    print(f"All examples saved to: \n{output_dir}")
     print("=" * 60)
 
-    plt.show()
+    # plt.show()
 
 
 if __name__ == "__main__":

@@ -7,6 +7,8 @@ This creates a random orientation for each grain in a Microstructure
 """
 
 import numpy as np
+
+from .texture import Texture
 from .texture_base import TextureGenerator
 
 
@@ -33,8 +35,6 @@ class RandomTexture(TextureGenerator):
         """
         if self.seed:
             np.random.seed(self.seed)
-
-        from .texture import Texture
 
         orientations = self._generate_orientations(micro)
         micro.orientations = orientations
