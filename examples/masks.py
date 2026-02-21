@@ -67,8 +67,8 @@ base_fig, base_axes = plt.subplots(1, 3, figsize=(15, 5))
 # Figure 0
 IPFplot.plot_multiple_ipf_slices(base_axes, micro, slice_indices=[50, 100, 150])
 plt.tight_layout()
-plt.savefig(output_dir / "base_micro.png", dpi=150, bbox_inches="tight")
-print("  Base microstructure filename: 'base_micro.png'")
+plt.savefig(output_dir / "mask_base_micro.png", dpi=150, bbox_inches="tight")
+print("  Base microstructure filename: 'mask_base_micro.png'")
 
 # ========================================================
 # Box mask example
