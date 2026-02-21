@@ -11,6 +11,7 @@ import warnings
 
 import numpy as np
 
+from .texture import Texture
 from .texture_base import TextureGenerator
 from ..rotation_converter import rotation_matrix_to_euler
 
@@ -63,6 +64,17 @@ class CustomTexture(TextureGenerator):
 
         self.degspread = degspread
         self.seed = seed
+
+    def generate(self, micro):
+        """Generate a Texture for the given microstructure."""
+        if self.seed is not None:
+            np.random.seed(self.seed)
+
+        orientations = self._generate_orientations(micro)
+
+        return Texture(
+            orientations=orientations, representation="euler", symmetry="cubic"
+        )
 
     def _generate_orientations(self, micro):
         """

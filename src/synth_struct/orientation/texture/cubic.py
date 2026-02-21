@@ -51,7 +51,7 @@ class CubicTexture(TextureGenerator):
 
     def generate(self, micro):
         """Generate a Texture for the given microstructure."""
-        if self.seed:
+        if self.seed is not None:
             np.random.seed(self.seed)
 
         orientations = self._generate_orientations(micro)

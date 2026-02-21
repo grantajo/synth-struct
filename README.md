@@ -43,9 +43,10 @@ than normal due to the program compiling on first run
 ## Todo Lists:
 ### Just finished
 - Added in examples for cubic textures
+- Working on custom texture example
+    - Bug in custom texture generation
 
 ### Short-term todo:
-- Add custom texture example
 - Fix representations for hexagonal crystal systems
 - Continue orix integration
     - Add in IPFs and ODFs

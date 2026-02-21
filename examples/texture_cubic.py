@@ -36,7 +36,7 @@ example_base_dir.mkdir(exist_ok=True)
 output_dir = repo_root / "output/texture/cubic"
 output_dir.mkdir(exist_ok=True)
 
-print("=" * 21, "Texture Examples", "=" * 21)
+print("=" * 18, "Cubic Texture Examples", "=" * 18)
 
 # Variables for microstructure generation
 dims = (200, 200)
