@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/plotting/orix_utils.py
+# synth-struct/src/synth_struct/plotting/orix_utils.py
 
 """
 Utility functions for orix-based crystallographic visualization

@@ -42,15 +42,11 @@ than normal due to the program compiling on first run
 
 ## Todo Lists:
 ### Just finished
-- Finished masks.py example
-- Fixed bug in orix_utils for x, y, z coordinate orders
+- Added in examples for cubic textures
 
 ### Short-term todo:
-- More examples
-    - Textures
-    - Stiffness (what do I even do for this?)
-
-### Things to be added:
+- Add custom texture example
+- Fix representations for hexagonal crystal systems
 - Continue orix integration
     - Add in IPFs and ODFs
     - Add in ability to have the colorkey shown in an IPF map
@@ -58,12 +54,15 @@ than normal due to the program compiling on first run
     - Figure out how to handle hexagonal directions for pole figures and ODFs
     - Add in ability to do ODF contour plots
     - Add in plotting examples
+
+### Things to be added:
 - Add grain structures with grain size better distribution
 - Add in file output generators
     - HDF5
     - VTK meshing
  
 ### Long term additions:
+- Figure out an example for texture
 - Add in second phases
     - Add in ability to have precipitates
     - Add in porosity
