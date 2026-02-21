@@ -64,9 +64,9 @@ def create_crystal_map(micro, crystal_structure="cubic", grain_subset=None):
     if len(micro.dimensions) == 3:
         nx, ny, nz = micro.dimensions
 
-        z_coords = np.repeat(np.arange(nz), ny * nx)
-        y_coords = np.tile(np.repeat(np.arange(ny), nx), nz)
-        x_coords = np.tile(np.arange(nx), nz * ny)
+        x_coords = np.repeat(np.arange(nx), ny * nz)
+        y_coords = np.tile(np.repeat(np.arange(ny), nz), nx)
+        z_coords = np.tile(np.arange(nz), nx * ny)
 
         crystal_map = CrystalMap(
             rotations=orientations,
@@ -127,13 +127,13 @@ def get_crystal_map_slice(crystal_map, dimensions, slice_idx=None, slice_directi
     # Extract slice based on direction
     if slice_direction.lower() == "z":
         crystal_map_slice = crystal_map[crystal_map.prop["z"] == slice_idx]
-        shape = (dimensions[0], dimensions[1])
+        shape = (dimensions[1], dimensions[0])
     elif slice_direction.lower() == "y":
         crystal_map_slice = crystal_map[crystal_map.y == slice_idx]
-        shape = (dimensions[0], dimensions[2])
+        shape = (dimensions[2], dimensions[0])
     elif slice_direction.lower() == "x":
         crystal_map_slice = crystal_map[crystal_map.x == slice_idx]
-        shape = (dimensions[1], dimensions[2])
+        shape = (dimensions[2], dimensions[1])
     else:
         raise ValueError(f"Invalid slice_direction: {slice_direction}")
 

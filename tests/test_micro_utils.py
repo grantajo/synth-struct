@@ -156,7 +156,7 @@ class TestGetGrains:
     def test_cylinder_region_with_bounds(self, micro_3d_simple):
         """Test cylinder with specified z bounds"""
         grains = get_grains_in_region(
-            micro_3d_simple, "cylinder", center=[50, 50], radius=15, z_min=40, z_max=60
+            micro_3d_simple, "cylinder", center=[50, 50], radius=15, c_min=40, c_max=60
         )
         assert 2 in grains
 
@@ -354,7 +354,7 @@ class TestCreateCylinderMask:
         """Test cylinder mask with z bounds"""
         micro = Microstructure(dimensions=(100, 100, 100), resolution=1.0)
         mask = _create_cylinder_mask(
-            micro, center=[50, 50], radius=10, z_min=30, z_max=70, axis="z"
+            micro, center=[50, 50], radius=10, c_min=30, c_max=70, axis="z"
         )
         assert mask.shape == (100, 100, 100)
         assert mask[50, 50, 50]  # Inside bounds

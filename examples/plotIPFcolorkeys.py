@@ -7,9 +7,6 @@ This example plots all of the IPF colorkeys for future reference.
 import sys
 from pathlib import Path
 
-import matplotlib.pyplot as plt
-from orix import plot
-from orix.quaternion import symmetry
 
 from synth_struct.plotting import ipfcolorkeys
 

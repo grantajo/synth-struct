@@ -42,9 +42,8 @@ than normal due to the program compiling on first run
 
 ## Todo Lists:
 ### Just finished
-- Started mask shapes examples
-    - There is a bug in the cylindrical mask
-    - There is a bug in the layers (the orientation of the layers is incorrect)
+- Finished masks.py example
+- Fixed bug in orix_utils for x, y, z coordinate orders
 
 ### Short-term todo:
 - More examples

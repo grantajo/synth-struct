@@ -54,7 +54,7 @@ def main():
     fig, ax = plt.subplots()
     Plotter.plot_grain_ids(ax, micro_2d)
     fig.savefig(output_dir / "voronoi_2d.png", dpi=100, bbox_inches="tight")
-    print(f"    Voronoi 2D saved to:")
+    print("    Voronoi 2D saved to:")
     print(f"    {output_dir / 'voronoi_2d.png'}")
 
     # 3D Voronoi
@@ -65,7 +65,7 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "voronoi_3d.png", dpi=100, bbox_inches="tight")
-    print(f"    Voronoi 3D saved to:")
+    print("    Voronoi 3D saved to:")
     print(f"    {output_dir / 'voronoi_3d.png'}")
 
     # ===========================
@@ -92,7 +92,7 @@ def main():
     fig, ax = plt.subplots()
     Plotter.plot_grain_ids(ax, micro_2d)
     fig.savefig(output_dir / "ellipsoidal_2d.png", dpi=150, bbox_inches="tight")
-    print(f"    Ellipsoidal 2D saved to:")
+    print("    Ellipsoidal 2D saved to:")
     print(f"    {output_dir / 'ellipsoidal_2d.png'}")
 
     print()
@@ -110,7 +110,7 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "ellipsoidal_3d.png", dpi=150, bbox_inches="tight")
-    print(f"    Ellipsoidal 3D saved to:")
+    print("    Ellipsoidal 3D saved to:")
     print(f"    {output_dir / 'ellipsoidal_3d.png'}")
 
     # ===========================
@@ -136,7 +136,7 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "columnar_z.png", dpi=150, bbox_inches="tight")
-    print(f"    Columnar in Z-axis saved to:")
+    print("    Columnar in Z-axis saved to:")
     print(f"    {output_dir / 'columnar_z.png'}")
 
     print()
@@ -154,7 +154,7 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "columnar_x.png", dpi=150, bbox_inches="tight")
-    print(f"    Columnar in X-axis saved to:")
+    print("    Columnar in X-axis saved to:")
     print(f"    {output_dir / 'columnar_x.png'}")
 
     # ===========================
@@ -179,7 +179,7 @@ def main():
     fig, ax = plt.subplots()
     Plotter.plot_grain_ids(ax, micro_2d)
     fig.savefig(output_dir / "mixed_2d.png", dpi=150, bbox_inches="tight")
-    print(f"    Mixed 2D saved to:")
+    print("    Mixed 2D saved to:")
     print(f"    {output_dir / 'mixed_2d.png'}")
 
     # 3D Mixed
@@ -197,7 +197,7 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "mixed_3d.png", dpi=150, bbox_inches="tight")
-    print(f"    Mixed 3D saved to:")
+    print("    Mixed 3D saved to:")
     print(f"    {output_dir / 'mixed_3d.png'}")
 
     # ===========================
@@ -227,7 +227,7 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "lath_colony.png", dpi=150, bbox_inches="tight")
-    print(f"  Pure Colony saved to:")
+    print("  Pure Colony saved to:")
     print(f"  {output_dir / 'lath_colony.png'}")
 
     # Get colony information
@@ -257,7 +257,7 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "lath_basketweave.png", dpi=150, bbox_inches="tight")
-    print(f"  Pure Basketweave saved to:")
+    print("  Pure Basketweave saved to:")
     print(f"  {output_dir / 'lath_basketweave.png'}")
 
     # Get colony information
@@ -287,7 +287,7 @@ def main():
     fig = plt.figure(figsize=(15, 5))
     Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
     fig.savefig(output_dir / "lath_mixed.png", dpi=150, bbox_inches="tight")
-    print(f"  Mixed Basketweave/Colony saved to:")
+    print("  Mixed Basketweave/Colony saved to:")
     print(f"  {output_dir / 'lath_mixed.png'}")
 
     # Get colony information
