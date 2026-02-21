@@ -1,4 +1,4 @@
-# synth_struct
+# synth-struct (synthetic microstructures)
 This is a code base that generates microstrcutures that are intended to be used in
 mechanical simulations, such as ultrasonic, crystal plasticity, etc.
 
@@ -82,13 +82,12 @@ synth_struct/<br>
 │   ├── __init__.py<br>
 │   ├── basic_example_2d.py<br>
 │   ├── basic_example_3d.py<br>
-│   ├── mask_box.py<br>
-│   ├── mask_custom.py<br>
-│   ├── mask_cylinder.py<br>
-│   ├── mask_layer.py<br>
-│   ├── mask_sphere.py<br>
-│   ├── shapes.py<br>
-│   └── vis_example.py<br>
+│   ├── masks.py<br>
+│   ├── middle_mask.py<br>
+│   ├── plotIPFcolorkeys.py<br>
+│   ├── texture_cubic.py<br>
+│   ├── texture_custom.py<br>
+│   └── shapes.py<br>
 ├── output<br>
 ├── pyproject.toml<br>
 ├── setup.py<br>
