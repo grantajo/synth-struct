@@ -1,4 +1,4 @@
-# synth_struct/src/orientation/texture/cubic.py
+# synth-struct/src/orientation/texture/cubic.py
 
 """
 This holds the CubicTexture Generator.

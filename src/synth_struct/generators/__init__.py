@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/generators/__init__.py
+# synth-struct/src/synth_struct/generators/__init__.py
 
 """
 Synthetic microstructure generators

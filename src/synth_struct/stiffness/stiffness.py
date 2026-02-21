@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/stiffness/stiffness.py
+# synth-struct/src/synth_struct/stiffness/stiffness.py
 
 """
 Stiffness class

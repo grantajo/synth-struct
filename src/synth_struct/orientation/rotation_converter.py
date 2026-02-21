@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/orientation/rotation_converter.py
+# synth-struct/src/synth_struct/orientation/rotation_converter.py
 
 """
 This file holds a set of conversion functions between Euler angles,

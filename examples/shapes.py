@@ -1,4 +1,4 @@
-# synth_struct/examples/shapes.py
+# synth-struct/examples/shapes.py
 
 """
 This example creates a microstructure with each of the various Microstructure generator classes

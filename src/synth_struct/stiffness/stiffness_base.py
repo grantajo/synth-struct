@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/stiffness/stiffness_base.py
+# synth-struct/src/synth_struct/stiffness/stiffness_base.py
 
 """
 StiffnessGenerator class

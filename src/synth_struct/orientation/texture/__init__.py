@@ -1,4 +1,4 @@
-# synth_struct/src/orientation/texture/__init__.py
+# synth-struct/src/orientation/texture/__init__.py
 
 """
 Texture generators

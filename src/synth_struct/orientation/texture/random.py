@@ -1,4 +1,4 @@
-# synth_struct/src/orientation/texture/random.py
+# synth-struct/src/orientation/texture/random.py
 
 """
 This holds the CustomTexture Generator.

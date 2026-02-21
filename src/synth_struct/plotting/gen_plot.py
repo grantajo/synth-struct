@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/plotting/gen_plot.py
+# synth-struct/src/synth_struct/plotting/gen_plot.py
 
 """
 This is a series of plotting functions to help with plotting.

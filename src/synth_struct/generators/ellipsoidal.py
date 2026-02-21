@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/generators/ellipsoidal.py
+# synth-struct/src/synth_struct/generators/ellipsoidal.py
 
 """
 This class holds the EllipsoidalGenerator class that generates an

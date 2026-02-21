@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/orientation/__init__.py
+# synth-struct/src/synth_struct/orientation/__init__.py
 
 """
 Rotation conversion functions

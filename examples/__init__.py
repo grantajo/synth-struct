@@ -1,1 +1,1 @@
-# synth_struct/examples/__init__.py
+# synth-struct/examples/__init__.py

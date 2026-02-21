@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/stiffness/hexagonal_stiffness.py
+# synth-struct/src/synth_struct/stiffness/hexagonal_stiffness.py
 
 """
 Rotation calculator for local stiffness tensors in a Hexagonal system.

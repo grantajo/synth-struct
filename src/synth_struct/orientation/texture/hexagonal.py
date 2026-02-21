@@ -1,4 +1,4 @@
-# synth_struct/src/orientation/texture/hexagonal.py
+# synth-struct/src/orientation/texture/hexagonal.py
 
 """
 This holds the HexagonalTexture Generator.

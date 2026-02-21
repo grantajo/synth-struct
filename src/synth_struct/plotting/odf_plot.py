@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/plotting/odf_plot.py
+# synth-struct/src/synth_struct/plotting/odf_plot.py
 
 import matplotlib.pyplot as plt
 

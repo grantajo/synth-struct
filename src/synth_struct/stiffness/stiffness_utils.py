@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/stiffness/stiffness_utils.py
+# synth-struct/src/synth_struct/stiffness/stiffness_utils.py
 
 """
 Utility functions for rotating stiffness tensors using orientation data.

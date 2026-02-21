@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/generators/lath_updated.py
+# synth-struct/src/synth_struct/generators/lath_updated.py
 
 """
 To be implemented:

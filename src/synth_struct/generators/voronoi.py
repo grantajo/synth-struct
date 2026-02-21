@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/generators/voronoi.py
+# synth-struct/src/synth_struct/generators/voronoi.py
 
 """
 This class holds the VoronoiGenerator class that generates an

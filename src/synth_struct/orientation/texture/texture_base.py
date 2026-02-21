@@ -1,4 +1,4 @@
-# synth_struct/src/orientation/texture/texture_base.py
+# synth-struct/src/orientation/texture/texture_base.py
 
 """
 Base TextureGenerator class to be able to call each individual generator.

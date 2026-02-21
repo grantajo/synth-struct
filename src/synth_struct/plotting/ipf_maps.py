@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/plotting/ipf_maps.py
+# synth-struct/src/synth_struct/plotting/ipf_maps.py
 
 """
 IPF (Inverse Pole Figure) colore map visualization.

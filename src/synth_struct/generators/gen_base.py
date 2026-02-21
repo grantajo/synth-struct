@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/generators/gen_base.py
+# synth-struct/src/synth_struct/generators/gen_base.py
 
 """
 This holds the MicrostructureGenerator class and associated basic functions.

@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/generators/lath.py
+# synth-struct/src/synth_struct/generators/lath.py
 
 """
 This class holds the LathGenerator class that generates an

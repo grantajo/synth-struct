@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/generators/mixed.py
+# synth-struct/src/synth_struct/generators/mixed.py
 
 """
 This class holds the MixedGenerator class that generates an

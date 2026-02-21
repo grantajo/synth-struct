@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/micro_utils.py
+# synth-struct/src/synth_struct/micro_utils.py
 
 """
 A series of functions to help with microstructure development

@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/stiffness/cubic_stiffness.py
+# synth-struct/src/synth_struct/stiffness/cubic_stiffness.py
 
 """
 Rotation calculator for local stiffness tensors in a cubic system.

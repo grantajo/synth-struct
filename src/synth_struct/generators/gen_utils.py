@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/generators/gen_utils.py
+# synth-struct/src/synth_struct/generators/gen_utils.py
 
 """
 Useful utility functions for microstructure generators

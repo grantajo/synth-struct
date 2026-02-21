@@ -1,4 +1,4 @@
-# synth_struct/src/orientation/texture/texture.py
+# synth-struct/src/orientation/texture/texture.py
 
 """
 Texture class for instantiating a texture for the TextureGenerators

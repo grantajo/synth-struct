@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/plotting/pole_figures.py
+# synth-struct/src/synth_struct/plotting/pole_figures.py
 
 import numpy as np
 import matplotlib.pyplot as plt

@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/plotting/plot_utils.py
+# synth-struct/src/synth_struct/plotting/plot_utils.py
 
 """
 Utility functions for preparing microstructure data for visualization.

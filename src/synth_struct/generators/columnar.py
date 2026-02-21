@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/generators/columnar.py
+# synth-struct/src/synth_struct/generators/columnar.py
 
 """
 This class holds the ColumnarGenerator class that generates an

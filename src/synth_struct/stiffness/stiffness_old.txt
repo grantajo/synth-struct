@@ -1,4 +1,4 @@
-# /synth_struct/src/synth_struct/stiffnes/stiffness_old.py
+# /synth-struct/src/synth_struct/stiffnes/stiffness_old.py
 
 import sys
 

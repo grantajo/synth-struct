@@ -1,4 +1,4 @@
-# synth_struct/src/synth_struct/microstructure.py
+# synth-struct/src/synth_struct/microstructure.py
 
 """
 Microstructure representation for voxel-based synthetic materials.
