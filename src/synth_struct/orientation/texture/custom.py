@@ -67,8 +67,6 @@ class CustomTexture(TextureGenerator):
 
     def generate(self, micro):
         """Generate a Texture for the given microstructure."""
-        if self.seed is not None:
-            np.random.seed(self.seed)
 
         orientations = self._generate_orientations(micro)
 
@@ -132,6 +130,8 @@ class CustomTexture(TextureGenerator):
         """
         if self.seed is not None:
             np.random.seed(self.seed)
+            
+        angles = rng.normal(0.0, np.radians)
 
         perturbations = np.random.normal(0.0, np.radians(self.degspread), size=(n, 3))
 

@@ -42,8 +42,10 @@ than normal due to the program compiling on first run
 
 ## Todo Lists:
 ### Just finished
-- Fixed custom texture generation bug
+- Need to fix the scattering to use skew
 - Starting to add in better hexagonal crystal system representation
+    - Really only need in the texture generators, I believe, might need to
+    add to the plotting functions later on.
 
 ### Short-term todo:
 - Continue orix integration
