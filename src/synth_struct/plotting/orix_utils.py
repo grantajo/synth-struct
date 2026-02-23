@@ -75,7 +75,11 @@ def create_crystal_map(micro, crystal_structure="cubic", grain_subset=None):
             y=y_coords,
             phase_list=phase_list,
             scan_unit="px",
-            prop={"grain_id": grain_ids_flat, "z": z_coords},
+            prop={
+                "grain_id": grain_ids_flat,
+                "z": z_coords,
+                "flat_idx": np.arange(len(grain_ids_flat)),
+            },
         )
 
     else:  # 2D

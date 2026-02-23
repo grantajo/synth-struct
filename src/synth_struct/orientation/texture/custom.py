@@ -99,7 +99,7 @@ class CustomTexture(TextureGenerator):
         # Each column represents where a crystal axis points in sample frame
         # Sample frame basis: [RD, TD, ND]
         # Crystal frame basis: [cRD, cTD, cND]
-        R = np.column_stack([cRD, cTD, cND])
+        R = np.vstack([cRD, cTD, cND])
 
         # Convert to Euler angles
         euler = rotation_matrix_to_euler(R)
@@ -130,15 +130,15 @@ class CustomTexture(TextureGenerator):
         Returns
         - orientations: np.ndarray of shape (n, 3) - Scatter Euler angles in degrees.
         """
-        if self.seed:
+        if self.seed is not None:
             np.random.seed(self.seed)
 
-        perturbations = np.random.normal(0.0, self.degspread, size=(n, 3))
+        perturbations = np.random.normal(0.0, np.radians(self.degspread), size=(n, 3))
 
         orientations = base_euler + perturbations
 
-        orientations[:, 0] %= 360.0
-        orientations[:, 1] = np.clip(orientations[:, 1], 0.0, 180.0)
-        orientations[:, 2] %= 360.0
+        orientations[:, 0] %= 2 * np.pi
+        orientations[:, 1] = np.clip(orientations[:, 1], 0.0, np.pi)
+        orientations[:, 2] %= 2 * np.pi
 
         return orientations

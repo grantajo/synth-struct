@@ -64,6 +64,11 @@ print(f"  Middle region contains {len(middle_grains)} grains")
 # Custom texture
 # ========================================================
 
+# This is the cube texture for testing
+# hkl = [0, 0, 1]
+# uvw = [1, 0, 0]
+
+# This is an arbitrary texture
 hkl = [1, 2, 3]
 uvw = [1, 1, -1]
 
@@ -78,14 +83,14 @@ print("-" * 60)
 custom_micro = micro.copy()
 
 # Generate texture for the middle
-middle_reg_texture = CustomTexture(hkl, uvw, degspread=2.0)
+middle_reg_texture = CustomTexture(hkl, uvw, degspread=5.0)
 middle_orientations = middle_reg_texture.generate(middle_grains)
 
 # Reassign textures for the grains in the box region
 custom_micro.orientations[middle_grains] = middle_orientations.orientations
 
 # Plot
-custom_fig, custom_axes = plt.subplots(1, 3, figsize=(15, 5))
+custom_fig, custom_axes = plt.subplots(1, 3, figsize=(13, 5))
 IPFplot.plot_multiple_ipf_maps(custom_axes, custom_micro)
 custom_fig.suptitle(f"Custom Texture\n"
                    f"(hkl) = ({hkl[0]}{hkl[1]}{hkl[2]})\n"
