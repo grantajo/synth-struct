@@ -42,12 +42,10 @@ than normal due to the program compiling on first run
 
 ## Todo Lists:
 ### Just finished
-- Added in examples for cubic textures
-- Working on custom texture example
-    - Bug in custom texture generation
+- Fixed custom texture generation bug
+- Starting to add in better hexagonal crystal system representation
 
 ### Short-term todo:
-- Fix representations for hexagonal crystal systems
 - Continue orix integration
     - Add in IPFs and ODFs
     - Add in ability to have the colorkey shown in an IPF map
@@ -79,61 +77,61 @@ than normal due to the program compiling on first run
 synth_struct/<br>
 ├── README.md<br>
 ├── examples/<br>
-│   ├── __init__.py<br>
-│   ├── basic_example_2d.py<br>
-│   ├── basic_example_3d.py<br>
-│   ├── masks.py<br>
-│   ├── middle_mask.py<br>
-│   ├── plotIPFcolorkeys.py<br>
-│   ├── texture_cubic.py<br>
-│   ├── texture_custom.py<br>
-│   └── shapes.py<br>
+│   ├── __init__.py<br>
+│   ├── basic_example_2d.py<br>
+│   ├── basic_example_3d.py<br>
+│   ├── masks.py<br>
+│   ├── middle_mask.py<br>
+│   ├── plotIPFcolorkeys.py<br>
+│   ├── texture_cubic.py<br>
+│   ├── texture_custom.py<br>
+│   └── shapes.py<br>
 ├── output<br>
 ├── pyproject.toml<br>
 ├── setup.py<br>
 ├── src/<br>
-│   ├── synth_struct/<br>
-│   │   ├── __init__.py<br>
-│   │   ├── generators/<br>
-│   │   │   ├── __init__.py<br>
-│   │   │   ├── columnar.py<br>
-│   │   │   ├── ellipsoidal.py<br>
-│   │   │   ├── gen_base.py<br>
-│   │   │   ├── gen_utils.py<br>
-│   │   │   ├── lath.py<br>
-│   │   │   ├── lath_updated.py<br>
-│   │   │   ├── mixed.py<br>
-│   │   │   └── voronoi.py<br>
-│   │   ├── _cpp_exensions/<br>
-│   │   │   ├── __init__.py<br>
-│   │   │   └── aniso_voronoi_eigen.cpp<br>
-│   │   ├── io/<br>
-│   │   │   └── hdf5_writer.py<br>
-│   │   ├── micro_utils.py<br>
-│   │   ├── microstructure.py<br>
-│   │   ├── orientation/<br>
-│   │   │   ├── __init__.py<br>
-│   │   │   ├── rotation_converter.py<br>
-│   │   │   └── texture/<br>
-│   │   │      ├── __init__.py<br>
-│   │   │      ├── cubic.py<br>
-│   │   │      ├── hexagonal.py<br>
-│   │   │      ├── random.py<br>
-│   │   │      ├── texture.py<br>
-│   │   │      ├── texture_base.py<br>
-│   │   │      └── custom.py<br>
-│   │   ├── plotting/<br>
-│   │   │   ├── __init__.py<br>
-│   │   │   ├── gen_plot.py<br>
-│   │   │   ├── ipf_maps.py<br>
-│   │   │   ├── ipfcolorkeys.py<br>
-│   │   │   ├── odf_plot.py<br>
-│   │   │   ├── orix_utils.py<br>
-│   │   │   ├── plot_utils.py<br>
-│   │   │   └── pole_figures.py<br>
-│   │   └── stiffness/<br>
-│   │       ├── __init__.py<br>
-│   │       └── stiffness.py<br>
+│   ├── synth_struct/<br>
+│   │   ├── __init__.py<br>
+│   │   ├── generators/<br>
+│   │   │   ├── __init__.py<br>
+│   │   │   ├── columnar.py<br>
+│   │   │   ├── ellipsoidal.py<br>
+│   │   │   ├── gen_base.py<br>
+│   │   │   ├── gen_utils.py<br>
+│   │   │   ├── lath.py<br>
+│   │   │   ├── lath_updated.py<br>
+│   │   │   ├── mixed.py<br>
+│   │   │   └── voronoi.py<br>
+│   │   ├── _cpp_exensions/<br>
+│   │   │   ├── __init__.py<br>
+│   │   │   └── aniso_voronoi_eigen.cpp<br>
+│   │   ├── io/<br>
+│   │   │   └── hdf5_writer.py<br>
+│   │   ├── micro_utils.py<br>
+│   │   ├── microstructure.py<br>
+│   │   ├── orientation/<br>
+│   │   │   ├── __init__.py<br>
+│   │   │   ├── rotation_converter.py<br>
+│   │   │   └── texture/<br>
+│   │   │      ├── __init__.py<br>
+│   │   │      ├── cubic.py<br>
+│   │   │      ├── hexagonal.py<br>
+│   │   │      ├── random.py<br>
+│   │   │      ├── texture.py<br>
+│   │   │      ├── texture_base.py<br>
+│   │   │      └── custom.py<br>
+│   │   ├── plotting/<br>
+│   │   │   ├── __init__.py<br>
+│   │   │   ├── gen_plot.py<br>
+│   │   │   ├── ipf_maps.py<br>
+│   │   │   ├── ipfcolorkeys.py<br>
+│   │   │   ├── odf_plot.py<br>
+│   │   │   ├── orix_utils.py<br>
+│   │   │   ├── plot_utils.py<br>
+│   │   │   └── pole_figures.py<br>
+│   │   └── stiffness/<br>
+│   │       ├── __init__.py<br>
+│   │       └── stiffness.py<br>
 └── tests/<br>
     ├── __init__.py<br>
     ├── test_columnar.py<br>

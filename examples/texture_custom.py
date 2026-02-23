@@ -4,7 +4,7 @@
 This is an example that shows how to use the custom textures
 feature. This example then saves IPF maps.
 
-Custom texture takes in hkl and uvw values with 
+Custom texture takes in hkl and uvw values with
 (hkl) || ND and [uvw] || RD
 """
 
@@ -92,10 +92,12 @@ custom_micro.orientations[middle_grains] = middle_orientations.orientations
 # Plot
 custom_fig, custom_axes = plt.subplots(1, 3, figsize=(13, 5))
 IPFplot.plot_multiple_ipf_maps(custom_axes, custom_micro)
-custom_fig.suptitle(f"Custom Texture\n"
-                   f"(hkl) = ({hkl[0]}{hkl[1]}{hkl[2]})\n"
-                   f"[uvw] = ({uvw[0]}{uvw[1]}{uvw[2]})", 
-                   fontsize=15)
+custom_fig.suptitle(
+    f"Custom Texture\n"
+    f"(hkl) = ({hkl[0]}{hkl[1]}{hkl[2]})\n"
+    f"[uvw] = ({uvw[0]}{uvw[1]}{uvw[2]})",
+    fontsize=15,
+)
 plt.tight_layout()
 plt.savefig(output_dir / "texture_custom.png", dpi=150, bbox_inches="tight")
 
