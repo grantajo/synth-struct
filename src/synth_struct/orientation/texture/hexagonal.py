@@ -12,6 +12,7 @@ import numpy as np
 
 from .texture import Texture
 from .texture_base import TextureGenerator
+from ..phase import Phase
 
 HEXAGONAL_ORIENTATIONS = {
     "basal": np.array([0.0, 0.0, 0.0]),
@@ -27,32 +28,45 @@ class HexagonalTexture(TextureGenerator):
     Args:
     - texture_type: str
         One of 'basal', 'prismatic', or 'pyramidal' .
+    - phase: Phase object
     - degspread: float - Gaussian spread around ideal orientation (degrees)
     - seed: int or None - Random seed for reproducibility
     """
 
-    def __init__(self, texture_type=None, degspread=5.0, seed=None):
+    def __init__(self, texture_type=None, phase=None, degspread=5.0, seed=None):
         if texture_type not in HEXAGONAL_ORIENTATIONS:
             raise ValueError(f"Unknown hexagonal texture type {texture_type}")
         if degspread is not None and degspread < 0:
             raise ValueError("scale < 0")
-        
+        if phase is None:
+            phase = Phase(
+                name="hexagonal_default",
+                crystal_system="hexagonal",
+                lattice_params=(1, 1, 1.633),
+            )
+        if phase.crystal_system != "hexagonal":
+            raise ValueError(
+                f"HexagonalTexture requires a hexagonal phase, "
+                f"got '{phase.crystal_system}'"
+            )
+
         self.texture_type = texture_type
+        self.phase = phase
         self.degspread = degspread
         self.seed = seed
 
     def generate(self, micro):
         """Generate a Texture for the given microstructure."""
         orientations = self._generate_orientations(micro)
-        
+
         texture = Texture(
-            orientations=orientations, 
-            representation="euler", 
-            symmetry="hexagonal"
+            orientations=orientations,
+            representation="euler",
+            phase=self.phase,
         )
         if self.degspread is not None and self.degspread > 0:
             texture = texture.apply_scatter(self.degspread, seed=self.seed)
-            
+
         return texture
 
     def _generate_orientations(self, micro):

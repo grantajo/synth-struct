@@ -16,6 +16,7 @@ from .rotation_converter import (
     rotation_z_to_x,
     rotation_z_to_y,
 )
+from .phase import Phase
 
 __all__ = [
     "normalize_angle",
@@ -28,4 +29,5 @@ __all__ = [
     "create_rotation_matrix_2d",
     "rotation_z_to_x",
     "rotation_z_to_y",
+    "Phase",
 ]

@@ -14,6 +14,7 @@ import numpy as np
 from .texture import Texture
 from .texture_base import TextureGenerator
 from ..rotation_converter import rotation_matrix_to_euler
+from ..phase import Phase
 
 
 def _normalize(v):
@@ -28,30 +29,31 @@ def _normalize(v):
 
     return v / norm
 
+
 def _crystal_to_cartesian(indices, crystal_system, lattice_params):
     """
     Convert crystal direction indices into a Cartesian vector.
-    
+
     This is for hexagonal, non-orthogonal bases.
-    
+
     Parameters:
         - indices: array-like - [h, k, l] or [h, k, i, l]
         - crystal_system: str - 'cubic' or 'hexagonal'
         - lattice_params: tuple - (a, b, c) lattice parameters
-        
+
     Returns:
         - np.ndarray of shape (3,) in Cartesian coordinates
     """
     indices = np.array(indices, dtype=float)
     a, b, c = lattice_params
-    
+
     if crystal_system == "cubic":
         return indices
-    
+
     elif crystal_system == "hexagonal":
-        
+
         if len(indices) == 4:
-            h, k, i, l  = indices
+            h, k, i, l = indices
             # Verify i = -(h+k) within tolerance
             if abs(i + h + k) > 1e-6:
                 warnings.warn(
@@ -60,21 +62,20 @@ def _crystal_to_cartesian(indices, crystal_system, lattice_params):
                     f"Ignoring i and computing from h, k."
                 )
             indices = np.array([h, k, l])
-            
+
         h, k, l = indices
         # Convert hexagonal Miller to orthogonal Cartesian
         x = a * (h + k * 0.5)
         y = a * (k * np.sqrt(3) / 2)
         z = c * l
-        
+
         return np.array([x, y, z])
-    
+
     else:
         raise ValueError(
             f"Unknown crystal system '{crystal_system}'. "
             f"Expected 'cubic' or 'hexagonal'."
         )
-    
 
 
 class CustomTexture(TextureGenerator):
@@ -84,46 +85,55 @@ class CustomTexture(TextureGenerator):
     The texture is defined by crystallographic alignment:
         (hkl) || ND
         [uvw] || RD
-    
+
     For hexagonal materials, Miller-Bravais 4-index notation is accepted:
         (hkil) || ND
         [uvtw] || RD
-        
+
     Args:
     - hkl: array-like - Direction parallel to ND as [h, k, l]
     - uvw: array-like - Direction parallel to RD as [u, v, w]
-    - crystal_system: str - 'cubic' or 'hexagonal'
-    - lattice_params: tuple - (a, b, c) lattice parameters.
-        Only meaningful for hexagonal.
+    - phase: Phase object
     - degspread: float or None - Gaussian spread around ideal orientation (degrees)
     - seed: int or None - Random seed for reproducibility
     """
 
-    def __init__(self, hkl, uvw, 
-                 crystal_system="cubic", lattice_params=(1, 1, 1),
-                 degspread=5.0, seed=None):
-        if crystal_system not in ("cubic", "hexagonal"):
-            raise ValueError(
-                f"Unknown crystal system '{crystal_system}'. "
-                f"Expected 'cubic' or 'hexagonal'."
+    def __init__(
+        self,
+        hkl,
+        uvw,
+        phase=None,
+        degspread=5.0,
+        seed=None,
+    ):
+        if phase is None:
+            phase = Phase(
+                name="default", crystal_system="cubic", lattice_params=(1, 1, 1)
             )
+        if not isinstance(phase, Phase):
+            raise TypeError(f"Expected Phase, got {type(phase)}")
         if degspread is not None and degspread < 0:
             raise ValueError("scale < 0")
-            
-        self.crystal_system = crystal_system
-        self.lattice_params = lattice_params
+
+        self.phase = phase
         self.degspread = degspread
         self.seed = seed
-        
-        hkl_cart = _crystal_to_cartesian(hkl, crystal_system, lattice_params)
-        uvw_cart = _crystal_to_cartesian(uvw, crystal_system, lattice_params)
-        
+
+        hkl_cart = _crystal_to_cartesian(
+            hkl, phase.crystal_system, phase.lattice_params
+        )
+        uvw_cart = _crystal_to_cartesian(
+            uvw, phase.crystal_system, phase.lattice_params
+        )
+
         self.hkl = _normalize(hkl_cart)
 
         dot_product = np.abs(np.dot(self.hkl, _normalize(uvw_cart)))
         if dot_product > 1e-6:
             # Orthogonalize
-            uvw_corrected = _normalize(uvw_cart) - np.dot(_normalize(uvw_cart), self.hkl) * self.hkl
+            uvw_corrected = (
+                _normalize(uvw_cart) - np.dot(_normalize(uvw_cart), self.hkl) * self.hkl
+            )
             self.uvw = _normalize(uvw_corrected)
 
             warnings.warn(
@@ -133,8 +143,6 @@ class CustomTexture(TextureGenerator):
         else:
             self.uvw = _normalize(uvw_cart)
 
-        
-
     def generate(self, micro):
         """Generate a Texture for the given microstructure."""
 
@@ -143,7 +151,7 @@ class CustomTexture(TextureGenerator):
         texture = Texture(
             orientations=orientations,
             representation="euler",
-            symmetry=self.crystal_system,
+            phase=self.phase,
         )
         if self.degspread is not None and self.degspread > 0:
             texture = texture.apply_scatter(self.degspread, seed=self.seed)

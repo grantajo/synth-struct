@@ -11,6 +11,7 @@ from typing import Dict
 
 import numpy as np
 
+from ..phase import Phase
 from ..rotation_converter import (
     euler_to_quat,
     euler_to_rotation_matrix,
@@ -32,7 +33,7 @@ class Texture:
 
     orientations: np.ndarray
     representation: str
-    symmetry: str
+    phase: Phase
     metadata: Dict = field(default_factory=dict)
 
     def __post_init__(self):
@@ -53,8 +54,8 @@ class Texture:
                 f"Expected 'euler', 'quat', or 'rotmat'."
             )
 
-        if not isinstance(self.symmetry, str):
-            raise TypeError("symmetry must be a string (e.g. 'cubic' or 'hexagonal')")
+        if not isinstance(self.phase, Phase):
+            raise TypeError("Phase must be a Phase object, got {type(self.phase)}")
 
     @property
     def n_orientations(self) -> int:
@@ -62,6 +63,11 @@ class Texture:
         Returns number of orientations
         """
         return self.orientations.shape[0]
+
+    @property
+    def symmetry(self) -> str:
+        """Convenience accessor for crystal system via phase."""
+        return self.phase.crystal_system
 
     def to_representation(self, representation: str) -> "Texture":
         """
@@ -101,7 +107,7 @@ class Texture:
         return Texture(
             orientations=new_orientations,
             representation=representation,
-            symmetry=self.symmetry,
+            phase=self.phase,
             metadata=self.metadata.copy(),
         )
 
@@ -136,7 +142,6 @@ class Texture:
         axes /= np.linalg.norm(axes, axis=1, keepdims=True)
 
         K = np.zeros((n, 3, 3))
-        K[:, 0, 1] = -axes[:, 2]
         K[:, 0, 1] = -axes[:, 2]
         K[:, 0, 2] = axes[:, 1]
         K[:, 1, 0] = axes[:, 2]

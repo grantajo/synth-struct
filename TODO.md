@@ -1,6 +1,7 @@
 ## Todo Lists:
 ### Just finished
-- Fixed scatter application for textures
+- Added phases, need to fix bug with orix grain_ids and making sure that the
+background stays
 - Added ability to do hexagonal custom textures
     - Need to fix orix ability to handle hexagonal
 

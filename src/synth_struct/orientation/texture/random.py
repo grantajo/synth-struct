@@ -10,6 +10,7 @@ import numpy as np
 
 from .texture import Texture
 from .texture_base import TextureGenerator
+from ..phase import Phase
 
 
 class RandomTexture(TextureGenerator):
@@ -23,7 +24,14 @@ class RandomTexture(TextureGenerator):
     - seed: int or None - Random seed for reproducibility
     """
 
-    def __init__(self, seed=None):
+    def __init__(self, phase=None, seed=None):
+        if phase is None:
+            phase = Phase(
+                name="default", crystal_system="cubic", lattice_params=(1, 1, 1)
+            )
+        if not isinstance(phase, Phase):
+            raise TypeError(f"Expected Phase, got {type(phase)}")
+        self.phase = phase
         self.seed = seed
 
     def generate(self, micro):
@@ -33,14 +41,13 @@ class RandomTexture(TextureGenerator):
         Args:
         - micro: Microstructure to assign orientations to
         """
-        if self.seed:
-            np.random.seed(self.seed)
-
         orientations = self._generate_orientations(micro)
         micro.orientations = orientations
 
         return Texture(
-            orientations=orientations, representation="euler", symmetry="cubic"
+            orientations=orientations,
+            representation="euler",
+            phase=self.phase,
         )
 
     def _generate_orientations(self, micro):
@@ -61,8 +68,10 @@ class RandomTexture(TextureGenerator):
             orientations = np.zeros((n, 3))
             start_idx = 0
 
-        orientations[start_idx:, 0] = np.random.uniform(0.0, 2 * np.pi, n)
-        orientations[start_idx:, 1] = np.arccos(np.random.uniform(-1.0, 1.0, n))
-        orientations[start_idx:, 2] = np.random.uniform(0.0, 2 * np.pi, n)
+        rng = np.random.default_rng(self.seed)
+
+        orientations[start_idx:, 0] = rng.uniform(0.0, 2 * np.pi, n)
+        orientations[start_idx:, 1] = np.arccos(rng.uniform(-1.0, 1.0, n))
+        orientations[start_idx:, 2] = rng.uniform(0.0, 2 * np.pi, n)
 
         return orientations

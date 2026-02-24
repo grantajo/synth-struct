@@ -18,6 +18,7 @@ import numpy as np
 
 from .texture import Texture
 from .texture_base import TextureGenerator
+from ..phase import Phase
 
 CUBIC_TEXTURES = {
     "cube": np.array([0.0, 0.0, 0.0]),
@@ -38,16 +39,26 @@ class CubicTexture(TextureGenerator):
     Args:
     - texture_type: str
         One of 'cube', 'goss', 'brass', 'copper', 's', 'p', 'rotated_cube', 'rotated_goss'.
+    - phase = Phase object
     - degspread: float - Gaussian spread around ideal orientation (degrees)
     - seed: int or None - Random seed for reproducibility
     """
 
-    def __init__(self, texture_type=None, degspread=5.0, seed=None):
+    def __init__(self, texture_type=None, phase=None, degspread=5.0, seed=None):
         if texture_type not in CUBIC_TEXTURES:
             raise ValueError(f"Unknown cubic texture type {texture_type}")
         if degspread is not None and degspread < 0:
             raise ValueError("scale < 0")
-        
+        if phase is None:
+            phase = Phase(
+                name="cubic_default", crystal_system="cubic", lattice_params=(1, 1, 1)
+            )
+        if phase.crystal_system != "cubic":
+            raise ValueError(
+                f"CubicTexture requires a cubic phase, " f"got '{phase.crystal_system}'"
+            )
+
+        self.phase = phase
         self.texture_type = texture_type
         self.degspread = degspread
         self.seed = seed
@@ -57,7 +68,9 @@ class CubicTexture(TextureGenerator):
         orientations = self._generate_orientations(micro)
 
         texture = Texture(
-            orientations=orientations, representation="euler", symmetry="cubic"
+            orientations=orientations,
+            representation="euler",
+            phase=self.phase,
         )
         if self.degspread is not None and self.degspread > 0:
             texture = texture.apply_scatter(self.degspread, seed=self.seed)
