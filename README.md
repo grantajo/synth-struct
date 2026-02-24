@@ -43,18 +43,18 @@ than normal due to the program compiling on first run
 ## Todo Lists:
 ### Just finished
 - Fixed scatter application for textures
-- Starting to add in better hexagonal crystal system representation
-    - Really only need in the texture generators, I believe, might need to
-    add to the plotting functions later on.
+- Added ability to do hexagonal custom textures
+    - Need to fix orix ability to handle hexagonal
 
 ### Short-term todo:
 - Continue orix integration
     - Add in IPFs and ODFs
     - Add in ability to have the colorkey shown in an IPF map
         - Add in ability to plot a single given colorkey with ipfcolorkeys.py
-    - Figure out how to handle hexagonal directions for pole figures and ODFs
     - Add in ability to do ODF contour plots
     - Add in plotting examples
+        - Maybe don't need to add since there will be plotting examples in 
+        other scripts?
 
 ### Things to be added:
 - Add grain structures with grain size better distribution

@@ -242,7 +242,5 @@ class TestCubicTexture:
         micro = Microstructure(dimensions=(10, 10, 10), resolution=1.0)
         micro.grain_ids[:, :, :] = 1
 
-        gen = CubicTexture(texture_type="cube", degspread=-5.0, seed=42)
-
         with pytest.raises(ValueError, match="scale < 0"):
-            gen.generate(micro)
+            gen = CubicTexture(texture_type="cube", degspread=-5.0, seed=42)

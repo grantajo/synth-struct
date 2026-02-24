@@ -8,6 +8,7 @@ from synth_struct.orientation.texture.hexagonal import (
     HEXAGONAL_ORIENTATIONS,
 )
 from synth_struct.orientation.texture.texture import Texture
+from synth_struct.orientation.rotation_converter import euler_to_rotation_matrix
 
 
 class TestHexagonalTexture:
@@ -157,17 +158,27 @@ class TestHexagonalTexture:
             texture_type="prismatic", degspread=20.0, seed=43
         )
 
-        texture_small = gen_small.generate(micro)
-        texture_large = gen_large.generate(micro)
+        texture_small = gen_small.generate(micro).to_representation("rotmat")
+        texture_large = gen_large.generate(micro).to_representation("rotmat")
 
-        ideal = HEXAGONAL_ORIENTATIONS["prismatic"]
-
+        ideal_euler = HEXAGONAL_ORIENTATIONS["prismatic"]
+        ideal_R = euler_to_rotation_matrix(ideal_euler)
+        
+        def mean_misorientation(orientations, ideal):
+            R_rel = np.einsum('ij,njk->nik', ideal.T, orientations)
+            traces = np.trace(R_rel, axis1=1, axis2=2)
+            angles = np.degrees(np.arccos(np.clip((traces - 1) / 2, -1, 1)))
+            return np.mean(angles)
+        
         # Calculate distances from ideal
-        dist_small = np.linalg.norm(texture_small.orientations - ideal, axis=1)
-        dist_large = np.linalg.norm(texture_large.orientations - ideal, axis=1)
+        mean_small = mean_misorientation(texture_small.orientations, ideal_R)
+        mean_large = mean_misorientation(texture_large.orientations, ideal_R)
 
         # Larger spread should have larger mean distance
-        assert np.std(dist_large) > np.std(dist_small)
+        assert mean_large > mean_small, (
+            f"Expected larger spread to have greater mean misorientation, "
+            f"got small={mean_small:.2f}, large={mean_large:.2f}"
+        )
 
     @pytest.mark.parametrize("texture_type", HEXAGONAL_ORIENTATIONS.keys())
     def test_all_texture_types_generate(self, texture_type):
@@ -252,11 +263,9 @@ class TestHexagonalTexture:
         """Test that negative spread raises ValueError"""
         micro = Microstructure(dimensions=(10, 10, 10), resolution=1.0)
         micro.grain_ids[:, :, :] = 1
-
-        gen = HexagonalTexture(texture_type="basal", degspread=-5.0, seed=42)
-
+        
         with pytest.raises(ValueError, match="scale < 0"):
-            gen.generate(micro)
+            gen = HexagonalTexture(texture_type="basal", degspread=-5.0, seed=42)
 
     def test_basal_vs_prismatic_different_orientations(self):
         """Test that basal and prismatic produce different ideal orientations"""

@@ -44,7 +44,10 @@ class CubicTexture(TextureGenerator):
 
     def __init__(self, texture_type=None, degspread=5.0, seed=None):
         if texture_type not in CUBIC_TEXTURES:
-            raise ValueError(f"Unknown cubic texture type {type}")
+            raise ValueError(f"Unknown cubic texture type {texture_type}")
+        if degspread is not None and degspread < 0:
+            raise ValueError("scale < 0")
+        
         self.texture_type = texture_type
         self.degspread = degspread
         self.seed = seed
@@ -56,7 +59,7 @@ class CubicTexture(TextureGenerator):
         texture = Texture(
             orientations=orientations, representation="euler", symmetry="cubic"
         )
-        if self.degspread is not None:
+        if self.degspread is not None and self.degspread > 0:
             texture = texture.apply_scatter(self.degspread, seed=self.seed)
 
         return texture

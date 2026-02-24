@@ -16,6 +16,7 @@ from .texture_base import TextureGenerator
 HEXAGONAL_ORIENTATIONS = {
     "basal": np.array([0.0, 0.0, 0.0]),
     "prismatic": np.array([0.0, np.radians(90.0), 0.0]),
+    "pyramidal": np.array([0.0, np.radians(45.0), 0.0]),
 }
 
 
@@ -25,28 +26,34 @@ class HexagonalTexture(TextureGenerator):
 
     Args:
     - texture_type: str
-        One of 'basal' or 'prismatic'.
+        One of 'basal', 'prismatic', or 'pyramidal' .
     - degspread: float - Gaussian spread around ideal orientation (degrees)
     - seed: int or None - Random seed for reproducibility
     """
 
     def __init__(self, texture_type=None, degspread=5.0, seed=None):
         if texture_type not in HEXAGONAL_ORIENTATIONS:
-            raise ValueError(f"Unknown hexagonal texture type {type}")
+            raise ValueError(f"Unknown hexagonal texture type {texture_type}")
+        if degspread is not None and degspread < 0:
+            raise ValueError("scale < 0")
+        
         self.texture_type = texture_type
         self.degspread = degspread
         self.seed = seed
 
     def generate(self, micro):
         """Generate a Texture for the given microstructure."""
-        if self.seed is not None:
-            np.random.seed(self.seed)
-
         orientations = self._generate_orientations(micro)
-
-        return Texture(
-            orientations=orientations, representation="euler", symmetry="hexagonal"
+        
+        texture = Texture(
+            orientations=orientations, 
+            representation="euler", 
+            symmetry="hexagonal"
         )
+        if self.degspread is not None and self.degspread > 0:
+            texture = texture.apply_scatter(self.degspread, seed=self.seed)
+            
+        return texture
 
     def _generate_orientations(self, micro):
         """
@@ -68,13 +75,6 @@ class HexagonalTexture(TextureGenerator):
             orientations = np.zeros((n, 3))
             start_idx = 0
 
-        if self.degspread == 0:
-            orientations[start_idx:] = np.tile(base_orientation, (n, 1))
-        else:
-            orientations[start_idx:] = np.random.normal(
-                loc=base_orientation, scale=np.radians(self.degspread), size=(n, 3)
-            )
-
-        orientations[start_idx:] = orientations[start_idx:] % (2 * np.pi)
+        orientations[start_idx:] = np.tile(base_orientation, (n, 1))
 
         return orientations
