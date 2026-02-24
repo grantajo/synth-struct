@@ -101,6 +101,7 @@ custom_fig.suptitle(
 plt.tight_layout()
 plt.savefig(output_dir / "texture_custom.png", dpi=150, bbox_inches="tight")
 
+print("  Base texture filename: 'texture_custom.png'")
 print("  Custom texture filename: 'texture_custom.png'")
 
 plt.show()

@@ -105,6 +105,61 @@ class Texture:
             metadata=self.metadata.copy(),
         )
 
+    def apply_scatter(self, degspread: float, seed: int or None) -> "Texture":
+        """
+        Apply scatter around each orientation in rotation space.
+
+        Perturbations are applied as small random rotations (Rodrigues
+        formula) composed with the base rotation.
+
+        Parameters
+        ----------
+        degspread : float
+            Standard deviation of scatter in degrees
+        seed : int or None
+            Random seed for reproducibility
+
+        Returns
+        -------
+        "Texture"
+            Texture with scattered orientations in the same
+            representation
+        """
+        rotmat_texture = self.to_representation("rotmat")
+        base_rotmats = rotmat_texture.orientations
+
+        rng = np.random.default_rng(seed)
+        n = self.n_orientations
+
+        angles = rng.normal(0.0, np.radians(degspread), size=n)
+        axes = rng.normal(0.0, 1.0, size=(n, 3))
+        axes /= np.linalg.norm(axes, axis=1, keepdims=True)
+
+        K = np.zeros((n, 3, 3))
+        K[:, 0, 1] = -axes[:, 2]
+        K[:, 0, 1] = -axes[:, 2]
+        K[:, 0, 2] = axes[:, 1]
+        K[:, 1, 0] = axes[:, 2]
+        K[:, 1, 2] = -axes[:, 0]
+        K[:, 2, 0] = -axes[:, 1]
+        K[:, 2, 1] = axes[:, 0]
+
+        s = np.sin(angles)[:, None, None]
+        c = (1 - np.cos(angles))[:, None, None]
+        I = np.eye(3)[None, :, :]
+        dR = I + s * K + c * np.einsum("nij,njk->nik", K, K)
+
+        scattered = np.einsum("nij,njk->nik", dR, base_rotmats)
+
+        scattered_texture = Texture(
+            orientations=scattered,
+            representation="rotmat",
+            symmetry=self.symmetry,
+            metadata=self.metadata.copy(),
+        )
+
+        return scattered_texture.to_representation(self.representation)
+
     def copy(self) -> "Texture":
         """
         Creates a copy of the texture for analysis

@@ -70,9 +70,15 @@ class CustomTexture(TextureGenerator):
 
         orientations = self._generate_orientations(micro)
 
-        return Texture(
-            orientations=orientations, representation="euler", symmetry="cubic"
+        texture = Texture(
+            orientations=orientations,
+            representation="euler",
+            symmetry="cubic",
         )
+        if self.degspread is not None:
+            texture = texture.apply_scatter(self.degspread, seed=self.seed)
+
+        return texture
 
     def _generate_orientations(self, micro):
         """
@@ -109,36 +115,7 @@ class CustomTexture(TextureGenerator):
             orientations = np.zeros((n, 3))
             start_idx = 0
 
-        if self.degspread:
-            orientations[start_idx:] = self._apply_scatter(euler, n)
-        else:
-            # Repeat base orienation for all grains
-            orientations[start_idx:] = np.tile(euler, (n, 1))
-
-        return orientations
-
-    def _apply_scatter(self, base_euler, n):
-        """
-        Apply Gaussian scatter around base orientation.
-
-        Args:
-        - base_euler: np.ndarray of shape (3,) - Base Euler angles [phi1, Phi, phi2] in degrees.
-        - n: int - Number of orientations to generate (number of grains)
-
-        Returns
-        - orientations: np.ndarray of shape (n, 3) - Scatter Euler angles in degrees.
-        """
-        if self.seed is not None:
-            np.random.seed(self.seed)
-            
-        angles = rng.normal(0.0, np.radians)
-
-        perturbations = np.random.normal(0.0, np.radians(self.degspread), size=(n, 3))
-
-        orientations = base_euler + perturbations
-
-        orientations[:, 0] %= 2 * np.pi
-        orientations[:, 1] = np.clip(orientations[:, 1], 0.0, np.pi)
-        orientations[:, 2] %= 2 * np.pi
+        # Repeat base orienation for all grains
+        orientations[start_idx:] = np.tile(euler, (n, 1))
 
         return orientations

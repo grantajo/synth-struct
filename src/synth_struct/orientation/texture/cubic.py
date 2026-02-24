@@ -51,14 +51,15 @@ class CubicTexture(TextureGenerator):
 
     def generate(self, micro):
         """Generate a Texture for the given microstructure."""
-        if self.seed is not None:
-            np.random.seed(self.seed)
-
         orientations = self._generate_orientations(micro)
 
-        return Texture(
+        texture = Texture(
             orientations=orientations, representation="euler", symmetry="cubic"
         )
+        if self.degspread is not None:
+            texture = texture.apply_scatter(self.degspread, seed=self.seed)
+
+        return texture
 
     def _generate_orientations(self, micro):
         """
@@ -80,13 +81,6 @@ class CubicTexture(TextureGenerator):
             orientations = np.zeros((n, 3))
             start_idx = 0
 
-        if self.degspread == 0:
-            orientations[start_idx:] = np.tile(base_orientation, (n, 1))
-        else:
-            orientations[start_idx:] = np.random.normal(
-                loc=base_orientation, scale=np.radians(self.degspread), size=(n, 3)
-            )
-
-        orientations[start_idx:] = orientations[start_idx:] % (2 * np.pi)
+        orientations[start_idx:] = np.tile(base_orientation, (n, 1))
 
         return orientations
