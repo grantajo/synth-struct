@@ -11,12 +11,15 @@ from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
 
-from synth_struct.microstructure import Microstructure
-from synth_struct.micro_utils import get_grains_in_region
-from synth_struct.generators.voronoi import VoronoiGenerator
-from synth_struct.orientation.texture.random import RandomTexture
-from synth_struct.orientation.texture.cubic import CubicTexture
-import synth_struct.plotting.ipf_maps as IPFplot
+from synth_struct import (
+    Microstructure,
+    Phase,
+    VoronoiGenerator,
+    RandomTexture,
+    CubicTexture,
+    get_grains_in_region,
+)
+from synth_struct import ipf_maps as IPFplot
 
 """
 Cubic textures:
@@ -36,6 +39,7 @@ Mask types:
 "custom_mask"
 """
 
+
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
 
@@ -49,16 +53,18 @@ print("=" * 23, "Mask Examples", "=" * 22)
 dims = (200, 200, 200)
 resolution = 1.0
 num_grains = 800
+default_phase = Phase.from_preset("default")
 
 # Create microstructure
-micro = Microstructure(dimensions=dims, resolution=resolution)
+micro = Microstructure(dimensions=dims, resolution=resolution, phase=default_phase)
 
 voronoi_gen = VoronoiGenerator(num_grains=num_grains, seed=42)
 voronoi_gen.generate(micro)
 
 # Generate random texture for entire microstructure
 random_texture = RandomTexture()
-random_texture.generate(micro)
+base_texture = random_texture.generate(micro)
+micro.assign_texture(base_texture)
 
 print(f"Created 3D Microstructure: {dims}")
 print(f"Number of grains: {micro.num_grains}")
@@ -66,6 +72,7 @@ print(f"Number of grains: {micro.num_grains}")
 base_fig, base_axes = plt.subplots(1, 3, figsize=(15, 5))
 # Figure 0
 IPFplot.plot_multiple_ipf_slices(base_axes, micro, slice_indices=[50, 100, 150])
+base_fig.suptitle("Base Figure (Unchanged Texture)", fontsize=14)
 plt.tight_layout()
 plt.savefig(output_dir / "mask_base_micro.png", dpi=150, bbox_inches="tight")
 print("  Base microstructure filename: 'mask_base_micro.png'")
@@ -92,7 +99,7 @@ box_reg_texture = CubicTexture(box_texture, degspread=2.0)
 box_orientations = box_reg_texture.generate(box_grains)
 
 # Reassign textures for the grains in the box region
-box_micro.orientations[box_grains] = box_orientations.orientations
+box_micro.assign_texture(box_orientations, grain_ids=box_grains)
 
 print(f"  Box region contains {len(box_grains)} grains")
 print()
@@ -103,7 +110,7 @@ print("  Plotting box mask orientation IPF-Z maps")
 box_fig, box_axes = plt.subplots(1, 3, figsize=(15, 5))
 # Figure 1
 IPFplot.plot_multiple_ipf_slices(box_axes, box_micro, slice_indices=[50, 100, 150])
-
+box_fig.suptitle("Box Mask", fontsize=14)
 plt.tight_layout()
 plt.savefig(output_dir / "mask_box.png", dpi=150, bbox_inches="tight")
 print("  Box mask example filename: 'mask_box.png'")
@@ -131,7 +138,7 @@ sphere_reg_texture = CubicTexture(sphere_texture, degspread=2.0)
 sphere_orientations = sphere_reg_texture.generate(sphere_grains)
 
 # Reassign textures for grains in spherical mask
-sphere_micro.orientations[sphere_grains] = sphere_orientations.orientations
+sphere_micro.assign_texture(sphere_orientations, grain_ids=sphere_grains)
 
 print(f"  Spherical region contains {len(sphere_grains)} grains")
 print()
@@ -139,12 +146,12 @@ print()
 # Plot box microstructure
 print("  Plotting spherical mask orientation IPF-Z maps")
 
-sphere_fig, sphere_axes = plt.subplots(1, 5, figsize=(15, 5))
+sphere_fig, sphere_axes = plt.subplots(1, 5, figsize=(20, 5))
 # Figure 2
 IPFplot.plot_multiple_ipf_slices(
     sphere_axes, sphere_micro, slice_indices=[25, 50, 75, 100, 150]
 )
-
+sphere_fig.suptitle("Sphere Mask", fontsize=14)
 plt.tight_layout()
 plt.savefig(output_dir / "mask_sphere.png", dpi=150, bbox_inches="tight")
 print("  Sphere mask example filename: 'mask_sphere.png'")
@@ -171,7 +178,7 @@ cyl_reg_texture = CubicTexture(cyl_texture, degspread=2.0)
 cyl_orientations = cyl_reg_texture.generate(cyl_grains)
 
 # Reassign textures for grains in spherical mask
-cyl_micro.orientations[cyl_grains] = cyl_orientations.orientations
+cyl_micro.assign_texture(cyl_orientations, grain_ids=cyl_grains)
 
 print(f"  Cylinder region contains {len(cyl_grains)} grains")
 print()
@@ -185,6 +192,7 @@ cyl_fig, cyl_axes = plt.subplots(1, 3, figsize=(15, 5))
 IPFplot.plot_multiple_ipf_slices(
     cyl_axes, cyl_micro, slice_indices=[75, 100, 125], slice_direction="z"
 )
+cyl_fig.suptitle("Cylinder Mask (x)", fontsize=14)
 plt.tight_layout()
 plt.savefig(output_dir / "mask_cylinder_zslices.png", dpi=150, bbox_inches="tight")
 
@@ -196,6 +204,7 @@ cyl_fig1, cyl_axes1 = plt.subplots(1, 3, figsize=(15, 5))
 IPFplot.plot_multiple_ipf_slices(
     cyl_axes1, cyl_micro, slice_indices=[50, 100, 150], slice_direction="y"
 )
+cyl_fig1.suptitle("Cylinder Mask (z)", fontsize=14)
 plt.tight_layout()
 plt.savefig(output_dir / "mask_cylinder_yslices.png", dpi=150, bbox_inches="tight")
 
@@ -261,7 +270,7 @@ tet_reg_texture = CubicTexture(tet_texture, degspread=2.0)
 tet_orientations = tet_reg_texture.generate(tet_grains)
 
 # Reassign textures for grains in spherical mask
-tet_micro.orientations[tet_grains] = tet_orientations.orientations
+tet_micro.assign_texture(tet_orientations, grain_ids=tet_grains)
 
 print(f"  Tetrahedron contains {len(tet_grains)} grains")
 print()
@@ -274,7 +283,7 @@ tet_fig, tet_axes = plt.subplots(1, 3, figsize=(15, 5))
 IPFplot.plot_multiple_ipf_slices(
     tet_axes, tet_micro, slice_indices=[70, 100, 130], slice_direction="x"
 )
-
+tet_fig.suptitle("Custom Mask (Tetrahedron)", fontsize=14)
 plt.tight_layout()
 plt.savefig(output_dir / "mask_custom_tetrahedron.png", dpi=150, bbox_inches="tight")
 
@@ -311,8 +320,8 @@ layer2_reg_texture = CubicTexture(layer2_texture, degspread=2.0)
 layer2_orientations = layer2_reg_texture.generate(layer2_grains)
 
 # Reassign textures for grains in spherical mask
-layer_micro.orientations[layer1_grains] = layer1_orientations.orientations
-layer_micro.orientations[layer2_grains] = layer2_orientations.orientations
+layer_micro.assign_texture(layer1_orientations, grain_ids=layer1_grains)
+layer_micro.assign_texture(layer2_orientations, grain_ids=layer2_grains)
 
 print(f"  Layer 1 (bottom) contains {len(layer1_grains)} grains")
 print(f"  Layer 2 (top) contains {len(layer2_grains)} grains")
@@ -326,6 +335,7 @@ layer_fig, layer_axes = plt.subplots(1, 3, figsize=(15, 5))
 IPFplot.plot_multiple_ipf_slices(
     layer_axes, layer_micro, slice_indices=[50, 100, 150], slice_direction="x"
 )
+layer_fig.suptitle("Layer Mask (2 Box Masks)", fontsize=14)
 plt.tight_layout()
 plt.savefig(output_dir / "mask_layers.png", dpi=150, bbox_inches="tight")
 

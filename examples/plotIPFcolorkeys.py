@@ -8,7 +8,7 @@ import sys
 from pathlib import Path
 
 
-from synth_struct.plotting import ipfcolorkeys
+from synth_struct import plot_all_colorkeys
 
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
@@ -17,7 +17,7 @@ outdir.mkdir(exist_ok=True)
 
 print("=" * 17, "IPF Color Keys", "=" * 17)
 
-ipfcolorkeys.plot_all_colorkeys(outdir)
+plot_all_colorkeys(outdir)
 
 print(f"Saved IPF color keys to: \n{outdir}")
 print("-" * 50)

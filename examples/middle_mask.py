@@ -53,7 +53,8 @@ voronoi_gen.generate(micro)
 
 # Generate random texture for entire microstructure
 random_texture = RandomTexture()
-random_texture.generate(micro)
+base_texture = random_texture.generate(micro)
+micro.assign_texture(base_texture)
 
 print(f"Created 3D Microstructure: {dims}")
 print(f"Number of grains: {micro.num_grains}")
@@ -61,8 +62,8 @@ print(f"Number of grains: {micro.num_grains}")
 # Separate middle grains and apply Cubic texture
 middle_grains = get_grains_in_region(micro, "sphere", center=[100, 100, 100], radius=60)
 middle_texture = CubicTexture(mid_text, degspread=5.0)
-middle_texture = middle_texture.generate(middle_grains)
-micro.orientations[middle_grains] = middle_texture.orientations
+middle_orientations = middle_texture.generate(middle_grains)
+micro.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 print(f"Middle region contains {len(middle_grains)} grains")
 

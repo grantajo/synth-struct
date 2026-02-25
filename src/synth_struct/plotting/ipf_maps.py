@@ -246,7 +246,6 @@ def plot_multiple_ipf_slices(
             ax,
             micro,
             direction=direction,
-            crystal_structure=crystal_structure,
             slice_idx=slice_idx,
             slice_direction=slice_direction,
             show_title=True,

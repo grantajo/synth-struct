@@ -20,13 +20,15 @@ from pathlib import Path
 
 import matplotlib.pyplot as plt
 
-from synth_struct.microstructure import Microstructure
-from synth_struct.micro_utils import get_grains_in_region
-from synth_struct.generators.voronoi import VoronoiGenerator
-from synth_struct import Phase
-from synth_struct.orientation.texture.random import RandomTexture
-from synth_struct.orientation.texture.cubic import CubicTexture
-import synth_struct.plotting.ipf_maps as IPFplot
+from synth_struct import (
+    Microstructure,
+    Phase,
+    VoronoiGenerator,
+    RandomTexture,
+    CubicTexture,
+    get_grains_in_region,
+)
+from synth_struct import ipf_maps as IPFplot
 
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))

@@ -1,12 +1,12 @@
 ## Todo Lists:
 ### Just finished/Currently working on
 - Finished adding in hexagonal texture plotting and phases
-- Working on making imports easier for examples (__init__.py)
-    - Need to change out the imports in the examples to test
-    - Maybe make a power user subspace such as rotation conversion
-    or symmetry operations, or something of the sort.
+- Added in figure supertitles for shapes.py
+- Added in imports to base __init__ file and changed imports for 
+examples
 
 ### Short-term todo:
+- Figure out what the weird one-off figure is in shapes.py
 - Continue orix integration
     - Add in IPFs and ODFs
     - Add in ability to have the colorkey shown in an IPF map
@@ -21,7 +21,9 @@
 - Add in file output generators
     - HDF5
     - VTK meshing
- 
+- Maybe make a power user import subspace such as rotation conversion
+or symmetry operations?
+
 ### Long term additions:
 - Figure out an example for texture
 - Add in second phases
