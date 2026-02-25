@@ -48,7 +48,7 @@ class Microstructure:
             self._phase_ids = None
         elif isinstance(phase, Phase):
             # Single phase - no phase_ids array needed
-            self._phases = {1: phase}
+            self._phases = {0: phase}
             self._phase_ids = None
         elif isinstance(phase, dict):
             # Multiphase - caller provides (phase_id: Phase) and
@@ -81,7 +81,8 @@ class Microstructure:
     @property
     def num_grains(self):
         """Number of grains excluding the background"""
-        return len(np.unique(self._grain_ids)) - 1  # Subtract 1 for background
+        unique = np.unique(self._grain_ids)
+        return len(unique[unique != 0])
 
     # -------------------------------------------------------------------------
     # Phase IDs
@@ -99,7 +100,7 @@ class Microstructure:
                 f"phase_ids shape {value.shape} does not match "
                 f"dimensions {self.dimensions}"
             )
-            unknown = set(np.unique(value)) - {0} - set(self._phases.keys())
+        unknown = set(np.unique(value)) - {-1} - set(self._phases.keys())
         if unknown:
             raise ValueError(
                 f"phase_ids contains unknown phase IDs {unknown}. "
@@ -115,11 +116,12 @@ class Microstructure:
     def phases(self) -> Dict[int, Phase]:
         return self._phases
 
-    def add_phase(self, phase_id: int, phase: Phase):
+    def add_phase(self, phase_id: int, phase: Phase) -> int:
         """Add or replace a phase by ID."""
         if not isinstance(phase, Phase):
             raise TypeError(f"Expected Phase, got {type(phase)}")
         self._phases[phase_id] = phase
+        return phase_id
 
     def get_phase(self, phase_id: int) -> Phase:
         """Get phase by ID"""
@@ -162,6 +164,46 @@ class Microstructure:
         self.fields["orientations"] = value
 
     # -------------------------------------------------------------------------
+    # Texture
+    # -------------------------------------------------------------------------
+
+    def assign_texture(self, texture, grain_ids=None):
+        """
+        Assigna texture to the microstructure, updating both
+        orientations and phase_ids automatically.
+
+        Args:
+            - texture: Texture object returned by a generator
+            - grain_ids: np.ndarray or None - Grain IDs to assign to.
+                If None, assigns to all grains
+        """
+        phase = texture.phase
+
+        existing_id = next(
+            (pid for pid, p in self._phases.items() if p.name == phase.name), None
+        )
+
+        if existing_id is None:
+            phase_id = max(self._phases.keys(), default=-1) + 1
+            self.add_phase(phase_id, phase)
+        else:
+            phase_id = existing_id
+
+        if grain_ids is not None:
+            self.orientations[grain_ids] = texture.orientations
+        else:
+            self.orientations = texture.orientations
+
+        if phase_id != 0 or self._phase_ids is not None:
+            if self._phase_ids is None:
+                self._phase_ids = np.zeros(self.dimensions, dtype=np.int32)
+            if grain_ids is not None:
+                for gid in grain_ids:
+                    self._phase_ids[self._grain_ids == gid] = phase_id
+            else:
+                self._phase_ids[:] = phase_id
+
+    # -------------------------------------------------------------------------
     # Utilities
     # -------------------------------------------------------------------------
 
@@ -185,7 +227,7 @@ class Microstructure:
             dimensions=self.dimensions,
             resolution=self.resolution,
             units=self.units,
-            symmetry=self.symmetry,
+            phase=self.phases,
         )
         new_micro.grain_ids = self.grain_ids.copy()
         new_micro.fields = {k: v.copy() for k, v in self.fields.items()}

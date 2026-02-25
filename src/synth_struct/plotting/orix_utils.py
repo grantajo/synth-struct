@@ -7,13 +7,15 @@ Handles conversion between microstructure data and orix data structures.
 """
 
 import numpy as np
-from orix.crystal_map import CrystalMap, PhaseList, Phase
-from orix.quaternion import Orientation
+from orix.crystal_map import CrystalMap, PhaseList
+from orix.crystal_map import Phase as OrixPhase
+from orix.quaternion import Orientation, Symmetry
 
-from ..orientation.rotation_converter import euler_to_quat
+from synth_struct.orientation.phase import Phase
+from synth_struct.orientation.rotation_converter import euler_to_quat
 
 
-def create_crystal_map(micro, crystal_structure="cubic", grain_subset=None):
+def create_crystal_map(micro, grain_subset=None):
     """
     Convert microstructure class to orix CrystalMap.
 
@@ -21,7 +23,6 @@ def create_crystal_map(micro, crystal_structure="cubic", grain_subset=None):
 
     Args:
     - micro: Microstructure object with orientations and grain_ids
-    - crystal_structure: str - 'cubic', 'fcc', 'bcc', 'hexagonal', or 'hcp'.
     - grain_subset: np.ndarray or None - Array of grain IDs to include. If None, include all grains
 
     Returns:
@@ -29,7 +30,7 @@ def create_crystal_map(micro, crystal_structure="cubic", grain_subset=None):
 
     Example:
         from plotting.orix_utils import create_crystal_map
-        crystal_map = create_crystal_map(micro, crystal_structure='cubic')
+        crystal_map = create_crystal_map(micro)
 
         # Or for a specific region
         from micro_utils import get_grains_in_region
@@ -37,29 +38,44 @@ def create_crystal_map(micro, crystal_structure="cubic", grain_subset=None):
         crystal_map = create_crystal_map(micro, grain_subset=region_grains)
     """
 
-    if crystal_structure.lower() in ["cubic", "fcc", "bcc"]:
-        phase = Phase(name="Cubic", point_group="m-3m")
-    elif crystal_structure.lower() in ["hexagonal", "hcp"]:
-        phase = Phase(name="Hexagonal", point_group="6/mmm")
+    if len(micro.phases) == 0:
+        raise ValueError("Microstructure has no phase information.")
+
+    orix_phases = {}
+    for phase_id, phase_obj in micro.phases.items():
+        if phase_obj.crystal_system.lower() == "cubic":
+            point_group = "m-3m"
+        elif phase_obj.crystal_system.lower() == "hexagonal":
+            point_group = "6/mmm"
+        else:
+            raise ValueError(
+                f"Unsupported crystal system '{phase_obj.crystal_system}' "
+                f"for orix plotting"
+            )
+        orix_phases[phase_id] = OrixPhase(name=phase_obj.name, point_group=point_group)
+
+    phase_list = PhaseList(phases=orix_phases)
+
+    grain_ids = micro.grain_ids
+    grain_ids_flat = grain_ids.flatten()
+
+    if micro.phase_ids is not None:
+        phase_ids_flat = micro.phase_ids.flatten().astype(np.int32)
     else:
-        raise ValueError(
-            f"Unkown crystal structure: {crystal_structure}. "
-            f"Supported: 'cubic', 'fcc', 'bcc', 'hexagonal', 'hcp'"
-        )
+        phase_ids_flat = np.zeros(grain_ids.size, dtype=np.int32)
 
-    phase_list = PhaseList(phase)
-    symmetry = phase.point_group
+    if grain_subset is not None:
+        mask_flat = np.isin(grain_ids_flat, grain_subset)
+    else:
+        mask_flat = np.ones(len(grain_ids_flat), dtype=bool)
 
-    # Convert orientations to quaternions
-    quaternions = euler_to_quat(micro.orientations)
+    masked_grain_ids = grain_ids_flat[mask_flat]
 
-    grain_ids_flat = micro.grain_ids.flatten()
-    num_points = len(grain_ids_flat)
+    quaternions_all = euler_to_quat(micro.orientations)
+    quaternions_array = quaternions_all[masked_grain_ids]
 
-    # Initialize quaternion array
-    quaternion_array = quaternions[grain_ids_flat]
-
-    orientations = Orientation(quaternion_array, symmetry=symmetry)
+    primary_symmetry = orix_phases[0].point_group
+    orientations = Orientation(quaternions_array, symmetry=primary_symmetry)
 
     if len(micro.dimensions) == 3:
         nx, ny, nz = micro.dimensions
@@ -70,15 +86,15 @@ def create_crystal_map(micro, crystal_structure="cubic", grain_subset=None):
 
         crystal_map = CrystalMap(
             rotations=orientations,
-            phase_id=np.zeros(num_points, dtype=int),
-            x=x_coords,
-            y=y_coords,
+            phase_id=phase_ids_flat[mask_flat],
+            x=x_coords[mask_flat],
+            y=y_coords[mask_flat],
             phase_list=phase_list,
             scan_unit="px",
             prop={
-                "grain_id": grain_ids_flat,
-                "z": z_coords,
-                "flat_idx": np.arange(len(grain_ids_flat)),
+                "grain_id": masked_grain_ids,
+                "z": z_coords[mask_flat],
+                "flat_idx": np.arange(len(grain_ids_flat))[mask_flat],
             },
         )
 
@@ -90,12 +106,12 @@ def create_crystal_map(micro, crystal_structure="cubic", grain_subset=None):
 
         crystal_map = CrystalMap(
             rotations=orientations,
-            phase_id=np.zeros(num_points, dtype=int),
-            x=x_coords,
-            y=y_coords,
+            phase_id=phase_ids_flat[mask_flat],
+            x=x_coords[mask_flat],
+            y=y_coords[mask_flat],
             phase_list=phase_list,
             scan_unit="px",
-            prop={"grain_id": grain_ids_flat},
+            prop={"grain_id": masked_grain_ids},
         )
 
     return crystal_map

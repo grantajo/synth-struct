@@ -20,6 +20,11 @@ VALID_CRYSTAL_SYSTEMS = (
 )
 
 KNOWN_PHASES = {
+    "default": {
+        "crystal_system": "cubic",
+        "lattice_params": (1, 1, 1),
+        "space_group": 225,
+    },
     "Ti-alpha": {
         "crystal_system": "hexagonal",
         "lattice_params": (2.95, 2.95, 4.68),

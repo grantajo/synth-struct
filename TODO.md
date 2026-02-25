@@ -1,9 +1,7 @@
 ## Todo Lists:
-### Just finished
-- Added phases, need to fix bug with orix grain_ids and making sure that the
-background stays
-- Added ability to do hexagonal custom textures
-    - Need to fix orix ability to handle hexagonal
+### Just finished/Currently working on
+- Finished adding in hexagonal texture plotting and phases
+- Working on making imports easier for examples (__init__.py)
 
 ### Short-term todo:
 - Continue orix integration

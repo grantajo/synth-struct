@@ -159,7 +159,7 @@ class Texture:
         scattered_texture = Texture(
             orientations=scattered,
             representation="rotmat",
-            symmetry=self.symmetry,
+            phase=self.phase,
             metadata=self.metadata.copy(),
         )
 

@@ -23,6 +23,7 @@ import matplotlib.pyplot as plt
 from synth_struct.microstructure import Microstructure
 from synth_struct.micro_utils import get_grains_in_region
 from synth_struct.generators.voronoi import VoronoiGenerator
+from synth_struct import Phase
 from synth_struct.orientation.texture.random import RandomTexture
 from synth_struct.orientation.texture.cubic import CubicTexture
 import synth_struct.plotting.ipf_maps as IPFplot
@@ -42,9 +43,10 @@ print("=" * 18, "Cubic Texture Examples", "=" * 18)
 dims = (200, 200)
 resolution = 1.0
 num_grains = 300
+default_phase = Phase.from_preset("default")
 
 # Create microstructure
-micro = Microstructure(dimensions=dims, resolution=resolution)
+micro = Microstructure(dimensions=dims, resolution=resolution, phase=default_phase)
 
 voronoi_gen = VoronoiGenerator(num_grains=num_grains, seed=42)
 voronoi_gen.generate(micro)

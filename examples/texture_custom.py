@@ -16,6 +16,7 @@ import matplotlib.pyplot as plt
 from synth_struct.microstructure import Microstructure
 from synth_struct.micro_utils import get_grains_in_region
 from synth_struct.generators.voronoi import VoronoiGenerator
+from synth_struct.orientation import Phase
 from synth_struct.orientation.texture.random import RandomTexture
 from synth_struct.orientation.texture.custom import CustomTexture
 import synth_struct.plotting.ipf_maps as IPFplot
@@ -36,15 +37,22 @@ dims = (200, 200)
 resolution = 1.0
 num_grains = 300
 
+default_phase = Phase.from_preset("Fe-bcc")
+
 # Create microstructure
-micro = Microstructure(dimensions=dims, resolution=resolution)
+micro = Microstructure(
+    dimensions=dims,
+    resolution=resolution,
+    phase=default_phase,
+)
 
 voronoi_gen = VoronoiGenerator(num_grains=num_grains, seed=42)
 voronoi_gen.generate(micro)
 
 # Generate random texture for entire microstructure
 random_texture = RandomTexture()
-random_texture.generate(micro)
+base_texture = random_texture.generate(micro)
+micro.assign_texture(base_texture)
 
 print(f"Created 2D Microstructure: {dims}")
 print(f"Number of grains: {micro.num_grains}")
@@ -74,7 +82,7 @@ print("  Base texture filename: 'texture_custom_base.png'")
 # This is an arbitrary texture
 hkl = [1, 2, 3]
 uvw = [1, 1, -1]
-
+cubic_phase = Phase.from_preset("Fe-fcc")
 
 print("=" * 60)
 print("Custom Texture (Cubic):")
@@ -86,11 +94,11 @@ print("-" * 60)
 cubic_micro = micro.copy()
 
 # Generate texture for the middle
-middle_reg_texture = CustomTexture(hkl, uvw, crystal_system="cubic", degspread=5.0)
-middle_orientations = middle_reg_texture.generate(middle_grains)
+middle_reg_texture = CustomTexture(hkl, uvw, phase=cubic_phase, degspread=10.0)
+middle_texture = middle_reg_texture.generate(middle_grains)
 
 # Reassign textures for the grains in the box region
-cubic_micro.orientations[middle_grains] = middle_orientations.orientations
+cubic_micro.assign_texture(middle_texture, grain_ids=middle_grains)
 
 # Plot
 cubic_fig, cubic_axes = plt.subplots(1, 3, figsize=(13, 5))
@@ -98,7 +106,7 @@ IPFplot.plot_multiple_ipf_maps(cubic_axes, cubic_micro)
 cubic_fig.suptitle(
     f"Custom Texture (Cubic):\n"
     f"(hkl) = ({hkl[0]}{hkl[1]}{hkl[2]}) | "
-    f"[uvw] = ({uvw[0]}{uvw[1]}{uvw[2]})",
+    f"[uvw] = [{uvw[0]}{uvw[1]}{uvw[2]}]",
     fontsize=15,
 )
 plt.tight_layout()
@@ -115,7 +123,7 @@ print("  Custom cubic texture filename: 'texture_custom_cubic.png'")
 # Example from Ti
 hkil = [1, 0, -1, 0]
 uvtw = [0, 0, 0, 1]
-lattice_params = (2.95, 2.95, 4.68)
+hex_phase = Phase.from_preset("Ti-alpha")
 
 print()
 print("=" * 60)
@@ -125,20 +133,18 @@ print(f"[uvtw] = [{uvtw[0]}{uvtw[1]}{uvtw[2]}{uvtw[3]}]")
 print("-" * 60)
 
 hex_micro = micro.copy()
-middle_reg_texture = CustomTexture(
-    hkil, uvtw, crystal_system="hexagonal", lattice_params=lattice_params
-)
 
-middle_orientations = middle_reg_texture.generate(middle_grains)
+middle_reg_texture = CustomTexture(hkil, uvtw, phase=hex_phase, degspread=10.0, seed=42)
+middle_texture = middle_reg_texture.generate(middle_grains)
 
-hex_micro.orientations[middle_grains] = middle_orientations.orientations
+hex_micro.assign_texture(middle_texture, grain_ids=middle_grains)
 
 hex_fig, hex_axes = plt.subplots(1, 3, figsize=(13, 5))
 IPFplot.plot_multiple_ipf_maps(hex_axes, hex_micro)
 hex_fig.suptitle(
     f"Custom Texture (Hexagonal):\n"
     f"(hkil) = ({hkil[0]}{hkil[1]}{hkil[2]}{hkil[3]}) | "
-    f"[uvw] = ({uvtw[0]}{uvtw[1]}{uvtw[2]}{uvtw[3]})",
+    f"[uvtw] = [{uvtw[0]}{uvtw[1]}{uvtw[2]}{uvtw[3]}]",
     fontsize=15,
 )
 plt.tight_layout()

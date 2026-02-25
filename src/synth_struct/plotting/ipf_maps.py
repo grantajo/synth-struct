@@ -1,9 +1,16 @@
 # synth-struct/src/synth_struct/plotting/ipf_maps.py
 
 """
-IPF (Inverse Pole Figure) colore map visualization.
+IPF (Inverse Pole Figure) color map visualization.
+
+The convention for plotting is:
+X || RD
+Y || TD
+Z || ND
+
 """
 
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib_scalebar.scalebar import ScaleBar
 from orix.vector import Vector3d
@@ -43,11 +50,16 @@ def get_ipf_rgb(crystal_map, direction="z"):
         raise ValueError(f"Invalid direction '{direction}'. Must be 'x', 'y', or 'z'")
 
     ipf_direction = direction_map[direction]
+    rgb_pixels = np.zeros((crystal_map.size, 3))
 
-    symmetry = crystal_map.phases[0].point_group
-
-    ipf_key = IPFColorKeyTSL(symmetry, direction=ipf_direction)
-    rgb_pixels = ipf_key.orientation2color(crystal_map.rotations)
+    for phase_id, phase in crystal_map.phases:
+        if phase_id == -1:
+            continue
+        mask = crystal_map.phase_id == phase_id
+        if not np.any(mask):
+            continue
+        ipf_key = IPFColorKeyTSL(phase.point_group, direction=ipf_direction)
+        rgb_pixels[mask] = ipf_key.orientation2color(crystal_map[mask].rotations)
 
     return rgb_pixels
 
@@ -56,7 +68,6 @@ def plot_ipf_map(
     ax,
     micro,
     direction="z",
-    crystal_structure="cubic",
     slice_idx=None,
     slice_direction="z",
     grain_subset=None,
@@ -94,9 +105,7 @@ def plot_ipf_map(
         plt.savefig('ipf_z.png')
     """
 
-    crystal_map = create_crystal_map(
-        micro, crystal_structure, grain_subset=grain_subset
-    )
+    crystal_map = create_crystal_map(micro, grain_subset=grain_subset)
 
     # Get slice if 3D, returns itself if 2D
     crystal_map_slice, shape = get_crystal_map_slice(
@@ -147,9 +156,7 @@ def plot_ipf_map(
     return im
 
 
-def plot_multiple_ipf_maps(
-    axes, micro, directions=None, crystal_structure="cubic", **kwargs
-):
+def plot_multiple_ipf_maps(axes, micro, directions=None, **kwargs):
     """
     Plot multiple IPF maps (different directions on provided axes).
 
@@ -188,7 +195,6 @@ def plot_multiple_ipf_maps(
             ax,
             micro,
             direction=direction,
-            crystal_structure=crystal_structure,
             show_title=True,
             **kwargs,
         )

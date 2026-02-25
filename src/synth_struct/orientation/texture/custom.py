@@ -5,6 +5,10 @@ This holds the CustomTexture Generator.
 
 This is where the user can decide on a texture based on
 two directions (parallel to RD and parallel to RD)
+
+X || RD
+Y || TD
+Z || ND
 """
 
 import warnings
@@ -81,6 +85,11 @@ def _crystal_to_cartesian(indices, crystal_system, lattice_params):
 class CustomTexture(TextureGenerator):
     """
     Generates a custom texture for a given microstructure
+
+    The convention for plotting is:
+    X || RD
+    Y || TD
+    Z || ND
 
     The texture is defined by crystallographic alignment:
         (hkl) || ND
@@ -181,7 +190,7 @@ class CustomTexture(TextureGenerator):
         # Each column represents where a crystal axis points in sample frame
         # Sample frame basis: [RD, TD, ND]
         # Crystal frame basis: [cRD, cTD, cND]
-        R = np.vstack([cRD, cTD, cND])
+        R = np.column_stack([cRD, cTD, cND])
 
         # Convert to Euler angles
         euler = rotation_matrix_to_euler(R)
