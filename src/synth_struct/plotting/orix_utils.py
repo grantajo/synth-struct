@@ -9,9 +9,8 @@ Handles conversion between microstructure data and orix data structures.
 import numpy as np
 from orix.crystal_map import CrystalMap, PhaseList
 from orix.crystal_map import Phase as OrixPhase
-from orix.quaternion import Orientation, Symmetry
+from orix.quaternion import Orientation
 
-from synth_struct.orientation.phase import Phase
 from synth_struct.orientation.rotation_converter import euler_to_quat
 
 
@@ -178,9 +177,10 @@ def subsample_orientations(orientations, sample_fraction):
     if not 0 < sample_fraction <= 1:
         raise ValueError(f"sample_fraction must be in (0, 1], got {sample_fraction}")
 
+    rng = np.random.default_rng()
     n = orientations.size
     n_sample = int(sample_fraction * n)
-    idx = np.random.choice(n, size=n_sample, replace=False)
+    idx = rng.choice(n, size=n_sample, replace=False)
 
     return orientations[idx]
 
@@ -190,8 +190,7 @@ def get_grain_average_orientations(micro, crystal_structure="cubic"):
     Get one representative orientation per grain (useful for pole figures with large datasets).
 
     Args:
-    - microstructure: Microstructure object
-    - crystal_structure: str - Crystal structure type
+    - micro: Microstructure object
 
     Returns:
     - Orientation: orix Orientation object with one orientation per grain
@@ -201,27 +200,24 @@ def get_grain_average_orientations(micro, crystal_structure="cubic"):
         avg_oris = get_grain_average_orientations(micro)
     """
 
-    # Get phase info
-    if crystal_structure.lower() in ["cubic", "fcc", "bcc"]:
-        phase = Phase(name="Cubic", point_group="m-3m")
-    elif crystal_structure.lower() in ["hexagonal", "hcp"]:
-        phase = Phase(name="Hexagonal", point_group="6/mmm")
+    if len(micro.phases) == 0:
+        raise ValueError("Microstructure has no phase information")
+
+    phase_obj = next(iter(micro.phases.values()))
+    if phase_obj.crystal_system.lower() == "cubic":
+        point_group = "m-3m"
+    elif phase_obj.crystal_system.lower() == "hexagonal":
+        point_group = "6/mmm"
     else:
-        raise ValueError(f"Unknown crystal structure: {crystal_structure}")
+        raise ValueError(f"Unsupported crystal system '{phase_obj.crystal_system}'")
 
-    symmetry = phase.point_group
+    orix_phase = OrixPhase(name=phase_obj.name, point_group=point_group)
+    symmetry = orix_phase.point_group
 
-    # Get quaternions (already one per grain)
     quaternions = euler_to_quat(micro.orientations)
+    grain_quaternions = quaternions[1:]  # Skip background
 
-    # Convert to array
-    num_grains = len(quaternions)
-    quat_array = np.zeros((num_grains, 4))
-    for grain_id, quat in quaternions.items():
-        if grain_id > 0:
-            quat_array[grain_id - 1] = quat
-
-    return Orientation(quat_array, symmetry=symmetry)
+    return Orientation(grain_quaternions, symmetry=symmetry)
 
 
 def filter_crystal_map_by_grains(crystal_map, grain_ids):

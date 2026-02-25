@@ -2,6 +2,9 @@
 ### Just finished/Currently working on
 - Finished adding in hexagonal texture plotting and phases
 - Working on making imports easier for examples (__init__.py)
+    - Need to change out the imports in the examples to test
+    - Maybe make a power user subspace such as rotation conversion
+    or symmetry operations, or something of the sort.
 
 ### Short-term todo:
 - Continue orix integration
