@@ -3,6 +3,8 @@
 - Fixed mixed 2D figure in shapes.py
 
 ### Currently working on
+- Need to fix tests, since they are broken with changes to phases
+and Microstructure initiation
 - Working on plotting IPFs and ODFs
 
 ### Short-term todo:
