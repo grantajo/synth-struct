@@ -1,12 +1,11 @@
 ## Todo Lists:
-### Just finished/Currently working on
-- Finished adding in hexagonal texture plotting and phases
-- Added in figure supertitles for shapes.py
-- Added in imports to base __init__ file and changed imports for 
-examples
+### Just finished
+- Fixed mixed 2D figure in shapes.py
+
+### Currently working on
+- Working on plotting IPFs and ODFs
 
 ### Short-term todo:
-- Figure out what the weird one-off figure is in shapes.py
 - Continue orix integration
     - Add in IPFs and ODFs
     - Add in ability to have the colorkey shown in an IPF map

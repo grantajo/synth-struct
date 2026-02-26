@@ -53,9 +53,11 @@ def main():
     # 2D Voronoi
     gen = VoronoiGenerator(num_grains=num_grains, seed=seed)
     gen.generate(micro_2d)
-    fig, ax = plt.subplots()
-    Plotter.plot_grain_ids(ax, micro_2d)
-    fig.savefig(output_dir / "voronoi_2d.png", dpi=100, bbox_inches="tight")
+    fig2dv, ax2dv = plt.subplots()
+    Plotter.plot_grain_ids(ax2dv, micro_2d)
+    fig2dv.suptitle("Voronoi 2D")
+    plt.tight_layout()
+    fig2dv.savefig(output_dir / "voronoi_2d.png", dpi=100, bbox_inches="tight")
     print("    Voronoi 2D saved to:")
     print(f"    {output_dir / 'voronoi_2d.png'}")
 
@@ -64,9 +66,11 @@ def main():
     print("Starting Standard Voronoi 3D")
     gen = VoronoiGenerator(num_grains=num_grains, seed=seed)
     gen.generate(micro_3d)
-    fig = plt.figure(figsize=(15, 5))
-    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
-    fig.savefig(output_dir / "voronoi_3d.png", dpi=100, bbox_inches="tight")
+    fig3dv = plt.figure(figsize=(15, 5))
+    Plotter.plot_3d_slices(fig3dv, micro_3d, shuffle=True)
+    fig3dv.suptitle("Voronoi 3D")
+    plt.tight_layout()
+    fig3dv.savefig(output_dir / "voronoi_3d.png", dpi=100, bbox_inches="tight")
     print("    Voronoi 3D saved to:")
     print(f"    {output_dir / 'voronoi_3d.png'}")
 
@@ -91,9 +95,11 @@ def main():
         seed=seed,
     )
     gen.generate(micro_2d)
-    fig, ax = plt.subplots()
-    Plotter.plot_grain_ids(ax, micro_2d)
-    fig.savefig(output_dir / "ellipsoidal_2d.png", dpi=150, bbox_inches="tight")
+    fig2e, ax2e = plt.subplots()
+    Plotter.plot_grain_ids(ax2e, micro_2d)
+    fig2e.suptitle("Ellipsoidal 2D")
+    plt.tight_layout()
+    fig2e.savefig(output_dir / "ellipsoidal_2d.png", dpi=150, bbox_inches="tight")
     print("    Ellipsoidal 2D saved to:")
     print(f"    {output_dir / 'ellipsoidal_2d.png'}")
 
@@ -109,9 +115,11 @@ def main():
         chunk_size=1_000_000,
     )
     gen.generate(micro_3d)
-    fig = plt.figure(figsize=(15, 5))
-    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
-    fig.savefig(output_dir / "ellipsoidal_3d.png", dpi=150, bbox_inches="tight")
+    fig3e = plt.figure(figsize=(15, 5))
+    Plotter.plot_3d_slices(fig3e, micro_3d, shuffle=True)
+    fig3e.suptitle("Ellipsoidal 3D")
+    plt.tight_layout()
+    fig3e.savefig(output_dir / "ellipsoidal_3d.png", dpi=150, bbox_inches="tight")
     print("    Ellipsoidal 3D saved to:")
     print(f"    {output_dir / 'ellipsoidal_3d.png'}")
 
@@ -135,9 +143,11 @@ def main():
         chunk_size=1_000_000,
     )
     gen.generate(micro_3d)
-    fig = plt.figure(figsize=(15, 5))
-    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
-    fig.savefig(output_dir / "columnar_z.png", dpi=150, bbox_inches="tight")
+    fig3cz = plt.figure(figsize=(15, 5))
+    Plotter.plot_3d_slices(fig3cz, micro_3d, shuffle=True)
+    fig3cz.suptitle("Columnar 3D Z-axis")
+    plt.tight_layout()
+    fig3cz.savefig(output_dir / "columnar_z.png", dpi=150, bbox_inches="tight")
     print("    Columnar in Z-axis saved to:")
     print(f"    {output_dir / 'columnar_z.png'}")
 
@@ -153,9 +163,11 @@ def main():
         chunk_size=1_000_000,
     )
     gen.generate(micro_3d)
-    fig = plt.figure(figsize=(15, 5))
-    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
-    fig.savefig(output_dir / "columnar_x.png", dpi=150, bbox_inches="tight")
+    fig3cx = plt.figure(figsize=(15, 5))
+    Plotter.plot_3d_slices(fig3cx, micro_3d, shuffle=True)
+    fig3cx.suptitle("Columnar 3D X-axis")
+    plt.tight_layout()
+    fig3cx.savefig(output_dir / "columnar_x.png", dpi=150, bbox_inches="tight")
     print("    Columnar in X-axis saved to:")
     print(f"    {output_dir / 'columnar_x.png'}")
 
@@ -178,9 +190,12 @@ def main():
         base_size=10.0,
         seed=seed,
     )
-    fig, ax = plt.subplots()
-    Plotter.plot_grain_ids(ax, micro_2d)
-    fig.savefig(output_dir / "mixed_2d.png", dpi=150, bbox_inches="tight")
+    gen.generate(micro_2d)
+    fig2m, ax2m = plt.subplots()
+    Plotter.plot_grain_ids(ax2m, micro_2d)
+    fig2m.suptitle("Mixed 2D")
+    plt.tight_layout()
+    fig2m.savefig(output_dir / "mixed_2d.png", dpi=150, bbox_inches="tight")
     print("    Mixed 2D saved to:")
     print(f"    {output_dir / 'mixed_2d.png'}")
 
@@ -196,9 +211,11 @@ def main():
         chunk_size=1_000_000,
     )
     gen.generate(micro_3d)
-    fig = plt.figure(figsize=(15, 5))
-    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
-    fig.savefig(output_dir / "mixed_3d.png", dpi=150, bbox_inches="tight")
+    fig3m = plt.figure(figsize=(15, 5))
+    Plotter.plot_3d_slices(fig3m, micro_3d, shuffle=True)
+    fig3m.suptitle("Mixed 3D")
+    plt.tight_layout()
+    fig3m.savefig(output_dir / "mixed_3d.png", dpi=150, bbox_inches="tight")
     print("    Mixed 3D saved to:")
     print(f"    {output_dir / 'mixed_3d.png'}")
 
@@ -226,9 +243,11 @@ def main():
         chunk_size=1_000_000,
     )
     gen.generate(micro_3d)
-    fig = plt.figure(figsize=(15, 5))
-    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
-    fig.savefig(output_dir / "lath_colony.png", dpi=150, bbox_inches="tight")
+    figlc = plt.figure(figsize=(15, 5))
+    Plotter.plot_3d_slices(figlc, micro_3d, shuffle=True)
+    figlc.suptitle("Lath Pure Colony")
+    plt.tight_layout()
+    figlc.savefig(output_dir / "lath_colony.png", dpi=150, bbox_inches="tight")
     print("  Pure Colony saved to:")
     print(f"  {output_dir / 'lath_colony.png'}")
 
@@ -256,9 +275,11 @@ def main():
         chunk_size=1_000_000,
     )
     gen.generate(micro_3d)
-    fig = plt.figure(figsize=(15, 5))
-    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
-    fig.savefig(output_dir / "lath_basketweave.png", dpi=150, bbox_inches="tight")
+    figlb = plt.figure(figsize=(15, 5))
+    Plotter.plot_3d_slices(figlb, micro_3d, shuffle=True)
+    figlb.suptitle("Lath Pure Basketweave")
+    plt.tight_layout()
+    figlb.savefig(output_dir / "lath_basketweave.png", dpi=150, bbox_inches="tight")
     print("  Pure Basketweave saved to:")
     print(f"  {output_dir / 'lath_basketweave.png'}")
 
@@ -286,9 +307,11 @@ def main():
         chunk_size=1_000_000,
     )
     gen.generate(micro_3d)
-    fig = plt.figure(figsize=(15, 5))
-    Plotter.plot_3d_slices(fig, micro_3d, shuffle=True)
-    fig.savefig(output_dir / "lath_mixed.png", dpi=150, bbox_inches="tight")
+    figlm = plt.figure(figsize=(15, 5))
+    Plotter.plot_3d_slices(figlm, micro_3d, shuffle=True)
+    figlm.suptitle("Lath Mixed Basketweave/Colony")
+    plt.tight_layout()
+    figlm.savefig(output_dir / "lath_mixed.png", dpi=150, bbox_inches="tight")
     print("  Mixed Basketweave/Colony saved to:")
     print(f"  {output_dir / 'lath_mixed.png'}")
 
