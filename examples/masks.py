@@ -1,4 +1,4 @@
-# /synth-struct/examples/masks.py
+# synth-struct/examples/masks.py
 
 """
 This example shows the various mask types that are available by changing

@@ -6,6 +6,7 @@ This holds the HexagonalTexture Generator.
 There are two basic textures for hexagonal:
 - basal
 - prismatic
+- pyramidal
 """
 
 import numpy as np

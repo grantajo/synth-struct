@@ -25,17 +25,12 @@ from .stiffness.cubic_stiffness import CubicStiffnessGenerator
 from .stiffness.hexagonal_stiffness import HexagonalStiffnessGenerator
 
 from .plotting.gen_plot import Plotter
-from .plotting import ipf_maps
-
-#    plot_ipf_map,
-#    plot_multiple_ipf_maps,
-#    plot_multiple_ipf_slices,
-# )
+from .plotting import (
+    ipf_maps,
+    odf_plot,
+    # pole_figures,
+)
 from .plotting.ipfcolorkeys import plot_all_colorkeys
-
-# from .plotting.pole_figures import ...
-# from .plotting.odf_plot import ...
-
 
 __all__ = [
     # Core
@@ -61,8 +56,7 @@ __all__ = [
     # Plotting
     "Plotter",
     "ipf_maps",
-    # "plot_ipf_map",
-    # "plot_multiple_ipf_maps",
-    # "plot_multiple_ipf_slices",
+    "odf_plot",
+    # "pole_figures",
     "plot_all_colorkeys",
 ]

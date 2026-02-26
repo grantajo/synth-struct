@@ -1,6 +1,7 @@
 # synth-struct/src/synth_struct/plotting/odf_plot.py
 
 import matplotlib.pyplot as plt
+from orix.plot import register_projections
 
 from .orix_utils import create_crystal_map
 
@@ -15,9 +16,8 @@ providing a complete representation of crystallographic texture.
 def plot_odf(
     ax,
     micro,
-    crystal_structure="cubic",
     grain_subset=None,
-    projection="axangle",
+    projection="stereographic",
     **scatter_kwargs,
 ):
     """
@@ -29,7 +29,6 @@ def plot_odf(
     Args:
     - ax: matplotlib Axes object
     - micro: Microstructure object
-    - crystal_structure: str - Crystal structure type ('cubic', 'fcc', 'bcc', 'hexagonal', or 'hcp')
     - grain_subset: np.ndarray or None - Specific grain IDs to include. If None, uses all grains.
     - projection: str - Projection type for ODF (default: 'axangle')
     - **scatter_kwargs: Additional arguments passed to scatter plot (e.g., s=1, c='blue')
@@ -44,9 +43,7 @@ def plot_odf(
         plt.savefig('odf.png')
     """
 
-    crystal_map = create_crystal_map(
-        micro, crystal_structure, grain_subset=grain_subset
-    )
+    crystal_map = create_crystal_map(micro, grain_subset=grain_subset)
 
     scatter_defaults = {"s": 1, "alpha": 0.5, "c": "C0"}
     scatter_defaults.update(scatter_kwargs)
@@ -58,9 +55,8 @@ def plot_odf(
 
 def create_odf_figure(
     micro,
-    crystal_structure="cubic",
     grain_subset=None,
-    projection="axangle",
+    projection="stereographic",
     filename=None,
     figsize=(5, 5),
     dpi=150,
@@ -90,6 +86,7 @@ def create_odf_figure(
     Example:
         fig, ax = create_odf_figure(micro, filename='odf.png')
     """
+    register_projections()
 
     fig = plt.figure(figsize=figsize)
     ax = fig.add_subplot(111, projection=projection)
@@ -97,7 +94,6 @@ def create_odf_figure(
     plot_odf(
         ax,
         micro,
-        crystal_structure=crystal_structure,
         grain_subset=grain_subset,
         **kwargs,
     )

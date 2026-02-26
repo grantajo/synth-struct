@@ -117,7 +117,6 @@ plt.savefig(output_dir / "texture_custom_cubic.png", dpi=150, bbox_inches="tight
 
 print("  Custom cubic texture filename: 'texture_custom_cubic.png'")
 
-# Uncomment when orix plotting is fixed for hexagonal
 # ========================================================
 # Custom texture (Hexagonal)
 # ========================================================

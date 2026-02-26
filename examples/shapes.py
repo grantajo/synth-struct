@@ -182,6 +182,7 @@ def main():
     print("-" * 60)
     print("Starting Mixed 2D")
 
+    # 2D Mixed
     gen = MixedGenerator(
         num_grains=num_grains,
         ellipsoid_fraction=0.6,
