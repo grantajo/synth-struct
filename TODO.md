@@ -1,16 +1,16 @@
 
-## Todo Lists
+# Todo Lists
 
-### Just finished
+## Just finished
 
 - Added in dictionary for phases to directly read the point group
 - Fixed tests after adding phases.
 
-### Currently working on
+## Currently working on
 
 - Working on plotting IPFs and ODFs
 
-### Short-term todo
+## Short-term todo
 
 - Continue orix integration
   - Add in IPFs and ODFs
@@ -20,9 +20,9 @@
     - Add in plotting examples
       - Maybe don't need to add since there will be plotting examples in other scripts?
 
-### Things to be added
+## Things to be added
 
-- Problem with apply_scatter for textures since adding hexagonal. 
+- Problem with apply_scatter for textures since adding hexagonal.  
 Can produce orientations outside fundamental zone since it can have multiple phases?
 - Add grain structures with grain size better distribution
 - Add in file output generators
@@ -31,7 +31,7 @@ Can produce orientations outside fundamental zone since it can have multiple pha
 - Maybe make a power user import subspace such as rotation conversion
 or symmetry operations?
 
-### Long term additions
+## Long term additions
 
 - Figure out an example for texture
 - Add in second phases
