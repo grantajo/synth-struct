@@ -1,14 +1,19 @@
+
 # synth-struct (synthetic microstructures)
+
 This is a code base that generates microstrcutures that are intended to be used in
 mechanical simulations, such as ultrasonic, crystal plasticity, etc.
 
 ## Installation
+
 ### Create a virtual environment
-Run the following commands to create a virtual environment<br>
-`conda create --name synth`<br>
-`conda activate synth`<br>
+
+Run the following commands to create a virtual environment  
+`conda create --name synth`  
+`conda activate synth`  
 
 ### Install dependencies in virtual environment
+
 |Package              |Installation                       |Requirement             |
 |:-------------------:|:---------------------------------:|:----------------------:|
 |numpy                |`conda install numpy`              |Required                |
@@ -22,22 +27,24 @@ Run the following commands to create a virtual environment<br>
 |pytest               |`conda install pytest`             |Required for tests      |
 
 ### Clone repository
+
 Clone the repository from Github
 
 ### Make output directory
-`cd synth-struct`<br>
+
+`cd synth-struct`  
 `mkdir output`
 
 ### Install the project
-When in project root run:<br>
+
+When in project root run:  
 `pip install -e .`
 
 ### Testing Installation
-Once installed, run the following command to run the tests<br>
-`pytest tests/`<br>
+
+Once installed, run the following command to run the tests  
+`pytest tests/`  
 
 ### Installation notes
-The first time running an example, the code may take slightly longer 
-than normal due to the program compiling on first run
 
-
+The first time running an example, the code may take slightly longer than normal due to the program compiling on first run
