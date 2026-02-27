@@ -94,4 +94,4 @@ print("-" * 50)
 print(f"    Saved figures to: \n{output_dir}")
 print("-" * 50)
 
-plt.show()
+# plt.show()

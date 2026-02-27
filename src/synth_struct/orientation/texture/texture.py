@@ -28,7 +28,7 @@ class Texture:
     Data container for crystallographic textures.
 
     A Texture represents a mapping from grains (or voxels)
-    to orientations, together with symmetry information.
+    to orientations, together with phase information.
     """
 
     orientations: np.ndarray
@@ -63,11 +63,6 @@ class Texture:
         Returns number of orientations
         """
         return self.orientations.shape[0]
-
-    @property
-    def symmetry(self) -> str:
-        """Convenience accessor for crystal system via phase."""
-        return self.phase.crystal_system
 
     def to_representation(self, representation: str) -> "Texture":
         """
@@ -172,7 +167,7 @@ class Texture:
         return Texture(
             orientations=self.orientations.copy(),
             representation=self.representation,
-            symmetry=self.symmetry,
+            phase=self.phase,
             metadata=self.metadata.copy(),
         )
 
@@ -183,6 +178,6 @@ class Texture:
         return Texture(
             orientations=self.orientations[indices],
             representation=self.representation,
-            symmetry=self.symmetry,
+            phase=self.phase,
             metadata=self.metadata.copy(),
         )

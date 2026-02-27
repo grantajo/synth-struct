@@ -42,15 +42,7 @@ def create_crystal_map(micro, grain_subset=None):
 
     orix_phases = {}
     for phase_id, phase_obj in micro.phases.items():
-        if phase_obj.crystal_system.lower() == "cubic":
-            point_group = "m-3m"
-        elif phase_obj.crystal_system.lower() == "hexagonal":
-            point_group = "6/mmm"
-        else:
-            raise ValueError(
-                f"Unsupported crystal system '{phase_obj.crystal_system}' "
-                f"for orix plotting"
-            )
+        point_group = phase_obj.point_group
         orix_phases[phase_id] = OrixPhase(name=phase_obj.name, point_group=point_group)
 
     phase_list = PhaseList(phases=orix_phases)
@@ -185,7 +177,7 @@ def subsample_orientations(orientations, sample_fraction):
     return orientations[idx]
 
 
-def get_grain_average_orientations(micro, crystal_structure="cubic"):
+def get_grain_average_orientations(micro, phase):
     """
     Get one representative orientation per grain (useful for pole figures with large datasets).
 
@@ -204,12 +196,7 @@ def get_grain_average_orientations(micro, crystal_structure="cubic"):
         raise ValueError("Microstructure has no phase information")
 
     phase_obj = next(iter(micro.phases.values()))
-    if phase_obj.crystal_system.lower() == "cubic":
-        point_group = "m-3m"
-    elif phase_obj.crystal_system.lower() == "hexagonal":
-        point_group = "6/mmm"
-    else:
-        raise ValueError(f"Unsupported crystal system '{phase_obj.crystal_system}'")
+    point_group = phase_obj.point_group
 
     orix_phase = OrixPhase(name=phase_obj.name, point_group=point_group)
     symmetry = orix_phase.point_group

@@ -45,7 +45,7 @@ print("=" * 18, "Cubic Texture Examples", "=" * 18)
 dims = (200, 200)
 resolution = 1.0
 num_grains = 300
-default_phase = Phase.from_preset("default")
+default_phase = Phase.from_preset("default_cubic")
 
 # Create microstructure
 micro = Microstructure(dimensions=dims, resolution=resolution, phase=default_phase)
@@ -302,4 +302,4 @@ print("-" * 60)
 print("Saved all texture figures to:")
 print(f"{output_dir}")
 
-plt.show()
+# plt.show()

@@ -5,6 +5,9 @@ import numpy as np
 from synth_struct.orientation.texture.texture_base import TextureGenerator
 from synth_struct.orientation.texture.texture import Texture
 from synth_struct.microstructure import Microstructure
+from synth_struct import Phase
+
+cubic_phase = Phase.from_preset("default_cubic")
 
 
 class ConcreteTextureGenerator(TextureGenerator):
@@ -16,7 +19,9 @@ class ConcreteTextureGenerator(TextureGenerator):
         orientations = np.random.rand(n_grains, 3) * 2 * np.pi
 
         return Texture(
-            orientations=orientations, representation="euler", symmetry="cubic"
+            orientations=orientations,
+            representation="euler",
+            phase=cubic_phase,
         )
 
 
@@ -60,4 +65,3 @@ class TestTextureGenerator:
         assert isinstance(result, Texture)
         assert hasattr(result, "orientations")
         assert hasattr(result, "representation")
-        assert hasattr(result, "symmetry")

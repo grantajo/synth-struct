@@ -1,10 +1,9 @@
 ## Todo Lists:
 ### Just finished
-- Fixed mixed 2D figure in shapes.py
+- Added in dictionary for phases to directly read the point group
+- Fixed tests after adding phases.
 
 ### Currently working on
-- Need to fix tests, since they are broken with changes to phases
-and Microstructure initiation
 - Working on plotting IPFs and ODFs
 
 ### Short-term todo:
@@ -18,6 +17,8 @@ and Microstructure initiation
         other scripts?
 
 ### Things to be added:
+- Problem with apply_scatter for textures since adding hexagonal. 
+Can produce orientations outside fundamental zone since it can have multiple phases?
 - Add grain structures with grain size better distribution
 - Add in file output generators
     - HDF5

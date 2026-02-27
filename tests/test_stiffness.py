@@ -4,16 +4,16 @@ import numpy as np
 import pytest
 from synth_struct.stiffness.stiffness import Stiffness
 
+
 class TestStiffness:
 
     def test_initialization_basic(self):
         """Test Stiffness initialization with basic parameters"""
         n_grains = 10
         stiffness_tensors = np.random.rand(n_grains, 6, 6) * 100
-        
+
         stiffness = Stiffness(
-            stiffness_tensors=stiffness_tensors,
-            crystal_structure="cubic"
+            stiffness_tensors=stiffness_tensors, crystal_structure="cubic"
         )
 
         assert stiffness.crystal_structure == "cubic"
@@ -93,8 +93,7 @@ class TestStiffness:
         """Test subset extraction"""
         stiffness_tensors = np.random.rand(10, 6, 6) * 100
         stiffness = Stiffness(
-            stiffness_tensors=stiffness_tensors,
-            crystal_structure="cubic"
+            stiffness_tensors=stiffness_tensors, crystal_structure="cubic"
         )
 
         indices = np.array([0, 2, 4, 6])
@@ -126,20 +125,19 @@ class TestStiffness:
         for n in [1, 5, 100, 1000]:
             stiffness_tensors = np.random.rand(n, 6, 6)
             stiffness = Stiffness(
-                stiffness_tensors=stiffness_tensors,
-                crystal_structure="cubic"
+                stiffness_tensors=stiffness_tensors, crystal_structure="cubic"
             )
             assert stiffness.n_tensors == n
 
     @pytest.mark.parametrize(
-        "crystal_structure", ["cubic", "hexagonal", "isotropic", "tetragonal", "orthorhombic"]
+        "crystal_structure",
+        ["cubic", "hexagonal", "isotropic", "tetragonal", "orthorhombic"],
     )
     def test_various_crystal_structures(self, crystal_structure):
         """Test that various crystal structure strings are accepted"""
         stiffness_tensors = np.random.rand(5, 6, 6)
         stiffness = Stiffness(
-            stiffness_tensors=stiffness_tensors,
-            crystal_structure=crystal_structure
+            stiffness_tensors=stiffness_tensors, crystal_structure=crystal_structure
         )
 
         assert stiffness.crystal_structure == crystal_structure
@@ -148,8 +146,7 @@ class TestStiffness:
         """Test with single stiffness tensor"""
         stiffness_tensors = np.random.rand(1, 6, 6) * 100
         stiffness = Stiffness(
-            stiffness_tensors=stiffness_tensors,
-            crystal_structure="cubic"
+            stiffness_tensors=stiffness_tensors, crystal_structure="cubic"
         )
 
         assert stiffness.n_tensors == 1
@@ -158,8 +155,7 @@ class TestStiffness:
         """Test with large number of stiffness tensors"""
         stiffness_tensors = np.random.rand(1000, 6, 6) * 100
         stiffness = Stiffness(
-            stiffness_tensors=stiffness_tensors,
-            crystal_structure="cubic"
+            stiffness_tensors=stiffness_tensors, crystal_structure="cubic"
         )
 
         assert stiffness.n_tensors == 1000
@@ -168,30 +164,27 @@ class TestStiffness:
         """Test that stiffness tensors can be symmetric"""
         n = 5
         stiffness_tensors = np.zeros((n, 6, 6))
-        
+
         # Create symmetric tensors
         for i in range(n):
             C = np.random.rand(6, 6) * 100
             stiffness_tensors[i] = (C + C.T) / 2  # Make symmetric
 
         stiffness = Stiffness(
-            stiffness_tensors=stiffness_tensors,
-            crystal_structure="cubic"
+            stiffness_tensors=stiffness_tensors, crystal_structure="cubic"
         )
 
         # Check symmetry is preserved
         for i in range(n):
             np.testing.assert_array_almost_equal(
-                stiffness.stiffness_tensors[i],
-                stiffness.stiffness_tensors[i].T
+                stiffness.stiffness_tensors[i], stiffness.stiffness_tensors[i].T
             )
 
     def test_empty_metadata(self):
         """Test that empty metadata works correctly"""
         stiffness_tensors = np.random.rand(5, 6, 6)
         stiffness = Stiffness(
-            stiffness_tensors=stiffness_tensors,
-            crystal_structure="cubic"
+            stiffness_tensors=stiffness_tensors, crystal_structure="cubic"
         )
 
         assert stiffness.metadata == {}

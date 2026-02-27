@@ -15,15 +15,23 @@ import numpy as np
 VALID_CRYSTAL_SYSTEMS = (
     "cubic",
     "hexagonal",
-    # "tetragonal", "orthorhombic", "trigonal", "monoclinic", "triclinic",
-    # maybe implement other crystal systems in the future
+    "tetragonal",
+    "orthorhombic",
+    "trigonal",
+    "monoclinic",
+    "triclinic",
 )
 
 KNOWN_PHASES = {
-    "default": {
+    "default_cubic": {
         "crystal_system": "cubic",
         "lattice_params": (1, 1, 1),
         "space_group": 225,
+    },
+    "default_hexagonal": {
+        "crystal_system": "hexagonal",
+        "lattice_params": (1, 1, 1.33),
+        "space_group": 194,
     },
     "Ti-alpha": {
         "crystal_system": "hexagonal",
@@ -65,6 +73,16 @@ KNOWN_PHASES = {
         "lattice_params": (3.52, 3.52, 3.52),
         "space_group": 225,
     },
+}
+
+CRYSTAL_SYSTEM_POINT_GROUPS = {
+    "cubic": "m-3m",
+    "hexagonal": "6/mmm",
+    "tetragonal": "4/mmm",
+    "orthorhombic": "mmm",
+    "trigonal": "3-m",
+    "monoclinic": "2/m",
+    "triclinic": "-1",
 }
 
 
@@ -126,6 +144,10 @@ class Phase:
                 raise ValueError(
                     f"Space group must be between 1 and 230, got {self.space_group}"
                 )
+
+    @property
+    def point_group(self) -> str:
+        return CRYSTAL_SYSTEM_POINT_GROUPS[self.crystal_system]
 
     @property
     def a(self) -> float:

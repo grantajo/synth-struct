@@ -53,7 +53,7 @@ print("=" * 23, "Mask Examples", "=" * 22)
 dims = (200, 200, 200)
 resolution = 1.0
 num_grains = 800
-default_phase = Phase.from_preset("default")
+default_phase = Phase.from_preset("default_cubic")
 
 # Create microstructure
 micro = Microstructure(dimensions=dims, resolution=resolution, phase=default_phase)

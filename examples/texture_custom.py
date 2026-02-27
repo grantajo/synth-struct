@@ -39,7 +39,7 @@ dims = (200, 200)
 resolution = 1.0
 num_grains = 300
 
-default_phase = Phase.from_preset("Fe-bcc")
+default_phase = Phase.from_preset("default_cubic")
 
 # Create microstructure
 micro = Microstructure(
@@ -156,4 +156,4 @@ print()
 print("=" * 60)
 print(f"All files saved to: \n{output_dir}")
 
-plt.show()
+# plt.show()
