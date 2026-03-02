@@ -3,11 +3,11 @@
 
 ## Just finished
 
-- Added in dictionary for phases to directly read the point group
-- Fixed tests after adding phases.
+- Added basic ability for plotting pole figures for singly generated microstructure
 
 ## Currently working on
 
+- Working on getting pole figures to work for multiply generated microstructures
 - Working on plotting IPFs and ODFs
 
 ## Short-term todo

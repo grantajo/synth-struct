@@ -304,7 +304,6 @@ def create_ipf_map_figure(
         ax,
         micro,
         direction=direction,
-        crystal_structure=crystal_structure,
         slice_idx=slice_idx,
         slice_direction=slice_direction,
         grain_subset=grain_subset,

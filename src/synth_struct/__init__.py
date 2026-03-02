@@ -28,7 +28,7 @@ from .plotting.gen_plot import Plotter
 from .plotting import (
     ipf_maps,
     odf_plot,
-    # pole_figures,
+    pole_figures,
 )
 from .plotting.ipfcolorkeys import plot_all_colorkeys
 
@@ -57,6 +57,6 @@ __all__ = [
     "Plotter",
     "ipf_maps",
     "odf_plot",
-    # "pole_figures",
+    "pole_figures",
     "plot_all_colorkeys",
 ]

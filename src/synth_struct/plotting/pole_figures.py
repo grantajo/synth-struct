@@ -3,6 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from orix.vector import Miller
+from orix.plot import register_projections
 from .orix_utils import create_crystal_map
 
 """
@@ -12,16 +13,16 @@ Pole figures show the distribution of crystallographic directions in stereograph
 to analyze crystallographic texture.
 """
 
+register_projections()
 
 def plot_pole_figure(
     ax,
     micro,
     miller_index,
-    crystal_structure="cubic",
     grain_subset=None,
     show_labels=True,
     sample_fraction=None,
-    marker_size=1,
+    marker_size=15,
     **scatter_kwargs,
 ):
     """
@@ -52,10 +53,10 @@ def plot_pole_figure(
     """
 
     crystal_map = create_crystal_map(
-        micro, crystal_structure, grain_subset=grain_subset
+        micro, grain_subset=grain_subset
     )
 
-    phase = crystal_map.phases[0]
+    phase = crystal_map.phases[1]
     miller = Miller(uvw=miller_index, phase=phase)
 
     orientations = crystal_map.orientations
@@ -71,13 +72,15 @@ def plot_pole_figure(
     scatter_defaults = {"s": marker_size, "c": "C0", "alpha": 0.5}
     scatter_defaults.update(scatter_kwargs)
 
-    pf = ax.scatter(orientations.outer(miller), **scatter_defaults)
+    poles = orientations.inv().outer(miller)
+
+    pf = ax.scatter(poles, **scatter_defaults)
 
     if show_labels:
         ax.set_labels("X", "Y", "Z")
 
     h, k, l = miller_index
-    ax.set_title(rf"$\{{{h}\,{k}\,{l}\}}$ Pole Figure")
+    ax.set_title(rf"$\left<{h},{k},{l}\right>$")
 
     return pf
 
@@ -86,7 +89,6 @@ def plot_multiple_pole_figures(
     axes,
     micro,
     miller_indices,
-    crystal_structure="cubic",
     grain_subset=None,
     show_labels=True,
     sample_fraction=None,
@@ -131,9 +133,8 @@ def plot_multiple_pole_figures(
     for ax, hkl in zip(axes, miller_indices):
         artist = plot_pole_figure(
             ax,
-            hkl,
             micro,
-            crystal_structure=crystal_structure,
+            hkl,
             grain_subset=grain_subset,
             show_labels=show_labels,
             sample_fraction=sample_fraction,
@@ -186,9 +187,11 @@ def create_pole_figure_axes(fig, n_figures, projection="stereographic", layout="
 
     return axes
 
+# This function is currently broken due to changes in
+# phase handling. Will fix in a future update.
 
 def create_standard_pole_figures(
-    micro, crystal_structure="cubic", filename=None, **kwargs
+    micro, filename=None, **kwargs
 ):
     """
     Create standard pole figures set for a given crystal structure.
@@ -217,19 +220,12 @@ def create_standard_pole_figures(
         "hcp": [(0, 0, 1), (1, 0, 0), (1, 1, 0)],  # Need to fix
     }
 
-    crystal_structure = crystal_structure.lower()
-    if crystal_structure not in standard_poles:
-        raise ValueError(
-            f"Unknown crystal structure: {crystal_structure}. "
-            f"Supported: {list(standard_poles.keys())}"
-        )
-
-    miller_indices = standard_poles[crystal_structure]
+    # miller_indices = standard_poles[crystal_structure]
 
     fig = plt.figure(figsize=(15, 5))
     axes = create_pole_figure_axes(fig, 3, layout="row")
     plot_multiple_pole_figures(
-        axes, micro, miller_indices, crystal_structure=crystal_structure, **kwargs
+        axes, micro, miller_indices, **kwargs
     )
 
     plt.tight_layout()
