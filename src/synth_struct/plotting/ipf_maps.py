@@ -209,7 +209,6 @@ def plot_multiple_ipf_slices(
     slice_indices=None,
     direction="z",
     slice_direction="z",
-    crystal_structure="cubic",
     **kwargs,
 ):
     """
@@ -259,7 +258,6 @@ def plot_multiple_ipf_slices(
 def create_ipf_map_figure(
     micro,
     direction="z",
-    crystal_structure="cubic",
     slice_idx=None,
     slice_direction="z",
     grain_subset=None,
