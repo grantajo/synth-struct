@@ -76,6 +76,8 @@ PFplot.plot_multiple_pole_figures(
     micro,
     phase_id=0,
     miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
+    sample_fraction=0.005,
+    plot_type='density',
 )
 base_pf_fig.suptitle("Pole Figures for Random Texture", fontsize=15)
 plt.tight_layout()
@@ -115,6 +117,8 @@ PFplot.plot_multiple_pole_figures(
     micro_5deg,
     phase_id=0,
     miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
+    sample_fraction=0.005,
+    plot_type='density',
 )
 fig_5deg_pf.suptitle("Pole Figures with Cube Texture (5° Spread)", fontsize=15)
 plt.tight_layout()
@@ -124,6 +128,7 @@ print(f"  Saved pole figures to 'cube_texture_5deg_pole_figures.png'")
 # ========================================================
 # Cube texture with 10° spread
 # ========================================================
+
 print()
 print("-" * 60)
 print("Creating texture in middle of the microstructure with 10° spread...")
@@ -154,6 +159,8 @@ PFplot.plot_multiple_pole_figures(
     micro_10deg,
     phase_id=0,
     miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
+    sample_fraction=0.005,
+    plot_type='density',
 )
 fig_10deg_pf.suptitle("Pole Figures with Cube Texture (10° Spread)", fontsize=15)
 plt.tight_layout()

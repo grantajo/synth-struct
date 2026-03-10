@@ -2,7 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
-from orix.vector import Miller
+from orix.vector import Miller, Vector3d
 from orix.plot import register_projections
 from .orix_utils import create_crystal_map
 
@@ -21,10 +21,13 @@ def plot_pole_figure(
     miller_index,
     phase_id=None,
     grain_subset=None,
+    crystal_map=None,
     show_labels=True,
     sample_fraction=None,
+    plot_type='scatter',
     marker_size=15,
-    **scatter_kwargs,
+    sigma=5,
+    **kwargs,
 ):
     """
     Plot a pole figure on provided axes.
@@ -52,16 +55,16 @@ def plot_pole_figure(
         plot_pole_figure(ax, micro, (1,0,0), show_labels=True)
         plt.savefig('pf_100.png')
     """
-
-    crystal_map = create_crystal_map(
-        micro, grain_subset=grain_subset
-    )
+    if crystal_map is None:
+        crystal_map = create_crystal_map(
+            micro, grain_subset=grain_subset
+        )
 
     if phase_id is None:
         phase_id = next(i for i in crystal_map.phases.ids if i >= 0)
 
     phase = crystal_map.phases[phase_id]
-    miller = Miller(uvw=miller_index, phase=phase)
+    miller = Miller(hkl=miller_index, phase=phase).symmetrise(unique=True)
 
     phase_mask = crystal_map.phase_id == phase_id
     orientations = crystal_map.orientations[phase_mask]
@@ -74,12 +77,19 @@ def plot_pole_figure(
         idx = np.random.choice(n, size=n_sample, replace=False)
         orientations = orientations[idx]
 
-    scatter_defaults = {"s": marker_size, "c": "C0", "alpha": 0.5}
-    scatter_defaults.update(scatter_kwargs)
-
     poles = orientations.inv().outer(miller)
+    xyz = poles.data.reshape(-1, 3).copy()
+    xyz[xyz[:, 2] < 0] *= -1
+    poles = Vector3d(xyz)
 
-    pf = ax.scatter(poles, **scatter_defaults)
+    if plot_type == 'scatter':
+        scatter_defaults = {"s": marker_size, "c": "C0", "alpha": 0.5}
+        scatter_defaults.update(kwargs)
+        pf = ax.scatter(poles, **scatter_defaults)
+    if plot_type == 'density':
+        density_defaults = {"sigma": sigma, "cmap": "jet"}
+        density_defaults.update(kwargs)
+        pf = ax.pole_density_function(poles, **density_defaults)
 
     if show_labels:
         ax.set_labels("X", "Y", "Z")
@@ -98,6 +108,7 @@ def plot_multiple_pole_figures(
     grain_subset=None,
     show_labels=True,
     sample_fraction=None,
+    plot_type='scatter',
     **plot_kwargs,
 ):
     """
@@ -128,7 +139,8 @@ def plot_multiple_pole_figures(
             axes.append(ax)
         plot_multiple_pole_figures(axes, [(1,0,0), (1,1,0), (1,1,1)], micro)
     """
-
+    crystal_map = create_crystal_map(micro, grain_subset=grain_subset)
+    
     if len(axes) != len(miller_indices):
         raise ValueError(
             f"Number of axes ({len(axes)}) must match "
@@ -143,8 +155,10 @@ def plot_multiple_pole_figures(
             hkl,
             phase_id=phase_id,
             grain_subset=grain_subset,
+            crystal_map=crystal_map,
             show_labels=show_labels,
             sample_fraction=sample_fraction,
+            plot_type=plot_type,
             **plot_kwargs,
         )
         artists.append(artist)

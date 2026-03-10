@@ -147,7 +147,7 @@ def quat_to_euler(quats):
     euler_angles[mask2, 0] = np.arctan2(
         -2 * q0[mask2] * q3[mask2], q0[mask2] ** 2 - q3[mask2] ** 2
     )
-    euler_angles[mask2, 1] = 0.0
+    euler_angles[mask2, 1] = np.pi
     euler_angles[mask2, 2] = 0.0
 
     # Case 3: General case
@@ -273,7 +273,7 @@ def rotation_matrix_to_quat(R):
     # Sign corrections
     quats[R[:, 2, 1] < R[:, 1, 2], 1] *= -1
     quats[R[:, 0, 2] < R[:, 2, 0], 2] *= -1
-    quats[R[:, 1, 0] < R[:, 0, 1], 2] *= -1
+    quats[R[:, 1, 0] < R[:, 0, 1], 3] *= -1
 
     norm = np.linalg.norm(quats, axis=1, keepdims=True)
     quats = quats / norm
