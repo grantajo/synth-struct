@@ -16,6 +16,7 @@ to analyze crystallographic texture.
 
 register_projections()
 
+
 def plot_pole_figure(
     ax,
     micro,
@@ -25,7 +26,7 @@ def plot_pole_figure(
     crystal_map=None,
     show_labels=True,
     sample_fraction=None,
-    plot_type='scatter',
+    plot_type="scatter",
     marker_size=15,
     sigma=1,
     **kwargs,
@@ -41,7 +42,7 @@ def plot_pole_figure(
     - micro: Microstructure object
     - miller_index: tuple - Miller indices (h, k, l) for the pole to plot
     - phase_id: ID for Phase being analyzed
-    - crystal_map: Orix CrystalMap holder if already created. 
+    - crystal_map: Orix CrystalMap holder if already created.
     - grain_subset: np.ndarray or None - Grain mask. If None, uses all grains
     - show_labels: bool - Whether to show axis labels (X, Y, Z)
     - sample_fraction: float or None - Fraction of orientations to plot (0-1). Useful for large datasets
@@ -59,7 +60,8 @@ def plot_pole_figure(
     """
     if crystal_map is None:
         crystal_map = create_crystal_map(
-            micro, grain_subset=grain_subset,
+            micro,
+            grain_subset=grain_subset,
         )
 
     if phase_id is None:
@@ -84,11 +86,11 @@ def plot_pole_figure(
     xyz[xyz[:, 2] < 0] *= -1
     poles = Vector3d(xyz)
 
-    if plot_type == 'scatter':
+    if plot_type == "scatter":
         scatter_defaults = {"s": marker_size, "c": "C0", "alpha": 0.5}
         scatter_defaults.update(kwargs)
         pf = ax.scatter(poles, **scatter_defaults)
-    elif plot_type == 'density':
+    elif plot_type == "density":
         density_defaults = {"sigma": sigma, "cmap": "jet"}
         density_defaults.update(kwargs)
         pf = ax.pole_density_function(poles, **density_defaults)
@@ -112,7 +114,7 @@ def plot_multiple_pole_figures(
     grain_subset=None,
     show_labels=True,
     sample_fraction=None,
-    plot_type='scatter',
+    plot_type="scatter",
     **plot_kwargs,
 ):
     """
@@ -144,7 +146,7 @@ def plot_multiple_pole_figures(
         plot_multiple_pole_figures(axes, [(1,0,0), (1,1,0), (1,1,1)], micro)
     """
     crystal_map = create_crystal_map(micro, grain_subset=grain_subset)
-    
+
     if len(axes) != len(miller_indices):
         raise ValueError(
             f"Number of axes ({len(axes)}) must match "
@@ -212,12 +214,12 @@ def create_pole_figure_axes(fig, n_figures, projection="stereographic", layout="
 
     return axes
 
+
 # This function is currently broken due to changes in
 # phase handling. Will fix in a future update.
 
-def create_standard_pole_figures(
-    micro, filename=None, **kwargs
-):
+
+def create_standard_pole_figures(micro, filename=None, **kwargs):
     """
     Create standard pole figures set for a given crystal structure.
 
@@ -249,9 +251,7 @@ def create_standard_pole_figures(
 
     fig = plt.figure(figsize=(15, 5))
     axes = create_pole_figure_axes(fig, 3, layout="row")
-    plot_multiple_pole_figures(
-        axes, micro, miller_indices, **kwargs
-    )
+    plot_multiple_pole_figures(axes, micro, miller_indices, **kwargs)
 
     plt.tight_layout()
 

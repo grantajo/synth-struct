@@ -265,10 +265,18 @@ def rotation_matrix_to_quat(R):
     quats = np.zeros((N, 4))
 
     # Convert R to quaternions
-    quats[:, 0] = 0.5 * np.sqrt(np.clip(1 + R[:, 0, 0] + R[:, 1, 1] + R[:, 2, 2], 0, None))
-    quats[:, 1] = 0.5 * np.sqrt(np.clip(1 + R[:, 0, 0] - R[:, 1, 1] - R[:, 2, 2], 0, None))
-    quats[:, 2] = 0.5 * np.sqrt(np.clip(1 - R[:, 0, 0] + R[:, 1, 1] - R[:, 2, 2], 0, None))
-    quats[:, 3] = 0.5 * np.sqrt(np.clip(1 - R[:, 0, 0] - R[:, 1, 1] + R[:, 2, 2], 0, None))
+    quats[:, 0] = 0.5 * np.sqrt(
+        np.clip(1 + R[:, 0, 0] + R[:, 1, 1] + R[:, 2, 2], 0, None)
+    )
+    quats[:, 1] = 0.5 * np.sqrt(
+        np.clip(1 + R[:, 0, 0] - R[:, 1, 1] - R[:, 2, 2], 0, None)
+    )
+    quats[:, 2] = 0.5 * np.sqrt(
+        np.clip(1 - R[:, 0, 0] + R[:, 1, 1] - R[:, 2, 2], 0, None)
+    )
+    quats[:, 3] = 0.5 * np.sqrt(
+        np.clip(1 - R[:, 0, 0] - R[:, 1, 1] + R[:, 2, 2], 0, None)
+    )
 
     # Sign corrections
     quats[R[:, 2, 1] < R[:, 1, 2], 1] *= -1

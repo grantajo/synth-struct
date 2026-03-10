@@ -187,8 +187,12 @@ class Microstructure:
         phase = texture.phase
 
         existing_id = next(
-            (pid for pid, p in self._phases.items() 
-             if p.name == phase.name and p.point_group == phase.point_group), None
+            (
+                pid
+                for pid, p in self._phases.items()
+                if p.name == phase.name and p.point_group == phase.point_group
+            ),
+            None,
         )
 
         if existing_id is None:

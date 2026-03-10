@@ -16,6 +16,7 @@ relative to reference directions.
 
 register_projections()
 
+
 def plot_ipf(
     ax,
     micro,
@@ -25,7 +26,7 @@ def plot_ipf(
     direction=None,
     show_labels=True,
     sample_fraction=None,
-    plot_type='scatter',
+    plot_type="scatter",
     marker_size=15,
     sigma=5,
     **kwargs,
@@ -52,16 +53,17 @@ def plot_ipf(
     - marker_size: float - Size of scatter points
     - sigma: float - Angular resolution of broadening in degrees
     **kwargs: Additional elements passed to orix/matplotlib plotting functions
-    
+
     Returns:
     - matplotlib plot artist
     """
 
     if crystal_map is None:
         crystal_map = create_crystal_map(
-            micro, grain_subset=grain_subset,
+            micro,
+            grain_subset=grain_subset,
         )
-    
+
     if phase_id is None:
         phase_id = next(i for i in crystal_map.phases.ids if i >= 0)
 
@@ -77,7 +79,7 @@ def plot_ipf(
         n_sample = int(sample_fraction * n)
         idx = np.random.choice(n, size=n_sample, replace=False)
         orientations = orientations[idx]
-    
+
     sample_dir = Vector3d(np.array(direction, dtype=float))
     crystal_dirs = orientations.outer(sample_dir)
 
@@ -105,6 +107,7 @@ def plot_ipf(
     ax.set_title(rf"IPF $[{x}, {y}, {z}]$")
 
     return ipf
+
 
 def plot_multiple_ipfs(
     axes,
@@ -144,9 +147,10 @@ def plot_multiple_ipfs(
             f"Number of axes ({len(axes)}) must match "
             f"number of Miller indices ({len(directions)})"
         )
-    
+
     crystal_map = create_crystal_map(
-        micro, grain_subset=grain_subset,
+        micro,
+        grain_subset=grain_subset,
     )
 
     artists = []
@@ -167,8 +171,12 @@ def plot_multiple_ipfs(
 
     return artists
 
+
 def create_ipf_axes(
-    fig, n_figures, projection="ipf", layout="row",
+    fig,
+    n_figures,
+    projection="ipf",
+    layout="row",
 ):
     """
     Creates multiple IPF projection axes for inverse pole figures.
