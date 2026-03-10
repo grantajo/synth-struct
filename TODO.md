@@ -4,10 +4,11 @@
 ## Just finished
 
 - Added ability to plot pole density functions
+- Added untested IPF plotting functionality
 
 ## Currently working on
 
-- Working on plotting IPFs
+- Need to test IPF plotting, probably with pole_figures example
 
 ## Short-term todo
 

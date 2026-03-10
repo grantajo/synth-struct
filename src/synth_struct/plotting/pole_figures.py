@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from orix.vector import Miller, Vector3d
 from orix.plot import register_projections
+
 from .orix_utils import create_crystal_map
 
 """
@@ -26,7 +27,7 @@ def plot_pole_figure(
     sample_fraction=None,
     plot_type='scatter',
     marker_size=15,
-    sigma=5,
+    sigma=1,
     **kwargs,
 ):
     """
@@ -39,12 +40,13 @@ def plot_pole_figure(
     - ax: matplotlib Axes object
     - micro: Microstructure object
     - miller_index: tuple - Miller indices (h, k, l) for the pole to plot
-    - crystal_structure: str - 'cubic', 'fcc', 'bcc', 'hexagonal', or 'hcp'
+    - phase_id: ID for Phase being analyzed
+    - crystal_map: Orix CrystalMap holder if already created. 
     - grain_subset: np.ndarray or None - Grain mask. If None, uses all grains
     - show_labels: bool - Whether to show axis labels (X, Y, Z)
     - sample_fraction: float or None - Fraction of orientations to plot (0-1). Useful for large datasets
     - marker_size: float - Size of scatter points
-    **scatter_kwargs: Additional elements passed to ax.scatter (e.g., c='red', alpha=0.5, cmap='viridis')
+    **kwargs: Additional elements passed to orix/matplotlib plotting functions
 
     Returns:
     - matplotlib scatter plot artist
@@ -57,7 +59,7 @@ def plot_pole_figure(
     """
     if crystal_map is None:
         crystal_map = create_crystal_map(
-            micro, grain_subset=grain_subset
+            micro, grain_subset=grain_subset,
         )
 
     if phase_id is None:
@@ -86,10 +88,12 @@ def plot_pole_figure(
         scatter_defaults = {"s": marker_size, "c": "C0", "alpha": 0.5}
         scatter_defaults.update(kwargs)
         pf = ax.scatter(poles, **scatter_defaults)
-    if plot_type == 'density':
+    elif plot_type == 'density':
         density_defaults = {"sigma": sigma, "cmap": "jet"}
         density_defaults.update(kwargs)
         pf = ax.pole_density_function(poles, **density_defaults)
+    else:
+        raise ValueError(f"plot_type must be 'scatter' or 'density', got '{plot_type}'")
 
     if show_labels:
         ax.set_labels("X", "Y", "Z")
