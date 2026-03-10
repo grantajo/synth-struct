@@ -14,6 +14,7 @@ from typing import Dict, Optional
 import numpy as np
 
 from .orientation.phase import Phase
+from .orientation.rotation_converter import euler_to_quat
 
 
 class Microstructure:
@@ -167,6 +168,11 @@ class Microstructure:
     # Texture
     # -------------------------------------------------------------------------
 
+    def get_quaternions(self):
+        if self._quaternion_cache is None:
+            self._quaternion_cache = euler_to_quat(self.orientations)
+        return self._quaternion_cache
+
     def assign_texture(self, texture, grain_ids=None):
         """
         Assigna texture to the microstructure, updating both
@@ -177,10 +183,12 @@ class Microstructure:
             - grain_ids: np.ndarray or None - Grain IDs to assign to.
                 If None, assigns to all grains
         """
+        self._quaternion_cache = None
         phase = texture.phase
 
         existing_id = next(
-            (pid for pid, p in self._phases.items() if p.name == phase.name), None
+            (pid for pid, p in self._phases.items() 
+             if p.name == phase.name and p.point_group == phase.point_group), None
         )
 
         if existing_id is None:
@@ -194,14 +202,13 @@ class Microstructure:
         else:
             self.orientations = texture.orientations
 
-        if phase_id != 0 or self._phase_ids is not None:
-            if self._phase_ids is None:
-                self._phase_ids = np.zeros(self.dimensions, dtype=np.int32)
-            if grain_ids is not None:
-                for gid in grain_ids:
-                    self._phase_ids[self._grain_ids == gid] = phase_id
-            else:
-                self._phase_ids[:] = phase_id
+        if self._phase_ids is None:
+            self._phase_ids = np.zeros(self.dimensions, dtype=np.int32)
+        if grain_ids is not None:
+            mask = np.isin(self._grain_ids, grain_ids)
+            self._phase_ids[mask] = phase_id
+        else:
+            self._phase_ids[:] = phase_id
 
     # -------------------------------------------------------------------------
     # Utilities

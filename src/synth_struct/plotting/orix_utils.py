@@ -62,10 +62,15 @@ def create_crystal_map(micro, grain_subset=None):
 
     masked_grain_ids = grain_ids_flat[mask_flat]
 
-    quaternions_all = euler_to_quat(micro.orientations)
-    quaternions_array = quaternions_all[masked_grain_ids]
+    unique_grain_ids = np.unique(masked_grain_ids)
+    all_grain_quats = micro.get_quaternions()
+    quat_subset = all_grain_quats[unique_grain_ids]
 
-    primary_symmetry = orix_phases[0].point_group
+    grain_id_to_idx = np.zeros(unique_grain_ids.max() + 1, dtype=np.int32)
+    grain_id_to_idx[unique_grain_ids] = np.arange(len(unique_grain_ids))
+    quaternions_array = quat_subset[grain_id_to_idx[masked_grain_ids]]
+
+    primary_symmetry = orix_phases[min(orix_phases.keys())].point_group
     orientations = Orientation(quaternions_array, symmetry=primary_symmetry)
 
     if len(micro.dimensions) == 3:

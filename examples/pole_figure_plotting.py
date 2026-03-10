@@ -48,7 +48,7 @@ micro = Microstructure(
 voronoi_gen = VoronoiGenerator(num_grains=num_grains, seed=42)
 voronoi_gen.generate(micro)
 
-random_texture = RandomTexture()
+random_texture = RandomTexture(phase=default_phase)
 base_texture = random_texture.generate(micro)
 micro.assign_texture(base_texture)
 
@@ -74,6 +74,7 @@ base_pf_fig, base_pf_ax = plt.subplots(
 PFplot.plot_multiple_pole_figures(
     base_pf_ax,
     micro,
+    phase_id=0,
     miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
 )
 base_pf_fig.suptitle("Pole Figures for Random Texture", fontsize=15)
@@ -112,6 +113,7 @@ fig_5deg_pf, ax_5deg_pf = plt.subplots(1, 3, figsize=(15, 5), subplot_kw={"proje
 PFplot.plot_multiple_pole_figures(
     ax_5deg_pf,
     micro_5deg,
+    phase_id=0,
     miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
 )
 fig_5deg_pf.suptitle("Pole Figures with Cube Texture (5° Spread)", fontsize=15)
@@ -150,6 +152,7 @@ fig_10deg_pf, ax_10deg_pf = plt.subplots(1, 3, figsize=(15, 5), subplot_kw={"pro
 PFplot.plot_multiple_pole_figures(
     ax_10deg_pf,
     micro_10deg,
+    phase_id=0,
     miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
 )
 fig_10deg_pf.suptitle("Pole Figures with Cube Texture (10° Spread)", fontsize=15)

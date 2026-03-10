@@ -19,6 +19,7 @@ def plot_pole_figure(
     ax,
     micro,
     miller_index,
+    phase_id=None,
     grain_subset=None,
     show_labels=True,
     sample_fraction=None,
@@ -56,10 +57,14 @@ def plot_pole_figure(
         micro, grain_subset=grain_subset
     )
 
-    phase = crystal_map.phases[1]
+    if phase_id is None:
+        phase_id = next(i for i in crystal_map.phases.ids if i >= 0)
+
+    phase = crystal_map.phases[phase_id]
     miller = Miller(uvw=miller_index, phase=phase)
 
-    orientations = crystal_map.orientations
+    phase_mask = crystal_map.phase_id == phase_id
+    orientations = crystal_map.orientations[phase_mask]
 
     if sample_fraction is not None:
         if not 0 < sample_fraction <= 1:
@@ -89,6 +94,7 @@ def plot_multiple_pole_figures(
     axes,
     micro,
     miller_indices,
+    phase_id=None,
     grain_subset=None,
     show_labels=True,
     sample_fraction=None,
@@ -135,6 +141,7 @@ def plot_multiple_pole_figures(
             ax,
             micro,
             hkl,
+            phase_id=phase_id,
             grain_subset=grain_subset,
             show_labels=show_labels,
             sample_fraction=sample_fraction,
