@@ -241,7 +241,7 @@ def create_standard_pole_figures(
         "hcp": [(0, 0, 1), (1, 0, 0), (1, 1, 0)],  # Need to fix
     }
 
-    # miller_indices = standard_poles[crystal_structure]
+    miller_indices = standard_poles[crystal_structure]
 
     fig = plt.figure(figsize=(15, 5))
     axes = create_pole_figure_axes(fig, 3, layout="row")

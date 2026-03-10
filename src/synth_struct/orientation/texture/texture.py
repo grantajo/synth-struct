@@ -7,7 +7,7 @@ Texture class for instantiating a texture for the TextureGenerators
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict
+from typing import Dict, Optional
 
 import numpy as np
 
@@ -106,7 +106,7 @@ class Texture:
             metadata=self.metadata.copy(),
         )
 
-    def apply_scatter(self, degspread: float, seed: int or None) -> "Texture":
+    def apply_scatter(self, degspread: float, seed: Optional[int]) -> "Texture":
         """
         Apply scatter around each orientation in rotation space.
 

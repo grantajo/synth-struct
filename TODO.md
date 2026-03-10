@@ -3,22 +3,19 @@
 
 ## Just finished
 
-- Added basic ability for plotting pole figures for singly generated microstructure
+- Added ability to plot pole density functions
 
 ## Currently working on
 
-- Working on getting pole figures to work for multiply generated microstructures
-- Working on plotting IPFs and ODFs
+- Working on plotting IPFs
 
 ## Short-term todo
 
 - Continue orix integration
-  - Add in IPFs and ODFs
-    - Add in ability to have the colorkey shown in an IPF map
-      - Add in ability to plot a single given colorkey with ipfcolorkeys.py
-    - Add in ability to do ODF contour plots
-    - Add in plotting examples
-      - Maybe don't need to add since there will be plotting examples in other scripts?
+  - Add in ability to have the colorkey shown in an IPF map
+    - Add in ability to plot a single given colorkey with ipfcolorkeys.py
+  - Add in plotting examples
+    - Maybe don't need to add since there will be plotting examples in other scripts?
 
 ## Things to be added
 
@@ -28,8 +25,7 @@ Can produce orientations outside fundamental zone since it can have multiple pha
 - Add in file output generators
   - HDF5
   - VTK meshing
-- Maybe make a power user import subspace such as rotation conversion
-or symmetry operations?
+- Maybe make a power user import subspace such as rotation conversion or symmetry operations?
 
 ## Long term additions
 
