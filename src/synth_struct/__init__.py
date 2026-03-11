@@ -27,8 +27,8 @@ from .stiffness.hexagonal_stiffness import HexagonalStiffnessGenerator
 from .plotting.gen_plot import Plotter
 from .plotting import (
     ipf_maps,
-    odf_plot,
     pole_figures,
+    inverse_pole_figures,
 )
 from .plotting.ipfcolorkeys import plot_all_colorkeys
 
@@ -56,7 +56,7 @@ __all__ = [
     # Plotting
     "Plotter",
     "ipf_maps",
-    "odf_plot",
     "pole_figures",
+    "inverse_pole_figures",
     "plot_all_colorkeys",
 ]

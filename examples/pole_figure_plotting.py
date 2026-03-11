@@ -20,7 +20,8 @@ from synth_struct import (
     get_grains_in_region,
 )
 from synth_struct import pole_figures as PFplot
-from synth_struct import ipf_maps as IPFplot
+from synth_struct import ipf_maps as IPFmap
+from synth_struct import inverse_pole_figures as IPFplot
 
 project_root = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(project_root))
@@ -59,7 +60,7 @@ print("-" * 60)
 print("Plotting figures for base random texture")
 print("-Plotting IPF maps...")
 base_ipf_fig, base_ipf_ax = plt.subplots(1, 3, figsize=(15, 5))
-IPFplot.plot_multiple_ipf_maps(base_ipf_ax, micro)
+IPFmap.plot_multiple_ipf_maps(base_ipf_ax, micro)
 base_ipf_fig.suptitle("IPF Maps for Random Texture", fontsize=15)
 plt.tight_layout()
 plt.savefig(output_dir / "base_texture_ipf_maps.png", dpi=150, bbox_inches="tight")
@@ -77,7 +78,7 @@ PFplot.plot_multiple_pole_figures(
     phase_id=0,
     miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
     sample_fraction=0.005,
-    plot_type='density',
+    plot_type='scatter',
 )
 base_pf_fig.suptitle("Pole Figures for Random Texture", fontsize=15)
 plt.tight_layout()
@@ -105,7 +106,7 @@ middle_orientations = middle_reg_texture.generate(middle_grains)
 micro_5deg.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 fig_5deg_ipf, ax_5deg_ipf = plt.subplots(1, 3, figsize=(15, 5))
-IPFplot.plot_multiple_ipf_maps(ax_5deg_ipf, micro_5deg)
+IPFmap.plot_multiple_ipf_maps(ax_5deg_ipf, micro_5deg)
 fig_5deg_ipf.suptitle("IPF Maps with Cube Texture (5° Spread)", fontsize=15)
 plt.tight_layout()
 plt.savefig(output_dir / "cube_texture_5deg_ipf_maps.png", dpi=150, bbox_inches="tight")
@@ -119,6 +120,7 @@ PFplot.plot_multiple_pole_figures(
     miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
     sample_fraction=0.005,
     plot_type='density',
+    sigma=5.0,
 )
 fig_5deg_pf.suptitle("Pole Figures with Cube Texture (5° Spread)", fontsize=15)
 plt.tight_layout()
@@ -147,25 +149,26 @@ middle_orientations = middle_reg_texture.generate(middle_grains)
 micro_10deg.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 fig_10deg_ipf, ax_10deg_ipf = plt.subplots(1, 3, figsize=(15, 5))
-IPFplot.plot_multiple_ipf_maps(ax_10deg_ipf, micro_10deg)
+IPFmap.plot_multiple_ipf_maps(ax_10deg_ipf, micro_10deg)
 fig_10deg_ipf.suptitle("IPF Maps with Cube Texture (10° Spread)", fontsize=15)
 plt.tight_layout()
 plt.savefig(output_dir / "cube_texture_10deg_ipf_maps.png", dpi=150, bbox_inches="tight")
 print(f"  Saved IPF maps to 'cube_texture_10deg_ipf_maps.png'")
 
-fig_10deg_pf, ax_10deg_pf = plt.subplots(1, 3, figsize=(15, 5), subplot_kw={"projection": "stereographic"})
-PFplot.plot_multiple_pole_figures(
+fig_10deg_pf = plt.figure(figsize=(15, 5))
+ax_10deg_pf = IPFplot.create_ipf_axes(fig_10deg_pf, 3, layout="row")
+IPFplot.plot_multiple_ipfs(
     ax_10deg_pf,
     micro_10deg,
+    directions=[(1, 0, 0), (0, 1, 0), (0, 0, 1)],
     phase_id=0,
-    miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
     sample_fraction=0.005,
     plot_type='density',
 )
-fig_10deg_pf.suptitle("Pole Figures with Cube Texture (10° Spread)", fontsize=15)
+fig_10deg_pf.suptitle("Inverse Pole Figures with Cube Texture (10° Spread)", fontsize=15)
 plt.tight_layout()
-plt.savefig(output_dir / "cube_texture_10deg_pole_figures.png", dpi=150, bbox_inches="tight")
-print(f"  Saved pole figures to 'cube_texture_10deg_pole_figures.png'")
+plt.savefig(output_dir / "cube_texture_10deg_inverse_pole_figures.png", dpi=150, bbox_inches="tight")
+print(f"  Saved inverse pole figures to 'cube_texture_10deg_inverse_pole_figures.png'")
 
 print()
 print("=" * 60)

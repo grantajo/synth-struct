@@ -20,10 +20,10 @@ register_projections()
 def plot_ipf(
     ax,
     micro,
+    direction,
     phase_id=None,
     grain_subset=None,
     crystal_map=None,
-    direction=None,
     show_labels=True,
     sample_fraction=None,
     plot_type="scatter",
@@ -104,7 +104,14 @@ def plot_ipf(
     # Find out how to add labels to IPFs
 
     x, y, z = direction
-    ax.set_title(rf"IPF $[{x}, {y}, {z}]$")
+    if x == 0 and y == 0 and z == 1:
+        ax.set_title(rf"IPF - ND")
+    elif x == 1 and y == 0 and z == 0:
+        ax.set_title(rf"IPF - RD")
+    elif x == 0 and y == 1 and z == 0:
+        ax.set_title(rf"IPF - TD")
+    else:
+        ax.set_title(rf"IPF $[{x}, {y}, {z}]$")
 
     return ipf
 
@@ -173,9 +180,10 @@ def plot_multiple_ipfs(
 
 
 def create_ipf_axes(
+    micro,
+    phase_id,
     fig,
     n_figures,
-    projection="ipf",
     layout="row",
 ):
     """
@@ -201,9 +209,12 @@ def create_ipf_axes(
     else:
         raise ValueError(f"Layout must be 'row', 'column' or 'grid', got '{layout}'")
 
+    symmetry = micro.phases[phase_id].point_group.symmetry
+
     axes = []
+    subplot_kw = {"projection": "ipf", "symmetry": symmetry}
     for i in range(n_figures):
-        ax = fig.add_subplot(nrows, ncols, i + 1, projection=projection)
+        ax = fig.add_subplot(nrows, ncols, i + 1, **subplot_kw)
         axes.append(ax)
 
     return axes

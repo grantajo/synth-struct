@@ -9,6 +9,7 @@
 ## Currently working on
 
 - Need to test IPF plotting, probably with pole_figures example
+- Need create_ipf_axes to have phase information to create subplots with correct symmetry
 
 ## Short-term todo
 
