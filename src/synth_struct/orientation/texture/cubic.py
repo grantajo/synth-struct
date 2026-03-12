@@ -51,7 +51,10 @@ class CubicTexture(TextureGenerator):
             raise ValueError("scale < 0")
         if phase is None:
             phase = Phase(
-                name="cubic_default", crystal_system="cubic", lattice_params=(1, 1, 1)
+                name="cubic_default", 
+                lattice_params=(1, 1, 1), 
+                space_group=229, 
+                point_group="m-3m", 
             )
         if phase.crystal_system != "cubic":
             raise ValueError(

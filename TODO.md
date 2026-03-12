@@ -3,41 +3,34 @@
 
 ## Just finished
 
-- Added ability to plot pole density functions
-- Added untested IPF plotting functionality
+- Tested IPF Plotting and it works
+- Reworked Phase class to include point group as requirement and interpret crystal system from there
+- Fixed create_ipf_axes to be able to take phase information from Phase object in Microstructure class object
 
 ## Currently working on
-
-- Need to test IPF plotting, probably with pole_figures example
-- Need create_ipf_axes to have phase information to create subplots with correct symmetry
 
 ## Short-term todo
 
 - Continue orix integration
   - Add in ability to have the colorkey shown in an IPF map
     - Add in ability to plot a single given colorkey with ipfcolorkeys.py
-  - Add in plotting examples
-    - Maybe don't need to add since there will be plotting examples in other scripts?
 
 ## Things to be added
 
 - Problem with apply_scatter for textures since adding hexagonal.  
 Can produce orientations outside fundamental zone since it can have multiple phases?
-- Add grain structures with grain size better distribution
 - Add in file output generators
-  - HDF5
   - VTK meshing
+  - HDF5 for DREAM3D visualization? Maybe good, maybe not important
 - Maybe make a power user import subspace such as rotation conversion or symmetry operations?
 
 ## Long term additions
 
-- Figure out an example for texture
-- Add in second phases
+- Add in second phase generation
   - Add in ability to have precipitates
   - Add in porosity
 - Add grain structures with grain size better distribution
 - New lath generator (CA see generators/lath_updated.py)
-- Add HDF5 and VTK writers
 - Add in ability to create a mesh with the microstructure
 - Add in ability to have orientation gradients within grains, subgrains and GNDs
 - See what adding in ODF textures would be like and what would be gained from it

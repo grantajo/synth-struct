@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from orix.vector import Vector3d
 from orix.plot import register_projections
+from orix.quaternion.symmetry import get_point_group
 
 from .orix_utils import create_crystal_map
 
@@ -181,15 +182,16 @@ def plot_multiple_ipfs(
 
 def create_ipf_axes(
     micro,
-    phase_id,
     fig,
     n_figures,
+    phase_id=None,
     layout="row",
 ):
     """
     Creates multiple IPF projection axes for inverse pole figures.
 
     Args:
+    - micro: Microstructure class object
     - fig: matplotlib Figure object
     - n_figures: int - Number of inverse pole figures to create
     - projection: str - Projection type (default: 'ipf')
@@ -209,7 +211,10 @@ def create_ipf_axes(
     else:
         raise ValueError(f"Layout must be 'row', 'column' or 'grid', got '{layout}'")
 
-    symmetry = micro.phases[phase_id].point_group.symmetry
+    if phase_id is None:
+        phase_id = next(iter(micro.phases.keys()))
+
+    symmetry = get_point_group(micro.phases[phase_id].space_group)
 
     axes = []
     subplot_kw = {"projection": "ipf", "symmetry": symmetry}

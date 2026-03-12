@@ -156,7 +156,12 @@ plt.savefig(output_dir / "cube_texture_10deg_ipf_maps.png", dpi=150, bbox_inches
 print(f"  Saved IPF maps to 'cube_texture_10deg_ipf_maps.png'")
 
 fig_10deg_pf = plt.figure(figsize=(15, 5))
-ax_10deg_pf = IPFplot.create_ipf_axes(fig_10deg_pf, 3, layout="row")
+ax_10deg_pf = IPFplot.create_ipf_axes(
+    micro_10deg, 
+    fig_10deg_pf, 
+    3, 
+    layout="row"
+)
 IPFplot.plot_multiple_ipfs(
     ax_10deg_pf,
     micro_10deg,
@@ -174,4 +179,4 @@ print()
 print("=" * 60)
 print(f"All figures saved to: {output_dir}")
 
-plt.show()
+# plt.show()

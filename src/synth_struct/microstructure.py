@@ -40,6 +40,8 @@ class Microstructure:
         self._grain_ids = np.zeros(
             self.dimensions, dtype=np.int32
         )  # 0 = background (e.g. unindexed EBSD)
+        
+        self._quaternion_cache = None
 
         self.fields = {}
         self.metadata = {}
@@ -190,7 +192,7 @@ class Microstructure:
             (
                 pid
                 for pid, p in self._phases.items()
-                if p.name == phase.name and p.point_group == phase.point_group
+                if p.name == phase.name and p.space_group == phase.space_group
             ),
             None,
         )
@@ -241,6 +243,7 @@ class Microstructure:
             phase=self.phases,
         )
         new_micro.grain_ids = self.grain_ids.copy()
+        new_micro._quaternion_cache = None
         new_micro.fields = {k: v.copy() for k, v in self.fields.items()}
         new_micro.metadata = copy.deepcopy(self.metadata)
         return new_micro

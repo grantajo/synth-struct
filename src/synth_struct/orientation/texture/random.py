@@ -27,7 +27,10 @@ class RandomTexture(TextureGenerator):
     def __init__(self, phase=None, seed=None):
         if phase is None:
             phase = Phase(
-                name="default", crystal_system="cubic", lattice_params=(1, 1, 1)
+                name="default", 
+                lattice_params=(1, 1, 1),
+                space_group=229,
+                point_group="m-3m",
             )
         if not isinstance(phase, Phase):
             raise TypeError(f"Expected Phase, got {type(phase)}")

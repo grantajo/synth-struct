@@ -12,79 +12,12 @@ from typing import Optional
 
 import numpy as np
 
-VALID_CRYSTAL_SYSTEMS = (
-    "cubic",
-    "hexagonal",
-    "tetragonal",
-    "orthorhombic",
-    "trigonal",
-    "monoclinic",
-    "triclinic",
-)
+from .phase_constants import KNOWN_PHASES, ALIASES, VALID_POINT_GROUPS
 
-KNOWN_PHASES = {
-    "default_cubic": {
-        "crystal_system": "cubic",
-        "lattice_params": (1, 1, 1),
-        "space_group": 225,
-    },
-    "default_hexagonal": {
-        "crystal_system": "hexagonal",
-        "lattice_params": (1, 1, 1.33),
-        "space_group": 194,
-    },
-    "Ti-alpha": {
-        "crystal_system": "hexagonal",
-        "lattice_params": (2.95, 2.95, 4.68),
-        "space_group": 194,
-    },
-    "Ti-beta": {
-        "crystal_system": "cubic",
-        "lattice_params": (3.28, 3.28, 3.28),
-        "space_group": 229,
-    },
-    "Fe-bcc": {
-        "crystal_system": "cubic",
-        "lattice_params": (2.87, 2.87, 2.87),
-        "space_group": 229,
-    },
-    "Fe-fcc": {
-        "crystal_system": "cubic",
-        "lattice_params": (3.64, 3.64, 3.64),
-        "space_group": 225,
-    },
-    "Al": {
-        "crystal_system": "cubic",
-        "lattice_params": (4.05, 4.05, 4.05),
-        "space_group": 225,
-    },
-    "Cu": {
-        "crystal_system": "cubic",
-        "lattice_params": (3.61, 3.61, 3.61),
-        "space_group": 225,
-    },
-    "Mg": {
-        "crystal_system": "hexagonal",
-        "lattice_params": (3.21, 3.21, 5.21),
-        "space_group": 194,
-    },
-    "Ni": {
-        "crystal_system": "cubic",
-        "lattice_params": (3.52, 3.52, 3.52),
-        "space_group": 225,
-    },
-}
 
-CRYSTAL_SYSTEM_POINT_GROUPS = {
-    "cubic": "m-3m",
-    "hexagonal": "6/mmm",
-    "tetragonal": "4/mmm",
-    "orthorhombic": "mmm",
-    "trigonal": "3-m",
-    "monoclinic": "2/m",
-    "triclinic": "-1",
-}
-
+def available_presets() -> list[str]:
+    """Return list of available phase presets and aliases."""
+    return list(KNOWN_PHASES.keys()) + list(ALIASES.keys())
 
 @dataclass
 class Phase:
@@ -100,8 +33,8 @@ class Phase:
     """
 
     name: str
-    crystal_system: str
     lattice_params: tuple
+    point_group: str
     space_group: Optional[int] = None
     metadata: dict = field(default_factory=dict)
 
@@ -109,12 +42,6 @@ class Phase:
         self._validate()
 
     def _validate(self):
-        if self.crystal_system not in VALID_CRYSTAL_SYSTEMS:
-            raise ValueError(
-                f"Unknown crystal system '{self.crystal_system}'. "
-                f"Expected one of {VALID_CRYSTAL_SYSTEMS}"
-            )
-
         if len(self.lattice_params) != 3:
             raise ValueError(
                 f"lattice_params must be (a, b, c), got {self.lattice_params}"
@@ -125,29 +52,17 @@ class Phase:
                 f"All lattice parameters must be positive, got {self.lattice_params}"
             )
 
-        if self.crystal_system == "cubic":
-            a, b, c = self.lattice_params
-            if not (np.isclose(a, b) and np.isclose(b, c)):
-                raise ValueError(
-                    f"Cubic phase requires a == b == c, got {self.lattice_params}"
-                )
-
-        if self.crystal_system == "hexagonal":
-            a, b, c = self.lattice_params
-            if not np.isclose(a, b):
-                raise ValueError(
-                    f"Hexagonal phase requires a == b, got {self.lattice_params}"
-                )
+        if self.point_group not in VALID_POINT_GROUPS:
+            raise ValueError(
+                f"Unknown point group '{self.point_group}'. "
+                f"Expected one of {VALID_POINT_GROUPS}"
+            )
 
         if self.space_group is not None:
             if not (1 <= self.space_group <= 230):
                 raise ValueError(
                     f"Space group must be between 1 and 230, got {self.space_group}"
                 )
-
-    @property
-    def point_group(self) -> str:
-        return CRYSTAL_SYSTEM_POINT_GROUPS[self.crystal_system]
 
     @property
     def a(self) -> float:
@@ -161,6 +76,26 @@ class Phase:
     def c(self) -> float:
         return self.lattice_params[2]
 
+    @property
+    def crystal_system(self) -> str:
+        """Derive crystal system from point group."""
+        cubic = {"m-3m", "m-3", "432", "-43m", "23"}
+        hexagonal = {"6/mmm", "6mm", "-6m2", "622", "6/m", "-6", "6"}
+        trigonal = {"3m", "-3m", "32", "-3", "3"}
+        tetragonal = {"4/mmm", "4mm", "-42m", "422", "4/m", "-4", "4"}
+        orthorhombic = {"mmm", "mm2", "222"}
+        monoclinic = {"2/m", "m", "2"}
+        triclinic = {"1", "-1"}
+
+        if self.point_group in cubic: return "cubic"
+        if self.point_group in hexagonal: return "hexagonal"
+        if self.point_group in trigonal: return "trigonal"
+        if self.point_group in tetragonal: return "tetragonal"
+        if self.point_group in orthorhombic: return "orthorhombic"
+        if self.point_group in monoclinic: return "monoclinic"
+        if self.point_group in triclinic: return "triclinic"
+        raise ValueError(f"Cannot derive crystal system from point group '{self.point_group}'")
+
     @classmethod
     def from_preset(cls, name: str) -> "Phase":
         """
@@ -169,6 +104,17 @@ class Phase:
         Usage:
             phase = Phase.from_preset("Fe-fcc")
         """
+
+        resolved = ALIASES.get(name, name)
+
+        if resolved not in KNOWN_PHASES:
+            available = list(KNOWN_PHASES.keys()) + list(ALIASES.keys())
+            raise ValueError(
+                f"Unknown preset '{name}'. "
+                f"Available presets: {available}"
+            )
+
+
         if name not in KNOWN_PHASES:
             raise ValueError(
                 f"Unknown preset '{name}'. "
@@ -177,16 +123,17 @@ class Phase:
 
         data = KNOWN_PHASES[name]
         return cls(
-            name=name,
-            crystal_system=data["crystal_system"],
+            name=resolved,
             lattice_params=data["lattice_params"],
             space_group=data["space_group"],
+            point_group=data["point_group"],
         )
 
     def __repr__(self):
         return (
             f"Phase(name='{self.name}', "
             f"crystal_system='{self.crystal_system}', "
+            f"point_group='{self.point_group}' "
             f"lattice_params={self.lattice_params}, "
-            f"space_group={self.space_group})"
+            f"space_group={self.space_group}), "
         )

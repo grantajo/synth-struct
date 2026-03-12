@@ -42,8 +42,9 @@ class HexagonalTexture(TextureGenerator):
         if phase is None:
             phase = Phase(
                 name="hexagonal_default",
-                crystal_system="hexagonal",
                 lattice_params=(1, 1, 1.633),
+                space_group=194,
+                point_group="6/mmm",
             )
         if phase.crystal_system != "hexagonal":
             raise ValueError(
