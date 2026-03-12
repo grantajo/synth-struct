@@ -10,7 +10,6 @@ lattice parameters, and associated crystallographic information.
 from dataclasses import dataclass, field
 from typing import Optional
 
-import numpy as np
 
 from .phase_constants import KNOWN_PHASES, ALIASES, VALID_POINT_GROUPS
 

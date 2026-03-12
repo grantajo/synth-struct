@@ -1,7 +1,6 @@
 # synth-struct/src/synth_struct/plotting/pole_figures.py
 
 import numpy as np
-import matplotlib.pyplot as plt
 from orix.vector import Vector3d
 from orix.plot import register_projections
 from orix.quaternion.symmetry import get_point_group
