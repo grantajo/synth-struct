@@ -88,7 +88,7 @@ middle_reg_texture = CubicTexture(texture, degspread=2.0)
 middle_orientations = middle_reg_texture.generate(middle_grains)
 
 # Reassign textures for the grains in the box region
-cube_micro.orientations[middle_grains] = middle_orientations.orientations
+cube_micro.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 # Plot
 cube_fig, cube_axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -116,7 +116,7 @@ middle_reg_texture = CubicTexture(texture, degspread=2.0)
 middle_orientations = middle_reg_texture.generate(middle_grains)
 
 # Reassign textures for the grains in the middle
-goss_micro.orientations[middle_grains] = middle_orientations.orientations
+goss_micro.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 # Plot
 goss_fig, goss_axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -144,7 +144,7 @@ middle_reg_texture = CubicTexture(texture, degspread=2.0)
 middle_orientations = middle_reg_texture.generate(middle_grains)
 
 # Reassign textures for the grains in the middle
-brass_micro.orientations[middle_grains] = middle_orientations.orientations
+brass_micro.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 # Plot
 brass_fig, brass_axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -172,7 +172,7 @@ middle_reg_texture = CubicTexture(texture, degspread=2.0)
 middle_orientations = middle_reg_texture.generate(middle_grains)
 
 # Reassign textures for the grains in the middle
-cu_micro.orientations[middle_grains] = middle_orientations.orientations
+cu_micro.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 # Plot
 cu_fig, cu_axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -200,7 +200,7 @@ middle_reg_texture = CubicTexture(texture, degspread=2.0)
 middle_orientations = middle_reg_texture.generate(middle_grains)
 
 # Reassign textures for the grains in the middle
-s_micro.orientations[middle_grains] = middle_orientations.orientations
+s_micro.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 # Plot
 s_fig, s_axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -228,7 +228,7 @@ middle_reg_texture = CubicTexture(texture, degspread=2.0)
 middle_orientations = middle_reg_texture.generate(middle_grains)
 
 # Reassign textures for the grains in the middle
-p_micro.orientations[middle_grains] = middle_orientations.orientations
+p_micro.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 # Plot
 p_fig, p_axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -256,7 +256,7 @@ middle_reg_texture = CubicTexture(texture, degspread=2.0)
 middle_orientations = middle_reg_texture.generate(middle_grains)
 
 # Reassign textures for the grains in the middle
-rot_cube_micro.orientations[middle_grains] = middle_orientations.orientations
+rot_cube_micro.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 # Plot
 rot_cube_fig, rot_cube_axes = plt.subplots(1, 3, figsize=(15, 5))
@@ -284,7 +284,7 @@ middle_reg_texture = CubicTexture(texture, degspread=2.0)
 middle_orientations = middle_reg_texture.generate(middle_grains)
 
 # Reassign textures for the grains in the middle
-rot_goss_micro.orientations[middle_grains] = middle_orientations.orientations
+rot_goss_micro.assign_texture(middle_orientations, grain_ids=middle_grains)
 
 # Plot
 rot_goss_fig, rot_goss_axes = plt.subplots(1, 3, figsize=(15, 5))

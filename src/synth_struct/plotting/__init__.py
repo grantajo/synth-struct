@@ -35,10 +35,7 @@ from .pole_figures import (
     create_pole_figure_axes,
     create_standard_pole_figures,
 )
-from .inverse_pole_figures import (
-    plot_ipf,
-    plot_multiple_ipfs
-)
+from .inverse_pole_figures import plot_ipf, plot_multiple_ipfs
 
 __all__ = [
     "shuffle_display_grain_ids",

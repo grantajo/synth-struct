@@ -19,6 +19,7 @@ def available_presets() -> list[str]:
     """Return list of available phase presets and aliases."""
     return list(KNOWN_PHASES.keys()) + list(ALIASES.keys())
 
+
 @dataclass
 class Phase:
     """
@@ -87,14 +88,23 @@ class Phase:
         monoclinic = {"2/m", "m", "2"}
         triclinic = {"1", "-1"}
 
-        if self.point_group in cubic: return "cubic"
-        if self.point_group in hexagonal: return "hexagonal"
-        if self.point_group in trigonal: return "trigonal"
-        if self.point_group in tetragonal: return "tetragonal"
-        if self.point_group in orthorhombic: return "orthorhombic"
-        if self.point_group in monoclinic: return "monoclinic"
-        if self.point_group in triclinic: return "triclinic"
-        raise ValueError(f"Cannot derive crystal system from point group '{self.point_group}'")
+        if self.point_group in cubic:
+            return "cubic"
+        if self.point_group in hexagonal:
+            return "hexagonal"
+        if self.point_group in trigonal:
+            return "trigonal"
+        if self.point_group in tetragonal:
+            return "tetragonal"
+        if self.point_group in orthorhombic:
+            return "orthorhombic"
+        if self.point_group in monoclinic:
+            return "monoclinic"
+        if self.point_group in triclinic:
+            return "triclinic"
+        raise ValueError(
+            f"Cannot derive crystal system from point group '{self.point_group}'"
+        )
 
     @classmethod
     def from_preset(cls, name: str) -> "Phase":
@@ -110,10 +120,8 @@ class Phase:
         if resolved not in KNOWN_PHASES:
             available = list(KNOWN_PHASES.keys()) + list(ALIASES.keys())
             raise ValueError(
-                f"Unknown preset '{name}'. "
-                f"Available presets: {available}"
+                f"Unknown preset '{name}'. " f"Available presets: {available}"
             )
-
 
         if name not in KNOWN_PHASES:
             raise ValueError(

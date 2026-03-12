@@ -111,7 +111,7 @@ KNOWN_PHASES = {
         "lattice_params": (3.16, 3.16, 3.16),
         "space_group": 229,
         "point_group": "m-3m",
-    }
+    },
 }
 
 ALIASES = {

@@ -40,7 +40,7 @@ class Microstructure:
         self._grain_ids = np.zeros(
             self.dimensions, dtype=np.int32
         )  # 0 = background (e.g. unindexed EBSD)
-        
+
         self._quaternion_cache = None
 
         self.fields = {}
@@ -204,7 +204,9 @@ class Microstructure:
             phase_id = existing_id
 
         if grain_ids is not None:
-            self.orientations[grain_ids] = texture.orientations
+            grain_ids = np.asarray(grain_ids)
+            for i, gid in enumerate(grain_ids):
+                self.orientations[gid] = texture.orientations[i]
         else:
             self.orientations = texture.orientations
 

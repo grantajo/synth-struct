@@ -3,11 +3,11 @@
 
 ## Just finished
 
-- Tested IPF Plotting and it works
-- Reworked Phase class to include point group as requirement and interpret crystal system from there
-- Fixed create_ipf_axes to be able to take phase information from Phase object in Microstructure class object
+- There was actually no problem with apply_scatter, went on a wild goose chase to realize that it was totally fine.
 
 ## Currently working on
+
+
 
 ## Short-term todo
 
@@ -17,8 +17,6 @@
 
 ## Things to be added
 
-- Problem with apply_scatter for textures since adding hexagonal.  
-Can produce orientations outside fundamental zone since it can have multiple phases?
 - Add in file output generators
   - VTK meshing
   - HDF5 for DREAM3D visualization? Maybe good, maybe not important
@@ -26,6 +24,8 @@ Can produce orientations outside fundamental zone since it can have multiple pha
 
 ## Long term additions
 
+- Add in GPU CUDA implementations for anisotropic voronoi assignment and new lath generator when done
+  - Won't be able to use Eigen implementation
 - Add in second phase generation
   - Add in ability to have precipitates
   - Add in porosity

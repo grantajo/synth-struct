@@ -106,11 +106,11 @@ def plot_ipf(
 
     x, y, z = direction
     if x == 0 and y == 0 and z == 1:
-        ax.set_title(rf"IPF - ND")
+        ax.set_title("IPF - ND")
     elif x == 1 and y == 0 and z == 0:
-        ax.set_title(rf"IPF - RD")
+        ax.set_title("IPF - RD")
     elif x == 0 and y == 1 and z == 0:
-        ax.set_title(rf"IPF - TD")
+        ax.set_title("IPF - TD")
     else:
         ax.set_title(rf"IPF $[{x}, {y}, {z}]$")
 
