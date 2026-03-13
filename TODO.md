@@ -9,7 +9,7 @@
 ## Currently working on
 
 - Validation of file output
-- Example for file output
+- Examples for file output (isotropic and anisotropic microstructures)
 
 ## Short-term todo
 
@@ -107,7 +107,6 @@ synth_struct/
     ├── test_texture_cubic.py  
     ├── test_texture_hexagonal.py  
     └── test_voronoi.py  
-
 
 ## Output files
 

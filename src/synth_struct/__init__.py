@@ -32,6 +32,13 @@ from .plotting import (
 )
 from .plotting.ipfcolorkeys import plot_all_colorkeys
 
+from .io.file_output import (
+    export_microstructure, 
+    SolverFormat,
+    MeshPath,
+    ElementType,
+)
+
 __all__ = [
     # Core
     "Microstructure",
@@ -59,4 +66,9 @@ __all__ = [
     "pole_figures",
     "inverse_pole_figures",
     "plot_all_colorkeys",
+    # IO
+    "export_microstructure",
+    "SolverFormat",
+    "MeshPath",
+    "ElementType",
 ]

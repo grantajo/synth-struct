@@ -682,10 +682,23 @@ def _write_custom_hdf5(
         mesh_grp = f.create_group("mesh")
         mesh_grp.create_dataset("nodes", data=mesh.points.astype(np.float64))
 
-        cells = mesh.cells_dict
-        for cell_type, connectivity in cells.items():
+        if hasattr(mesh, "cells_dict"):
+            cells = mesh.cells_dict
+            for cell_type, connectivity in cells.items():
+                mesh_grp.create_dataset(
+                    f"elements_{cell_type}", data=connectivity.astype(np.int32)
+                )
+        else:
+            # ImageData - store grid parameters instead of connectivity
+            # Connectivity is implicit from dimensions and spacing
             mesh_grp.create_dataset(
-                f"elements_{cell_type}", data=connectivity.astype(np.int32)
+                "dimensions", data=np.array(mesh.dimensions, dtype=np.int32)
+            )
+            mesh_grp.create_dataset(
+                "spacing", data=np.array(mesh.spacing, dtype=np.float64)
+            )
+            mesh_grp.create_dataset(
+                "origin", data=np.array(mesh.origin, dtype=np.float64)
             )
 
         if "grain_id" in mesh.cell_data:
