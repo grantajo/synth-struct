@@ -7,7 +7,8 @@
 
 ## Currently working on
 
-
+- File generators
+  VTK and meshing
 
 ## Short-term todo
 
@@ -108,3 +109,22 @@ synth_struct/
     ├── test_texture_cubic.py  
     ├── test_texture_hexagonal.py  
     └── test_voronoi.py  
+
+
+## Output files
+
+Microstructure + Generator
+        │
+        ├── Conforming path  ──────────────────────────────────────────┐
+        │   Analytic surfaces (.vtp)                                   │
+        │       └── Gmsh API                                           │
+        │               ├── Tet10 .msh  → FEniCS, deal.ii              │
+        │               ├── Tet10 .inp  → Abaqus Standard (elasticity) │
+        │               └── Tet10 .inp  → Abaqus CPFEM                 │
+        │                                                              │
+        └── Regular grid path ─────────────────────────────────────────┘
+            Voxel grain_ids
+                ├── Hex8 .vti        → DAMASK spectral
+                ├── Hex8 .hdf5       → DAMASK native
+                ├── Hex8 .inp        → Abaqus Explicit (wave)
+                └── Hex8 custom .h5  → your own CPFE solver
