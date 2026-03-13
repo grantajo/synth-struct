@@ -32,4 +32,7 @@ __all__ = [
     "rotation_z_to_y",
     "Phase",
     "available_presets",
+    "KNOWN_PHASES",
+    "VALID_POINT_GROUPS",
+    "ALIASES",
 ]

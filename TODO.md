@@ -3,12 +3,13 @@
 
 ## Just finished
 
-- There was actually no problem with apply_scatter, went on a wild goose chase to realize that it was totally fine.
+- File generator
+  - DAMASK, ABAQUS, FENICS, VTK
 
 ## Currently working on
 
-- File generators
-  VTK and meshing
+- Validation of file output
+- Example for file output
 
 ## Short-term todo
 
@@ -18,9 +19,6 @@
 
 ## Things to be added
 
-- Add in file output generators
-  - VTK meshing
-  - HDF5 for DREAM3D visualization? Maybe good, maybe not important
 - Maybe make a power user import subspace such as rotation conversion or symmetry operations?
 
 ## Long term additions
