@@ -4,10 +4,9 @@
 File outputs
 """
 
-from .file_output import MeshPath, SolverFormat, ElementType, export_microstructure
+from .file_output import SolverFormat, ElementType, export_microstructure
 
 __all__ = [
-    "MeshPath",
     "SolverFormat",
     "ElementType",
     "export_microstructure",

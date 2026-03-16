@@ -33,9 +33,8 @@ from .plotting import (
 from .plotting.ipfcolorkeys import plot_all_colorkeys
 
 from .io.file_output import (
-    export_microstructure, 
+    export_microstructure,
     SolverFormat,
-    MeshPath,
     ElementType,
 )
 
@@ -69,6 +68,5 @@ __all__ = [
     # IO
     "export_microstructure",
     "SolverFormat",
-    "MeshPath",
     "ElementType",
 ]

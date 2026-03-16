@@ -5,30 +5,32 @@ This file has functions for outputting meshes and other files
 that are useful for mechanical simulations.
 """
 
-import os
 from enum import Enum
 from pathlib import Path
 import warnings
-import tempfile
 
 import numpy as np
-from scipy.spatial import cKDTree, Voronoi, ConvexHull
+
+# from scipy.spatial import cKDTree, Voronoi, ConvexHull
 import pyvista as pv
-import gmsh
+
+# import gmsh
 import h5py
 
-
+"""
 class MeshPath(Enum):
-    """
+    "
     High-level mesh strategy.
 
     CONFORMING: Analytical grain boundaries -> Gmsh -> conformal Tet mesh
+        Getting rid of this
 
     REGULAR_GRID: Voxel grain_ids -> structured hex8 mesh
-    """
+    "
 
-    CONFORMING = "conforming"
+    # CONFORMING = "conforming"
     REGULAR_GRID = "regular_grid"
+"""
 
 
 class SolverFormat(Enum):
@@ -38,19 +40,22 @@ class SolverFormat(Enum):
     DAMASK_VTI      : ImageData .vti — DAMASK spectral solver
     DAMASK_HDF5     : Native DAMASK .hdf5 GeomFile
     ABAQUS_STANDARD : .inp — Abaqus Standard (elasticity, CPFEM)
+        Note: removed from implementation
     ABAQUS_EXPLICIT : .inp — Abaqus Explicit (wave propagation)
     FENICS          : .msh (Gmsh format v4) — FEniCS / DOLFINx
+        Note: removed from implementation
     CUSTOM_HDF5     : .h5 — your own CPFE solver
     VTK_SURFACE     : .vtp — intermediate surface, pass to mesher manually
+        Note: removed from implementation
     """
 
     DAMASK_VTI = "damask_vti"
     DAMASK_HDF5 = "damask_hdf5"
-    ABAQUS_STANDARD = "abaqus_standard"
+    # ABAQUS_STANDARD = "abaqus_standard"
     ABAQUS_EXPLICIT = "abaqus_explicit"
-    FENICS = "fenics"
+    # FENICS = "fenics"
     CUSTOM_HDF5 = "custom_hdf5"
-    VTK_SURFACE = "vtk_surface"
+    # VTK_SURFACE = "vtk_surface"
 
 
 class ElementType(Enum):
@@ -62,29 +67,31 @@ class ElementType(Enum):
     HEX8: Linear hexahedron — DAMASK spectral, wave problems - Less numerical dispersion than Tet for wave propagation
     """
 
-    TET4 = "tet4"
-    TET10 = "tet10"
+    # TET4 = "tet4"
+    # TET10 = "tet10"
     HEX8 = "hex8"
 
 
+"""
 _SOLVER_DEFAULTS = {
     SolverFormat.DAMASK_VTI: (MeshPath.REGULAR_GRID, ElementType.HEX8),
     SolverFormat.DAMASK_HDF5: (MeshPath.REGULAR_GRID, ElementType.HEX8),
-    SolverFormat.ABAQUS_STANDARD: (MeshPath.CONFORMING, ElementType.TET10),
+    # SolverFormat.ABAQUS_STANDARD: (MeshPath.CONFORMING, ElementType.TET10),
     SolverFormat.ABAQUS_EXPLICIT: (MeshPath.REGULAR_GRID, ElementType.HEX8),
-    SolverFormat.FENICS: (MeshPath.CONFORMING, ElementType.TET10),
+    # SolverFormat.FENICS: (MeshPath.CONFORMING, ElementType.TET10),
     SolverFormat.CUSTOM_HDF5: (MeshPath.REGULAR_GRID, ElementType.HEX8),
-    SolverFormat.VTK_SURFACE: (MeshPath.CONFORMING, None),
+    # SolverFormat.VTK_SURFACE: (MeshPath.CONFORMING, None),
 }
+"""
 
 _FORMAT_EXTENSIONS = {
     SolverFormat.DAMASK_VTI: ".vti",
     SolverFormat.DAMASK_HDF5: ".hdf5",
-    SolverFormat.ABAQUS_STANDARD: ".inp",
+    # SolverFormat.ABAQUS_STANDARD: ".inp",
     SolverFormat.ABAQUS_EXPLICIT: ".inp",
-    SolverFormat.FENICS: ".msh",
+    # SolverFormat.FENICS: ".msh",
     SolverFormat.CUSTOM_HDF5: ".h5",
-    SolverFormat.VTK_SURFACE: ".vtp",
+    # SolverFormat.VTK_SURFACE: ".vtp",
 }
 
 # -----------------------------------------------------------------------------
@@ -94,17 +101,11 @@ _FORMAT_EXTENSIONS = {
 
 def export_microstructure(
     micro,
-    generator,
     filepath,
     solver_format,
-    element_type=None,  # None = use solver default
-    mesh_path=None,  # None = use solver default
-    k_neighbors=24,
     # Wave propagation
     target_frequency_hz=None,  # if set, validates element size
     wave_velocity=6000.0,  # m/s - default steel longitudinal
-    # Periodic BCs
-    periodic_bc=False,
     # Validation
     validate=False,
     sample_fraction=0.01,
@@ -114,27 +115,17 @@ def export_microstructure(
 
     Args:
         microstructure      : Microstructure instance
-        generator           : VoronoiGenerator or AnisotropicVoronoiGenerator
         filepath            : str - output path (extension auto-corrected)
         solver_format       : SolverFormat enum
-        element_type        : ElementType or None (uses solver default)
-        mesh_path           : MeshPath or None (uses solver default)
-        k_neighbours        : int - neighbourhood size for analytic Voronoi
         target_frequency_hz : float or None - NDE frequency for element
                               size validation
         wave_velocity       : float - wave speed in m/s for λ calculation
-        periodic_bc         : bool - generate periodic node sets
         validate            : bool - validate mesh against voxel data
         sample_fraction     : float - voxel sample fraction for validation
 
     Returns:
         Exported mesh object (type depends on solver_format)
     """
-    # --- Resolve defaults ---
-    default_path, default_elem = _SOLVER_DEFAULTS[solver_format]
-    mesh_path = mesh_path or default_path
-    element_type = element_type or default_elem
-
     # --- Auto-correct extension ---
     filepath = str(Path(filepath).with_suffix(_FORMAT_EXTENSIONS[solver_format]))
 
@@ -147,26 +138,26 @@ def export_microstructure(
         )
 
     # --- Dispatch to mesh path ---
-    if mesh_path == MeshPath.REGULAR_GRID:
-        mesh = _build_regular_grid(micro)
+    mesh = _build_regular_grid(micro)
 
+    """
     else:
         mesh = _build_conforming_mesh(
             micro,
             generator,
             k_neighbors,
             element_type,
-            periodic_bc,
             solver_format,
             filepath,
+            validate=validate,
         )
+    """
 
     _write_format(
         mesh,
         micro,
         filepath,
         solver_format,
-        periodic_bc,
     )
 
     if validate:
@@ -215,6 +206,8 @@ def _build_regular_grid(micro):
     return grid
 
 
+"""
+# Deprecated since it did not work.
 def _build_conforming_mesh(
     micro,
     generator,
@@ -223,17 +216,33 @@ def _build_conforming_mesh(
     periodic_bc,
     solver_format,
     filepath,
+    validate=None,
 ):
-    """
+    "
     Analytic grain surfaces -> Gmsh -> conforming Tet mesh.
     Returns a PyVista UnstructuredGrid.
-    """
+    "
 
     surface_meshes = _build_grain_surface_meshes(
         micro,
         generator,
         k_neighbors,
     )
+
+    if solver_format == SolverFormat.VTK_SURFACE:
+        meshes = [mesh for _, mesh in surface_meshes]
+        gids = [gid for gid,_ in surface_meshes]
+
+        for i, (mesh, gid) in enumerate(zip(meshes, gids)):
+            mesh.cell_data["grain_id"] = np.full(mesh.n_cells, gid, dtype=np.int32)
+
+        if validate:
+            _validate_surface_mesh(surface_meshes, generator.seeds)
+
+        combined = meshes[0].merge(meshes[1:])
+        combined = combined.extract_surface(algorithm='dataset_surface')
+        combined.save(filepath)
+        return combined
 
     return _gmsh_conforming_tet(
         surface_meshes,
@@ -244,16 +253,15 @@ def _build_conforming_mesh(
         filepath,
     )
 
-
 def _build_grain_surface_meshes(
     micro,
     generator,
     k_neighbors,
 ):
-    """
+    "
     Build per-grain triangle surface meshes from analytical Voronoi.
     Returns list of (grain_id, pv.PolyData) tuples.
-    """
+    "
 
     seeds = generator.seeds.astype(np.float64)
     scale_factors = generator.scale_factors.astype(np.float64)
@@ -263,7 +271,9 @@ def _build_grain_surface_meshes(
     bounds = dims * res
     is_3d = len(dims) == 3
     n_grains = len(seeds)
-    tree = cKDTree(seeds)
+    mean_scale = scale_factors.mean(axis=0)
+    seeds_scaled = seeds / mean_scale
+    tree = cKDTree(seeds_scaled)
     meshes = []
 
     for gid in range(1, n_grains + 1):
@@ -271,13 +281,14 @@ def _build_grain_surface_meshes(
         R = rotations[g]
         scale = scale_factors[g]
         k = min(k_neighbors + 1, n_grains)
-        _, nbr = tree.query(seeds[g], k=k)
+        _, nbr = tree.query(seeds_scaled[g], k=k)
 
         local_seeds = seeds[nbr]
         shifted = local_seeds - seeds[g]
         rotated = (R.T @ shifted.T).T
         scaled = rotated / scale
-        mirrored = _mirror_seeds_local(scaled, k_neighbors)
+        aspect_ratio = float(np.max(scale) / np.min(scale))
+        mirrored = _mirror_seeds_local(scaled, k_neighbors, aspect_ratio)
 
         try:
             vor = Voronoi(mirrored)
@@ -294,20 +305,34 @@ def _build_grain_surface_meshes(
                 is_3d,
             )
 
+            if gid == 1:
+                print(f"  Seed: {seeds[g]}")
+                print(f"  verts_physical min: {verts_physical.min(axis=0)}")
+                print(f"  verts_physical max: {verts_physical.max(axis=0)}")
+                print(f"  bounds: {bounds}")
+
             if mesh is not None:
                 meshes.append((gid, mesh))
 
         except Exception:
             continue
 
-    return meshes
+    if not meshes:
+        raise RuntimeError(
+            "No grain surfaces could be extracted." 
+            "Try increasing k_neighbors. "
+        )
+            
+    print(f"  Built {len(meshes)} / {n_grains} grain surfaces. ")
 
+    return meshes
 
 def _mirror_seeds_local(
     seeds_local,
     k_neighbors,
+    aspect_ratio,
 ):
-    """
+    "
     Mirror seeds in local metric space across domain faces to
     ensure boundary grain cells are closed.
 
@@ -316,10 +341,10 @@ def _mirror_seeds_local(
     Args:
         seeds_local: (k, D) array of seeds in grain's local metric space
         k_neighbors: int - neighborhood size, used as a sanity reference
-    """
+    "
     mirrored = [seeds_local]
     n_dim = seeds_local.shape[1]
-    extent = np.max(np.abs(seeds_local), axis=0) * 2 + 1
+    extent = np.max(np.abs(seeds_local), axis=0) * 2 * max(1.0, aspect_ratio) + 1
 
     for ax in range(n_dim):
         low = seeds_local.copy()
@@ -336,7 +361,7 @@ def _convex_region_to_clipped_mesh(
     bounds,
     is_3d,
 ):
-    """
+    "
     Build a convex hull surface mesh from Voronoi region vertices,
     then clip to the physical domain box.
 
@@ -344,7 +369,7 @@ def _convex_region_to_clipped_mesh(
         verts: (V, D) array of vertices in physical space
         bounds: (D,) array of domain extents in physical units
         id_3d: bool
-    """
+    "
     try:
         if len(verts) < (4 if is_3d else 3):
             return None
@@ -357,7 +382,7 @@ def _convex_region_to_clipped_mesh(
         mesh = pv.PolyData(verts, faces_pv)
         box = pv.Box(bounds=[0, bounds[0], 0, bounds[1], 0, bounds[2] if is_3d else 1])
         clipped = mesh.clip_box(box, invert=False)
-        return clipped if clipped.n_cells > 0 else None
+        return clipped if clipped.n_cells > 0 and clipped.n_points > 0 else None
 
     except Exception:
         return None
@@ -371,10 +396,10 @@ def _gmsh_conforming_tet(
     solver_format,
     filepath,
 ):
-    """
+    "
     Feed grain surfaces into Gmsh to produce a conforming tet mesh with
     with grain physical groups
-    """
+    "
     gmsh.initialize()
     gmsh.option.setNumber("General.Verbosity", 2)
 
@@ -388,6 +413,11 @@ def _gmsh_conforming_tet(
     gmsh.option.setNumber("Mesh.CharacteristicLengthMax", res * 2.0)
 
     for gid, poly in surface_meshes:
+        if poly is None or poly.n_points == 0:
+            print(f"  WARNING: Skipping grain {gid} - Empty surface mesh.")
+            continue
+
+        poly = poly.triangulate()
         verts = np.array(poly.points)
         faces = poly.faces.reshape(-1, 4)[:, 1:]  # strip leading '3'
 
@@ -442,9 +472,9 @@ def _gmsh_conforming_tet(
 
 
 def _apply_gmsh_periodic_bc(micro):
-    """
+    "
     Apply periodic mesh constrains on opposing domain faces.
-    """
+    "
     dims = np.array(micro.dimensions)
     res = micro.resolution
     bounds = dims * res
@@ -496,7 +526,7 @@ def _apply_gmsh_periodic_bc(micro):
         )
         for (_, lo), (_, hi) in zip(lo_surfs, hi_surfs):
             gmsh.model.mesh.setPeriodic(2, [hi], [lo], translation)
-
+"""
 
 # -----------------------------------------------------------------------------
 # Format Writeres
@@ -508,7 +538,6 @@ def _write_format(
     micro,
     filepath,
     solver_format,
-    periodic_bc,
 ):
     """Dispatch to format-specific writer."""
     if solver_format == SolverFormat.DAMASK_VTI:
@@ -517,23 +546,15 @@ def _write_format(
     elif solver_format == SolverFormat.DAMASK_HDF5:
         _write_damask_hdf5(mesh, micro, filepath)
 
-    elif solver_format in (SolverFormat.ABAQUS_STANDARD, SolverFormat.ABAQUS_EXPLICIT):
+    elif solver_format == SolverFormat.ABAQUS_EXPLICIT:
         _write_abaqus_inp(
             mesh,
             micro,
             filepath,
-            explicit=(solver_format == SolverFormat.ABAQUS_EXPLICIT),
-            periodic_bc=periodic_bc,
         )
-
-    elif solver_format == SolverFormat.FENICS:
-        pass  # already written directly by Gmsh in _gmsh_conforming_tet
 
     elif solver_format == SolverFormat.CUSTOM_HDF5:
         _write_custom_hdf5(mesh, micro, filepath)
-
-    elif solver_format == SolverFormat.VTK_SURFACE:
-        mesh.save(filepath)
 
 
 def _write_damask_hdf5(grid, micro, filepath):
@@ -563,8 +584,6 @@ def _write_abaqus_inp(
     mesh,
     micro,
     filepath,
-    explicit,
-    periodic_bc,
 ):
     """
     Write Abaqus .inp file with:
@@ -574,12 +593,8 @@ def _write_abaqus_inp(
     - Node sets for boundary conditions
     - Material + selection blocks (placeholder - user fills constitutive)
     """
-    if periodic_bc:
-        warnings.warn(
-            "Periodic BC node equations for Abaqus are not yet implemented. "
-            "Node sets are written but *Equation blocks must be added manually.",
-            UserWarning,
-        )
+    if isinstance(mesh, pv.ImageData):
+        mesh = mesh.cast_to_unstructured_grid()
 
     dims = np.array(micro.dimensions)
     res = micro.resolution
@@ -589,9 +604,7 @@ def _write_abaqus_inp(
 
     with open(filepath, "w") as f:
         f.write("*Heading\n")
-        f.write(
-            f" Microstructure export — {'Explicit' if explicit else 'Standard'}\n\n"
-        )
+        f.write(f" Microstructure export — {'Explicit'}\n\n")
 
         # --- Nodes ---
         f.write("*Node\n")
@@ -599,7 +612,7 @@ def _write_abaqus_inp(
             f.write(f"  {i}, {x:.6f}, {y:.6f}, {z:.6f}\n")
 
         # --- Elements per type ---
-        abaqus_type = "C3D8R" if explicit else "C3D10"  # Hex8 explicit, Tet10 standard
+        abaqus_type = "C3D8R"  # Hex8 explicit, Tet10 standard
         f.write(f"\n*Element, type={abaqus_type}\n")
         elem_id = 1
 
@@ -651,7 +664,7 @@ def _write_abaqus_inp(
             f.write(",\n")
 
         # --- Step block ---
-        step_type = "*Dynamic, Explicit" if explicit else "*Static"
+        step_type = "*Dynamic, Explicit"
         f.write(f"\n*Step\n{step_type}\n")
         f.write("** TODO: define load steps, BCs, output requests\n")
         f.write("*End Step\n")
@@ -866,3 +879,60 @@ def _validate_against_voxels(
         print("  Validation Passed.")
 
     return match_rate
+
+
+"""
+def _validate_surface_mesh(surface_meshes, seeds):
+    "
+    Validate analytic grain surfaces by checking that each grain's
+    seed point lies within the bounding box of its surface mesh.
+
+    Args:
+        surface_meshes : list of (gid, pv.PolyData) tuples
+        seeds          : np.ndarray (N, 3) seed coordinates
+
+    Returns:
+        float - fraction of grains whose seed is within their surface bounds
+    "
+    passed = 0
+    failed = []
+
+    for gid, poly in surface_meshes:
+        if poly is None or poly.n_points == 0:
+            failed.append(gid)
+            continue
+
+        seed   = seeds[gid - 1]
+        bounds = poly.bounds  # (xmin, xmax, ymin, ymax, zmin, zmax)
+
+        in_bounds = (
+            bounds[0] <= seed[0] <= bounds[1] and
+            bounds[2] <= seed[1] <= bounds[3] and
+            bounds[4] <= seed[2] <= bounds[5]
+        )
+
+        if in_bounds:
+            passed += 1
+        else:
+            failed.append(gid)
+
+    total      = len(surface_meshes)
+    match_rate = passed / total if total > 0 else 0.0
+
+    print(
+        f"  Surface validation: {match_rate:.2%} of seeds within grain bounds "
+        f"({passed}/{total})"
+    )
+
+    if match_rate < 0.95:
+        warnings.warn(
+            f"{len(failed)} grains failed bounds check: "
+            f"{failed[:10]}{'...' if len(failed) > 10 else ''}. "
+            f"Try increasing k_neighbors or aspect ratio mirror extent.",
+            UserWarning,
+        )
+    else:
+        print("  Surface validation passed.")
+
+    return match_rate
+"""

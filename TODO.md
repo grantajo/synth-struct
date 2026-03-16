@@ -4,30 +4,30 @@
 ## Just finished
 
 - File generator
-  - DAMASK, ABAQUS, FENICS, VTK
+  - Couldn't get conforming mesh to work. Maybe I'll try again later.
 
 ## Currently working on
 
-- Validation of file output
-- Examples for file output (isotropic and anisotropic microstructures)
+- Maybe make an example that has orientations to be able to use ParaView with.
 
 ## Short-term todo
 
+- Add in GPU CUDA implementations for anisotropic voronoi assignment and new lath generator when done
+  - Won't be able to use Eigen implementation
 - Continue orix integration
   - Add in ability to have the colorkey shown in an IPF map
     - Add in ability to plot a single given colorkey with ipfcolorkeys.py
 
 ## Things to be added
 
+- Add in second phase generation
+  - Add in ability to have precipitates
+  - Add in porosity
+- Add grain structures with better grain size distribution abilities
 - Maybe make a power user import subspace such as rotation conversion or symmetry operations?
 
 ## Long term additions
 
-- Add in GPU CUDA implementations for anisotropic voronoi assignment and new lath generator when done
-  - Won't be able to use Eigen implementation
-- Add in second phase generation
-  - Add in ability to have precipitates
-  - Add in porosity
 - Add grain structures with grain size better distribution
 - New lath generator (CA see generators/lath_updated.py)
 - Add in ability to create a mesh with the microstructure

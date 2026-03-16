@@ -48,9 +48,8 @@ print("-" * 60)
 print("[1/6]")
 print("Exporting DAMASK VTI (.vti)...")
 
-export_microstructure(
+mesh1 = export_microstructure(
     micro=micro_ell,
-    generator=ell_gen,
     filepath=str(ell_path),
     solver_format=SolverFormat.DAMASK_VTI,
     validate=True,
@@ -58,33 +57,34 @@ export_microstructure(
 )
 print(f"  Saved: {str(ell_path) + '.vti'}")
 
+"""
+# This makes a really large file, only enable if you are okay with that
 print("-" * 60)
 print("[2/6]")
-print("Exporting VTK Surface (.vtp)...")
+print("Exporting ABAQUS Explicit (.inp)...")
 
-export_microstructure(
+mesh2 = export_microstructure(
     micro=micro_ell,
-    generator=ell_gen,
     filepath=str(ell_path),
-    solver_format=SolverFormat.VTK_SURFACE,
+    solver_format=SolverFormat.ABAQUS_EXPLICIT,
     validate=True,
     sample_fraction=0.1,
 )
-print(f"  Saved: {str(ell_path) + '.vtp'}")
+print(f"  Saved: {str(ell_path) + '.inp'}")
+"""
 
 print("-" * 60)
 print("[3/6]")
 print("Exporting DAMASK HDF5 (.hdf5)...")
 
-export_microstructure(
+mesh3 = export_microstructure(
     micro=micro_ell,
-    generator=ell_gen,
     filepath=str(ell_path),
     solver_format=SolverFormat.DAMASK_HDF5,
     validate=True,
     sample_fraction=0.1,
 )
-print(f"  Saved: {str(ell_path) + '.vtp'}")
+print(f"  Saved: {str(ell_path) + '.hdf5'}")
 
 # ----------------------------------------
 # Mixed Mesh Generation
@@ -101,14 +101,14 @@ mix_gen = MixedGenerator(
 )
 mix_gen.generate(micro_mix)
 
+
 print("Exporting Mixed Microstructure mesh files")
 print("-" * 60)
 print("[4/6]")
 print("Exporting DAMASK VTI (.vti)...")
 
-export_microstructure(
+mesh4 = export_microstructure(
     micro=micro_mix,
-    generator=mix_gen,
     filepath=str(mix_path),
     solver_format=SolverFormat.DAMASK_VTI,
     validate=True,
@@ -116,30 +116,34 @@ export_microstructure(
 )
 print(f"  Saved: {str(mix_path) + '.vti'}")
 
+"""
+# This makes a really large file, only enable if you are okay with that
 print("-" * 60)
 print("[5/6]")
-print("Exporting VTK Surface (.vtp)...")
+print("Exporting ABAQUS Explicit (.inp)...")
 
-export_microstructure(
+mesh5 = export_microstructure(
     micro=micro_mix,
-    generator=mix_gen,
     filepath=str(mix_path),
-    solver_format=SolverFormat.VTK_SURFACE,
+    solver_format=SolverFormat.ABAQUS_EXPLICIT,
     validate=True,
     sample_fraction=0.1,
 )
-print(f"  Saved: {str(mix_path) + '.vtp'}")
+print(f"  Saved: {str(mix_path) + '.inp'}")
+"""
 
 print("-" * 60)
 print("[6/6]")
 print("Exporting DAMASK HDF5 (.hdf5)...")
 
-export_microstructure(
+mesh6 = export_microstructure(
     micro=micro_mix,
-    generator=mix_gen,
     filepath=str(mix_path),
     solver_format=SolverFormat.DAMASK_HDF5,
     validate=True,
     sample_fraction=0.1,
 )
-print(f"  Saved: {str(mix_path) + '.vtp'}")
+print(f"  Saved: {str(mix_path) + '.hdf5'}")
+
+
+

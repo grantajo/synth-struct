@@ -88,6 +88,5 @@ print(f"  Saved: {output_dir / 'microstructure.h5'}")
 
 # Plotting
 mesh_vti.plot(scalars="grain_id", cmap="hsv", show_edges=False)
-#mesh_vtk.plot(scalars="grain_id", cmap="hsv", show_edges=False)
 mesh_hdf5.plot(scalars="grain_id", cmap="hsv", show_edges=False)
 mesh_h5.plot(scalars="grain_id", cmap="hsv", show_edges=False)
