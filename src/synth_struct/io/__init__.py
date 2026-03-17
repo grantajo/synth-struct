@@ -4,7 +4,7 @@
 File outputs
 """
 
-from .file_output import SolverFormat, ElementType, export_microstructure
+from .structured_mesh import SolverFormat, ElementType, export_microstructure
 
 __all__ = [
     "SolverFormat",

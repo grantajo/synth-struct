@@ -12,6 +12,9 @@
 
 ## Short-term todo
 
+- Make tests
+  - Structured_mesh
+  - Phases
 - Add in GPU CUDA implementations for anisotropic voronoi assignment and new lath generator when done
   - Won't be able to use Eigen implementation
 - Continue orix integration

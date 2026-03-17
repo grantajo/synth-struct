@@ -32,7 +32,7 @@ from .plotting import (
 )
 from .plotting.ipfcolorkeys import plot_all_colorkeys
 
-from .io.file_output import (
+from .io.structured_mesh import (
     export_microstructure,
     SolverFormat,
     ElementType,
