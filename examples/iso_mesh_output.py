@@ -44,7 +44,6 @@ print("Exporting DAMASK VTI (.vti)...")
 
 mesh_vti = export_microstructure(
     micro=micro,
-    generator=voronoi_gen,
     filepath=str(output_path),
     solver_format=SolverFormat.DAMASK_VTI,
     validate=True,
@@ -61,7 +60,6 @@ print("Exporting DAMASK HDF5 (.hdf5)...")
 
 mesh_hdf5 = export_microstructure(
     micro=micro,
-    generator=voronoi_gen,
     filepath=str(output_path),
     solver_format=SolverFormat.DAMASK_HDF5,
     validate=True,
@@ -78,7 +76,6 @@ print("Exporting custom HDF5 (.h5)...")
 
 mesh_h5 = export_microstructure(
     micro=micro,
-    generator=voronoi_gen,
     filepath=str(output_path),
     solver_format=SolverFormat.CUSTOM_HDF5,
     validate=True,
