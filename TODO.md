@@ -15,14 +15,15 @@
 - Make tests
   - Structured_mesh
   - Phases
+- Put out a version 0.1
+
+## Things to be added
+
 - Add in GPU CUDA implementations for anisotropic voronoi assignment and new lath generator when done
   - Won't be able to use Eigen implementation
 - Continue orix integration
   - Add in ability to have the colorkey shown in an IPF map
     - Add in ability to plot a single given colorkey with ipfcolorkeys.py
-
-## Things to be added
-
 - Add in second phase generation
   - Add in ability to have precipitates
   - Add in porosity
