@@ -1,28 +1,7 @@
 /output/*
-/.gitignore
-/src/__pycache__/
-/examples/__pycache__/
-/src/generators/__pycache__/
-/src/orientation/__pycache__/
-/src/plotting/__pycache__/
-/src/io/__pycache__/
-/src/stiffness/__pycache__/
-/tests/__pycache__/
-**/__pycache__/
-/src/orientation/texture/__pycache__/
-*.egg-info/
-.ruff_cache/
-.pytest_cache/
-*.so
-*.pyd
-*.dylib
-build/
-dist/
-**/*.pyc
-src/synth_struct/_cpp_extensions/*.so
-src/synth_struct/_cpp_extensions/*.pyd
 code_test.py
 .vscode/
+TODO.md
 
 
 # Byte-compiled / optimized / DLL files
@@ -241,3 +220,4 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+TODO.md

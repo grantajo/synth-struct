@@ -8,14 +8,12 @@
 
 ## Currently working on
 
-- Maybe make an example that has orientations to be able to use ParaView with.
-
-## Short-term todo
-
 - Make tests
   - Structured_mesh
   - Phases
 - Put out a version 0.1
+
+## Short-term todo
 
 ## Things to be added
 

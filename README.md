@@ -4,6 +4,8 @@
 This is a code base that generates microstrcutures that are intended to be used in
 mechanical simulations, such as ultrasonic, crystal plasticity, etc.
 
+This project is licensed under the terms of the MIT license.
+
 ## Installation
 
 ### Create a virtual environment
