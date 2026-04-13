@@ -3,13 +3,11 @@
 
 ## Just finished
 
-- File generator
-  - Couldn't get conforming mesh to work. Maybe I'll try again later.
+- Created tests for structured_mesh
 
 ## Currently working on
 
 - Make tests
-  - Structured_mesh
   - Phases
 - Put out a version 0.1
 

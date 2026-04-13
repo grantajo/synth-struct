@@ -97,12 +97,18 @@ class Microstructure:
 
     @phase_ids.setter
     def phase_ids(self, value):
+        if value is None:
+            self._phase_ids = None
+            return
+
         value = np.asarray(value, dtype=np.int32)
+
         if value.shape != self.dimensions:
             raise ValueError(
                 f"phase_ids shape {value.shape} does not match "
                 f"dimensions {self.dimensions}"
             )
+
         unknown = set(np.unique(value)) - {-1} - set(self._phases.keys())
         if unknown:
             raise ValueError(

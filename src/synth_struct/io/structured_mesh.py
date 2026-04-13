@@ -183,13 +183,26 @@ def _build_regular_grid(micro):
     grid = pv.ImageData()
     if len(dims) == 3:
         grid.dimensions = tuple(d + 1 for d in dims)
+    elif len(dims) == 2:
+        nx, ny = dims
+        grid.dimensions = (nx + 1, ny + 1, 2)
     else:
-        grid.dimensions = (*dims, 1)
+        raise ValueError(f"Unsupported dimensions: {dims}")
 
     grid.spacing = (res, res, res)
     grid.origin = (0.0, 0.0, 0.0)
 
     gids = micro.grain_ids.flatten(order="F")
+
+    if grid.n_cells != len(gids):
+        raise ValueError(
+            f"Cell mismatch:\n"
+            f"  grid.n_cells = {grid.n_cells}\n"
+            f"  data length  = {len(gids)}\n"
+            f"  dims         = {dims}\n"
+            f"  grid.dim     = {grid.dimensions}"
+        )
+
     grid.cell_data["grain_id"] = gids
 
     if micro.phase_ids is not None:
