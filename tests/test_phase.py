@@ -1,7 +1,5 @@
 # synth_struct/tests/test_phase.py
 
-# synth_struct/tests/test_phase.py
-
 import pytest
 import numpy as np
 from synth_struct import Microstructure

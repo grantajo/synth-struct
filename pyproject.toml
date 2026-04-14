@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "synth_struct"
-version = "0.0.1"
+version = "0.1.0"
 description = "Synthetic microstructure generation"
 authors = [{name="Grant Johnson", email="grantajohnson1@gmail.com"}]
 readme = "README.md"
