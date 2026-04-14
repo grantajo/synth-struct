@@ -3,12 +3,10 @@
 
 ## Just finished
 
-- Created tests for structured_mesh
+- Made tests for phases.
 
 ## Currently working on
 
-- Make tests
-  - Phases
 - Put out a version 0.1
 
 ## Short-term todo
