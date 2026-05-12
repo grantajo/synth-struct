@@ -16,20 +16,21 @@ Run the following commands to create a virtual environment
 
 ### Install dependencies in virtual environment
 
-|Package              |Installation                       |Requirement                  |
-|:-------------------:|:---------------------------------:|:---------------------------:|
-|numpy                |`conda install numpy`              |Required                     |
-|scipy                |`conda install scipy`              |Required                     |
-|matplotlib           |`conda install matplotlib`         |Required                     |
-|matplotlib-scalebar  |`conda install matplotlib-scalebar`|Required for plotting        |
-|h5py                 |`conda install h5py`               |Required for HDF5 output     |
-|pyvista              |`conda install pyvista`            |Required for meshing outputs |
-|gmsh                 |`pip install h5py`                 |Required for meshing outputs |
-|orix                 |`conda install orix=0.14.0`        |Required for plotting        |
-|pybind11             |`conda install pybind11`           |Required for C++ speedup     |
-|g++                  |`apt install build-essential gcc`  |Required for C++ speedup     |
-|Eigen                |`apt install libeigen3-dev`        |Required for C++ speedup     |
-|pytest               |`conda install pytest`             |Required for tests           |
+|Package              |Installation                          |Requirement                  |
+|:-------------------:|:------------------------------------:|:---------------------------:|
+|numpy                |`conda install numpy`                 |Required                     |
+|scipy                |`conda install scipy`                 |Required                     |
+|matplotlib           |`conda install matplotlib`            |Required                     |
+|matplotlib-scalebar  |`conda install matplotlib-scalebar`   |Required for plotting        |
+|h5py                 |`conda install h5py`                  |Required for HDF5 output     |
+|pyvista              |`conda install pyvista`               |Required for meshing outputs |
+|orix                 |`conda install orix=0.14.0`           |Required for plotting        |
+|pybind11             |`conda install pybind11`              |Required for C++ speedup     |
+|g++                  |`sudo apt install build-essential gcc`|Required for C++ speedup     |
+|Eigen                |`sudo apt install libeigen3-dev`      |Required for C++ speedup     |
+|pytest               |`conda install pytest`                |Required for tests           |
+
+For g++ and Eigen, it is preferable to install them outside of the conda virtual environment
 
 ### Clone repository
 
