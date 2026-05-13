@@ -15,6 +15,7 @@ from .generators.columnar import ColumnarGenerator
 from .generators.lath import LathGenerator
 
 from .orientation.phase import Phase
+from .orientation.texture import Texture
 from .orientation.texture.random import RandomTexture
 from .orientation.texture.cubic import CubicTexture
 from .orientation.texture.hexagonal import HexagonalTexture
@@ -51,6 +52,7 @@ __all__ = [
     # Phase
     "Phase",
     # Texture Generators
+    "Texture",
     "RandomTexture",
     "CubicTexture",
     "HexagonalTexture",

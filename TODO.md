@@ -1,13 +1,14 @@
 
 # Todo Lists
 
+## Levi/Erin "Training"
+- `pip install -e .` needs `conda install pip`
+- Stiffness example
+- ODF example
+
 ## Just finished
 
-- Made tests for phases.
-
 ## Currently working on
-
-- Put out a version 0.1
 
 ## Short-term todo
 

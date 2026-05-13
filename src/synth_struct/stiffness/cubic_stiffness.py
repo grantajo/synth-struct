@@ -19,6 +19,8 @@ import numpy as np
 from .stiffness_base import StiffnessGenerator
 from .stiffness import Stiffness
 from .stiffness_utils import rotate_stiffness_tensors_batch
+from ..orientation.texture import Texture
+from ..orientation.phase import Phase
 
 
 class CubicStiffnessGenerator(StiffnessGenerator):
@@ -64,6 +66,14 @@ class CubicStiffnessGenerator(StiffnessGenerator):
         Returns:
         - Stiffness object with rotated tensors
         """
+        if isinstance(texture, np.ndarray):
+            phase = next(iter(micro.phases.values()))
+            texture = Texture(
+                orientations=texture,
+                representation="euler",
+                phase=phase,
+            )
+        
         # Convert texture to rotation matrices if needed
         if texture.representation != "rotmat":
             texture_rotmat = texture.to_representation("rotmat")
