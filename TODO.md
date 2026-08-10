@@ -3,13 +3,15 @@
 
 ## Just finished
 
-- Made tests for phases.
+- Put out a version 0.1
 
 ## Currently working on
 
-- Put out a version 0.1
+- Adding in photos of examples
 
 ## Short-term todo
+
+- Add in 2D mesh generation
 
 ## Things to be added
 
