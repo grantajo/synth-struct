@@ -68,9 +68,7 @@ print(f"  Saved IPF maps to 'base_texture_ipf_maps.png'")
 
 print("-Plotting pole figures...")
 base_pf_fig, base_pf_ax = plt.subplots(
-    1, 3, 
-    figsize=(15, 5), 
-    subplot_kw={"projection": "stereographic"}
+    1, 3, figsize=(15, 5), subplot_kw={"projection": "stereographic"}
 )
 PFplot.plot_multiple_pole_figures(
     base_pf_ax,
@@ -78,7 +76,7 @@ PFplot.plot_multiple_pole_figures(
     phase_id=0,
     miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
     sample_fraction=0.005,
-    plot_type='scatter',
+    plot_type="scatter",
 )
 base_pf_fig.suptitle("Pole Figures for Random Texture", fontsize=15)
 plt.tight_layout()
@@ -95,7 +93,9 @@ print("Creating texture in middle of the microstructure with 5° spread...")
 micro_5deg = micro.copy()
 texture = "cube"
 
-middle_grains = get_grains_in_region(micro_5deg, "sphere", center=[50, 50, 50], radius=30)
+middle_grains = get_grains_in_region(
+    micro_5deg, "sphere", center=[50, 50, 50], radius=30
+)
 print(f"  Middle region contains {len(middle_grains)} grains")
 
 # Generate texture for the middle
@@ -112,19 +112,23 @@ plt.tight_layout()
 plt.savefig(output_dir / "cube_texture_5deg_ipf_maps.png", dpi=150, bbox_inches="tight")
 print(f"  Saved IPF maps to 'cube_texture_5deg_ipf_maps.png'")
 
-fig_5deg_pf, ax_5deg_pf = plt.subplots(1, 3, figsize=(15, 5), subplot_kw={"projection": "stereographic"})
+fig_5deg_pf, ax_5deg_pf = plt.subplots(
+    1, 3, figsize=(15, 5), subplot_kw={"projection": "stereographic"}
+)
 PFplot.plot_multiple_pole_figures(
     ax_5deg_pf,
     micro_5deg,
     phase_id=0,
     miller_indices=[(1, 0, 0), (1, 1, 0), (1, 1, 1)],
     sample_fraction=0.005,
-    plot_type='density',
+    plot_type="density",
     sigma=5.0,
 )
 fig_5deg_pf.suptitle("Pole Figures with Cube Texture (5° Spread)", fontsize=15)
 plt.tight_layout()
-plt.savefig(output_dir / "cube_texture_5deg_pole_figures.png", dpi=150, bbox_inches="tight")
+plt.savefig(
+    output_dir / "cube_texture_5deg_pole_figures.png", dpi=150, bbox_inches="tight"
+)
 print(f"  Saved pole figures to 'cube_texture_5deg_pole_figures.png'")
 
 # ========================================================
@@ -138,7 +142,9 @@ print("Creating texture in middle of the microstructure with 10° spread...")
 micro_10deg = micro.copy()
 texture = "cube"
 
-middle_grains = get_grains_in_region(micro_10deg, "sphere", center=[50, 50, 50], radius=30)
+middle_grains = get_grains_in_region(
+    micro_10deg, "sphere", center=[50, 50, 50], radius=30
+)
 print(f"  Middle region contains {len(middle_grains)} grains")
 
 # Generate texture for the middle
@@ -152,27 +158,30 @@ fig_10deg_ipf, ax_10deg_ipf = plt.subplots(1, 3, figsize=(15, 5))
 IPFmap.plot_multiple_ipf_maps(ax_10deg_ipf, micro_10deg)
 fig_10deg_ipf.suptitle("IPF Maps with Cube Texture (10° Spread)", fontsize=15)
 plt.tight_layout()
-plt.savefig(output_dir / "cube_texture_10deg_ipf_maps.png", dpi=150, bbox_inches="tight")
+plt.savefig(
+    output_dir / "cube_texture_10deg_ipf_maps.png", dpi=150, bbox_inches="tight"
+)
 print(f"  Saved IPF maps to 'cube_texture_10deg_ipf_maps.png'")
 
 fig_10deg_pf = plt.figure(figsize=(15, 5))
-ax_10deg_pf = IPFplot.create_ipf_axes(
-    micro_10deg, 
-    fig_10deg_pf, 
-    3, 
-    layout="row"
-)
+ax_10deg_pf = IPFplot.create_ipf_axes(micro_10deg, fig_10deg_pf, 3, layout="row")
 IPFplot.plot_multiple_ipfs(
     ax_10deg_pf,
     micro_10deg,
     directions=[(1, 0, 0), (0, 1, 0), (0, 0, 1)],
     phase_id=0,
     sample_fraction=0.005,
-    plot_type='density',
+    plot_type="density",
 )
-fig_10deg_pf.suptitle("Inverse Pole Figures with Cube Texture (10° Spread)", fontsize=15)
+fig_10deg_pf.suptitle(
+    "Inverse Pole Figures with Cube Texture (10° Spread)", fontsize=15
+)
 plt.tight_layout()
-plt.savefig(output_dir / "cube_texture_10deg_inverse_pole_figures.png", dpi=150, bbox_inches="tight")
+plt.savefig(
+    output_dir / "cube_texture_10deg_inverse_pole_figures.png",
+    dpi=150,
+    bbox_inches="tight",
+)
 print(f"  Saved inverse pole figures to 'cube_texture_10deg_inverse_pole_figures.png'")
 
 print()

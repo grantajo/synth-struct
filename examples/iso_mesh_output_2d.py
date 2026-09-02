@@ -3,7 +3,7 @@
 """
 This is an example of how to create a VTK file from a microstructure.
 
-This is similar to basic_example_3d
+This is similar to basic_example_2d
 """
 
 import sys
@@ -19,11 +19,11 @@ output_dir = project_root / "output" / "vtk_examples"
 output_dir.mkdir(parents=True, exist_ok=True)
 output_path = output_dir / "microstructure"
 
-print("=" * 20, "VTK Output Example", "=" * 20)
+print("=" * 17, "VTK Output Example - 2D", "=" * 18)
 
-print("Generating 3D Microstructure")
+print("Generating 2D Microstructure")
 # Variables for microstructure generation
-dims = (100, 100, 100)
+dims = (100, 100)
 res = 1.0
 num_grains = 500
 
@@ -32,7 +32,7 @@ micro = Microstructure(dimensions=dims, resolution=res)
 voronoi_gen = VoronoiGenerator(num_grains=num_grains, seed=42)
 voronoi_gen.generate(micro)
 
-print(f"Created 3D Microstructure: {dims}")
+print(f"Created 2D Microstructure: {dims}")
 print(f"Number of grains: {micro.num_grains}")
 
 # ------------------------------------------------------

@@ -3,36 +3,34 @@
 
 ## Just finished
 
-- Put out a version 0.1
+- Made sure that 2D meshes worked
+  - Added example for 2D mesh output
 
 ## Currently working on
 
-- Adding in photos of examples
-
 ## Short-term todo
-
-- Add in 2D mesh generation
 
 ## Things to be added
 
-- Add in GPU CUDA implementations for anisotropic voronoi assignment and new lath generator when done
-  - Won't be able to use Eigen implementation
-- Continue orix integration
-  - Add in ability to have the colorkey shown in an IPF map
-    - Add in ability to plot a single given colorkey with ipfcolorkeys.py
+- Generate better seeds for grain generators
+  - Generate different seeds for the ellipsoidal and equiaxed grains
+  - Generate seeds only in plane for columnar
+  - Weighted laguerre tesselation for equiaxed to get better size distribution
+- New lath generator (CA see generators/lath_updated.py)
 - Add in second phase generation
   - Add in ability to have precipitates
   - Add in porosity
-- Add grain structures with better grain size distribution abilities
 - Maybe make a power user import subspace such as rotation conversion or symmetry operations?
 
 ## Long term additions
 
-- Add grain structures with grain size better distribution
-- New lath generator (CA see generators/lath_updated.py)
-- Add in ability to create a mesh with the microstructure
-- Add in ability to have orientation gradients within grains, subgrains and GNDs
 - See what adding in ODF textures would be like and what would be gained from it
+- Continue orix integration
+  - Add in ability to have the colorkey shown in an IPF map
+  - Add in ability to plot a single given colorkey with ipfcolorkeys.py
+- Add in GPU CUDA implementations for anisotropic voronoi assignment and new lath generator when done
+  - Won't be able to use Eigen implementation
+- Add in ability to have orientation gradients within grains, subgrains and GNDs
 
 ## File structure
 
@@ -109,19 +107,3 @@ synth_struct/
     └── test_voronoi.py  
 
 ## Output files
-
-Microstructure + Generator
-        │
-        ├── Conforming path  ──────────────────────────────────────────┐
-        │   Analytic surfaces (.vtp)                                   │
-        │       └── Gmsh API                                           │
-        │               ├── Tet10 .msh  → FEniCS, deal.ii              │
-        │               ├── Tet10 .inp  → Abaqus Standard (elasticity) │
-        │               └── Tet10 .inp  → Abaqus CPFEM                 │
-        │                                                              │
-        └── Regular grid path ─────────────────────────────────────────┘
-            Voxel grain_ids
-                ├── Hex8 .vti        → DAMASK spectral
-                ├── Hex8 .hdf5       → DAMASK native
-                ├── Hex8 .inp        → Abaqus Explicit (wave)
-                └── Hex8 custom .h5  → your own CPFE solver

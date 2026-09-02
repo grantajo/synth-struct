@@ -117,8 +117,7 @@ def export_microstructure(
         microstructure      : Microstructure instance
         filepath            : str - output path (extension auto-corrected)
         solver_format       : SolverFormat enum
-        target_frequency_hz : float or None - NDE frequency for element
-                              size validation
+        target_frequency_hz : float or None - NDE frequency for element size validation
         wave_velocity       : float - wave speed in m/s for λ calculation
         validate            : bool - validate mesh against voxel data
         sample_fraction     : float - voxel sample fraction for validation

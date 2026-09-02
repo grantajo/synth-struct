@@ -144,6 +144,3 @@ mesh6 = export_microstructure(
     sample_fraction=0.1,
 )
 print(f"  Saved: {str(mix_path) + '.hdf5'}")
-
-
-
