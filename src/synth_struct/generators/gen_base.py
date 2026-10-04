@@ -61,6 +61,6 @@ class MicrostructureGenerator:
         """
         Return the coordinates of the Voronoi seed points
         """
-        if not hasattr(self, "seeds"):
+        if self.seeds is None:
             raise AttributeError("Seeds have not been generated yet. Call generate().")
         return self.seeds
