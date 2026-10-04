@@ -22,15 +22,16 @@ class Microstructure:
     Data container for a synthetic microstructure
     """
 
-    def __init__(self, dimensions, resolution, units="um", phase=None):
+    def __init__(self, dimensions, resolution, num_grains, units="um", phase=None):
         """
         Initiation of a Microstructure class
 
         Args:
         - dimensions: tuple - (nx, ny) for 2D, (nx, ny, nz) for 3D
         - resolution: float - physical size per voxel
+        - num_grains: int - Number of grains
         - units: str - physical units
-        - phase =
+        - phase: Dict - phases present
         """
 
         self.dimensions = tuple(dimensions)
@@ -40,6 +41,9 @@ class Microstructure:
         self._grain_ids = np.zeros(
             self.dimensions, dtype=np.int32
         )  # 0 = background (e.g. unindexed EBSD)
+
+        self.grain_volumes = None
+        self.grain_centroids = None
 
         self._quaternion_cache = None
 
@@ -227,6 +231,17 @@ class Microstructure:
     # -------------------------------------------------------------------------
     # Utilities
     # -------------------------------------------------------------------------
+
+    def measure_grain_volumes(self):
+        """
+        Calculate grain volumes for the microstructure
+        """
+        counts = np.bincount(
+            self.grain_ids.ravel(),
+            minlength=self.num_grains + 1,
+        )
+        self.grain_volumes = counts.astype(np.float64)
+        return self.grain_volumes
 
     def attach_field(self, name, array):
         """
