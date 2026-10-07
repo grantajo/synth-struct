@@ -22,7 +22,7 @@ class MixedGenerator(MicrostructureGenerator):
 
     def __init__(
         self,
-        num_grains,
+        target_num_grains,
         ellipsoid_fraction=0.5,
         aspect_ratio_mean=5.0,
         aspect_ratio_std=0.5,
@@ -34,7 +34,7 @@ class MixedGenerator(MicrostructureGenerator):
         Initialize mixed generator.
 
         Args:
-        - num_grains: int - Number of grains
+        - target_num_grains: int - Number of grains
         - ellipsoid_fraction: float - Fraction of ellipsoidal grains (0.0-1.0)
         - aspect_ratio_mean: float - Mean aspect ratio for ellipsoidal grains
         - aspect_ratio_std: float - Standard deviation of aspect ratio
@@ -43,7 +43,7 @@ class MixedGenerator(MicrostructureGenerator):
         - chunk_size: int - Number of voxels to process per chunk for memory efficiency
         """
 
-        self.num_grains = num_grains
+        self.target_num_grains = target_num_grains
         self.ellipsoid_fraction = np.clip(ellipsoid_fraction, 0.0, 1.0)
         self.aspect_ratio_mean = aspect_ratio_mean
         self.aspect_ratio_std = aspect_ratio_std
@@ -70,11 +70,11 @@ class MixedGenerator(MicrostructureGenerator):
         ndim = len(micro.dimensions)
 
         # Generate random seed points
-        self.seeds = get_seed_coordinates(self.num_grains, micro.dimensions, self.seed)
+        self.seeds = get_seed_coordinates(self.target_num_grains, micro.dimensions, self.seed)
 
         # Generate mixed grain parameters
         self.scale_factors, self.rotations = self._generate_mixed_params(
-            self.num_grains, ndim
+            self.target_num_grains, ndim
         )
 
         # Perform weighted Voronoi tessellation
@@ -82,33 +82,33 @@ class MixedGenerator(MicrostructureGenerator):
             micro, self.seeds, self.scale_factors, self.rotations, self.chunk_size
         )
 
-        num_ellipsoidal = int(self.num_grains * self.ellipsoid_fraction)
-        num_equiaxed = self.num_grains - num_ellipsoidal
+        num_ellipsoidal = int(self.target_num_grains * self.ellipsoid_fraction)
+        num_equiaxed = self.target_num_grains - num_ellipsoidal
 
         print(
-            f"Generated {self.num_grains} grains: "
+            f"Generated {self.target_num_grains} grains: "
             f"{num_ellipsoidal} ellipsoidal, {num_equiaxed} equiaxed"
         )
 
-    def _generate_mixed_params(self, num_grains, ndim):
+    def _generate_mixed_params(self, target_num_grains, ndim):
         """
         Generate scale factors and rotation matrices for mixed grain morphologies.
 
         Args:
-        - num_grains: int - Number of grains
+        - target_num_grains: int - Number of grains
         - ndim: int - Number of dimensions (2 or 3)
 
         Returns:
-        - scale_factors: np.ndarray of shape (num_grains, ndim)
+        - scale_factors: np.ndarray of shape (target_num_grains, ndim)
         - rotations: list of rotation matrices (each is ndim x ndim)
         """
 
-        num_ellipsoidal = int(num_grains * self.ellipsoid_fraction)
+        num_ellipsoidal = int(target_num_grains * self.ellipsoid_fraction)
 
-        scale_factors = np.zeros((num_grains, ndim))
+        scale_factors = np.zeros((target_num_grains, ndim))
         rotations = []
 
-        for i in range(num_grains):
+        for i in range(target_num_grains):
             if i < num_ellipsoidal:  # Ellipsoidal grains
                 aspect_ratio = np.random.normal(
                     self.aspect_ratio_mean, self.aspect_ratio_std
@@ -138,3 +138,17 @@ class MixedGenerator(MicrostructureGenerator):
             rotations.append(R)
 
         return scale_factors, rotations
+
+    def _get_metadata(self):
+        """
+        Update mixed generator specific metadata.
+        """
+        metadata = super()._get_metadata()
+        metadata.update({
+            "ellipsoid_fraction": self.ellipsoid_fraction,
+            "aspect_ratio_mean": self.aspect_ratio_mean,
+            "aspect_ratio_std": self.aspect_ratio_std,
+            "base_size": self.base_size,
+        })
+
+        return metadata

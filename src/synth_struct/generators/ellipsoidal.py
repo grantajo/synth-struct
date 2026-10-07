@@ -28,7 +28,7 @@ class EllipsoidalGenerator(MicrostructureGenerator):
 
     def __init__(
         self,
-        num_grains,
+        target_num_grains,
         aspect_ratio_mean=5.0,
         aspect_ratio_std=0.5,
         orientation="z",
@@ -49,7 +49,7 @@ class EllipsoidalGenerator(MicrostructureGenerator):
         - chunk_size: int - Number of voxels to process per chunk for memory efficiency
         """
 
-        self.num_grains = num_grains
+        self.target_num_grains = target_num_grains
         self.aspect_ratio_mean = aspect_ratio_mean
         self.aspect_ratio_std = aspect_ratio_std
         self.orientation = orientation
@@ -77,11 +77,11 @@ class EllipsoidalGenerator(MicrostructureGenerator):
         ndim = len(micro.dimensions)
 
         # Generate random seed points
-        self.seeds = get_seed_coordinates(self.num_grains, micro.dimensions, self.seed)
+        self.seeds = get_seed_coordinates(self.target_num_grains, micro.dimensions, self.seed)
 
         # Generate ellipsoidal parameters
         self.scale_factors, self.rotations = self._generate_ellipsoidal_params(
-            self.num_grains, ndim
+            self.target_num_grains, ndim
         )
 
         # Perform weighted Voronoi tessellation
@@ -89,27 +89,27 @@ class EllipsoidalGenerator(MicrostructureGenerator):
             micro, self.seeds, self.scale_factors, self.rotations, self.chunk_size
         )
 
-        print(f"Generated {self.num_grains} grains with ellipsoidal morphology")
+        print(f"Generated {self.target_num_grains} grains with ellipsoidal morphology")
 
-    def _generate_ellipsoidal_params(self, num_grains, ndim):
+    def _generate_ellipsoidal_params(self, target_num_grains, ndim):
         """
         Generate scale factors and rotation matrices for ellipsoidal grains.
 
         Returns:
-        - scale_factors: np.ndarray of shape (num_grains, ndim)
+        - scale_factors: np.ndarray of shape (target_num_grains, ndim)
         - rotations: list of rotation matrices
         """
 
         # Generate aspect ratios for each grain
         aspect_ratios = np.random.normal(
-            self.aspect_ratio_mean, self.aspect_ratio_std, num_grains
+            self.aspect_ratio_mean, self.aspect_ratio_std, target_num_grains
         )
         aspect_ratios = np.clip(aspect_ratios, 1.5, 10.0)
 
-        scale_factors = np.zeros((num_grains, ndim))
+        scale_factors = np.zeros((target_num_grains, ndim))
         rotations = []
 
-        for i in range(num_grains):
+        for i in range(target_num_grains):
             if ndim == 3:
                 long_axis = self.base_size * aspect_ratios[i]
                 short_axis = self.base_size
@@ -147,3 +147,17 @@ class EllipsoidalGenerator(MicrostructureGenerator):
                 rotations.append(R)
 
         return scale_factors, rotations
+
+    def _get_metadata(self):
+        """
+        Update ellipsoidal generator specific metadata
+        """
+        metadata = super()._get_metadata()
+        metadata.update({
+            "aspect_ratio_mean": self.aspect_ratio_mean,
+            "aspect_ratio_std": self.aspect_ratio_std,
+            "orientation": self.orientation,
+            "base_size": self.base_size,
+        })
+
+        return metadata

@@ -10,9 +10,9 @@ class TestColumnarGenerator:
 
     def test_initialization_default(self):
         """Test generator initialization with default parameters"""
-        gen = ColumnarGenerator(num_grains=10)
+        gen = ColumnarGenerator(target_num_grains=10)
 
-        assert gen.num_grains == 10
+        assert gen.target_num_grains == 10
         assert gen.axis == "z"
         assert gen.aspect_ratio == 5.0
         assert gen.base_size == 8.0
@@ -23,7 +23,7 @@ class TestColumnarGenerator:
     def test_initialization_custom(self):
         """Test generator initialization with custom parameters"""
         gen = ColumnarGenerator(
-            num_grains=20,
+            target_num_grains=20,
             axis="x",
             aspect_ratio=10.0,
             base_size=12.0,
@@ -32,7 +32,7 @@ class TestColumnarGenerator:
             chunk_size=100_000,
         )
 
-        assert gen.num_grains == 20
+        assert gen.target_num_grains == 20
         assert gen.axis == "x"
         assert gen.aspect_ratio == 10.0
         assert gen.base_size == 12.0
@@ -43,12 +43,12 @@ class TestColumnarGenerator:
     def test_invalid_axis(self):
         """Test that invalid axis raises ValueError"""
         with pytest.raises(ValueError, match="Invalid axis"):
-            ColumnarGenerator(num_grains=10, axis="w")
+            ColumnarGenerator(target_num_grains=10, axis="w")
 
     def test_axis_case_insensitive(self):
         """Test that axis is case-insensitive"""
-        gen_upper = ColumnarGenerator(num_grains=10, axis="X")
-        gen_lower = ColumnarGenerator(num_grains=10, axis="x")
+        gen_upper = ColumnarGenerator(target_num_grains=10, axis="X")
+        gen_lower = ColumnarGenerator(target_num_grains=10, axis="x")
 
         assert gen_upper.axis == "x"
         assert gen_lower.axis == "x"
@@ -56,7 +56,7 @@ class TestColumnarGenerator:
     def test_generate_3d(self):
         """Test 3D columnar grain generation"""
         micro = Microstructure(dimensions=(40, 40, 40), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=10, seed=42)
+        gen = ColumnarGenerator(target_num_grains=10, seed=42)
 
         gen.generate(micro)
 
@@ -68,7 +68,7 @@ class TestColumnarGenerator:
     def test_2d_raises_error(self):
         """Test that 2D microstructure raises ValueError"""
         micro = Microstructure(dimensions=(50, 50), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=10)
+        gen = ColumnarGenerator(target_num_grains=10)
 
         with pytest.raises(ValueError, match="only supported for 3D"):
             gen.generate(micro)
@@ -78,8 +78,8 @@ class TestColumnarGenerator:
         micro1 = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
         micro2 = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
 
-        gen1 = ColumnarGenerator(num_grains=8, seed=123)
-        gen2 = ColumnarGenerator(num_grains=8, seed=123)
+        gen1 = ColumnarGenerator(target_num_grains=8, seed=123)
+        gen2 = ColumnarGenerator(target_num_grains=8, seed=123)
 
         gen1.generate(micro1)
         gen2.generate(micro2)
@@ -91,8 +91,8 @@ class TestColumnarGenerator:
         micro1 = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
         micro2 = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
 
-        gen1 = ColumnarGenerator(num_grains=8, seed=123)
-        gen2 = ColumnarGenerator(num_grains=8, seed=456)
+        gen1 = ColumnarGenerator(target_num_grains=8, seed=123)
+        gen2 = ColumnarGenerator(target_num_grains=8, seed=456)
 
         gen1.generate(micro1)
         gen2.generate(micro2)
@@ -103,7 +103,7 @@ class TestColumnarGenerator:
     def test_axis_options(self, axis):
         """Test different axis options"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=5, axis=axis, seed=42)
+        gen = ColumnarGenerator(target_num_grains=5, axis=axis, seed=42)
 
         gen.generate(micro)
 
@@ -114,7 +114,7 @@ class TestColumnarGenerator:
     def test_scale_factors_generation(self):
         """Test that scale factors are generated correctly"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=10, aspect_ratio=6.0, base_size=5.0, seed=42)
+        gen = ColumnarGenerator(target_num_grains=10, aspect_ratio=6.0, base_size=5.0, seed=42)
 
         gen.generate(micro)
 
@@ -131,7 +131,7 @@ class TestColumnarGenerator:
     def test_rotation_matrices_z_axis(self):
         """Test rotation matrices for z-axis (identity)"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=5, axis="z", seed=42)
+        gen = ColumnarGenerator(target_num_grains=5, axis="z", seed=42)
 
         gen.generate(micro)
 
@@ -142,7 +142,7 @@ class TestColumnarGenerator:
     def test_rotation_matrices_x_axis(self):
         """Test rotation matrices for x-axis"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=5, axis="x", seed=42)
+        gen = ColumnarGenerator(target_num_grains=5, axis="x", seed=42)
 
         gen.generate(micro)
 
@@ -155,7 +155,7 @@ class TestColumnarGenerator:
     def test_rotation_matrices_y_axis(self):
         """Test rotation matrices for y-axis"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=5, axis="y", seed=42)
+        gen = ColumnarGenerator(target_num_grains=5, axis="y", seed=42)
 
         gen.generate(micro)
 
@@ -168,7 +168,7 @@ class TestColumnarGenerator:
     def test_rotation_matrices_orthogonal(self):
         """Test that all rotation matrices are orthogonal"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=5, axis="x", seed=42)
+        gen = ColumnarGenerator(target_num_grains=5, axis="x", seed=42)
 
         gen.generate(micro)
 
@@ -181,7 +181,7 @@ class TestColumnarGenerator:
         """Test that size variation affects grain dimensions"""
         micro = Microstructure(dimensions=(40, 40, 40), resolution=1.0)
         gen = ColumnarGenerator(
-            num_grains=20, base_size=10.0, size_variation=0.3, seed=42
+            target_num_grains=20, base_size=10.0, size_variation=0.3, seed=42
         )
 
         gen.generate(micro)
@@ -194,7 +194,7 @@ class TestColumnarGenerator:
         """Test with zero size variation (all grains same size)"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
         gen = ColumnarGenerator(
-            num_grains=10, base_size=10.0, aspect_ratio=5.0, size_variation=0.0, seed=42
+            target_num_grains=10, base_size=10.0, aspect_ratio=5.0, size_variation=0.0, seed=42
         )
 
         gen.generate(micro)
@@ -210,10 +210,10 @@ class TestColumnarGenerator:
         micro2 = Microstructure(dimensions=(40, 40, 40), resolution=1.0)
 
         gen1 = ColumnarGenerator(
-            num_grains=5, aspect_ratio=3.0, base_size=10.0, size_variation=0.0, seed=42
+            target_num_grains=5, aspect_ratio=3.0, base_size=10.0, size_variation=0.0, seed=42
         )
         gen2 = ColumnarGenerator(
-            num_grains=5, aspect_ratio=8.0, base_size=10.0, size_variation=0.0, seed=42
+            target_num_grains=5, aspect_ratio=8.0, base_size=10.0, size_variation=0.0, seed=42
         )
 
         gen1.generate(micro1)
@@ -228,7 +228,7 @@ class TestColumnarGenerator:
     def test_seeds_generation(self):
         """Test that seed coordinates are generated"""
         micro = Microstructure(dimensions=(40, 40, 40), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=15, seed=42)
+        gen = ColumnarGenerator(target_num_grains=15, seed=42)
 
         gen.generate(micro)
 
@@ -243,23 +243,23 @@ class TestColumnarGenerator:
     def test_all_voxels_assigned(self):
         """Test that all voxels are assigned to grains"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=10, seed=42)
+        gen = ColumnarGenerator(target_num_grains=10, seed=42)
 
         gen.generate(micro)
 
         # All voxels should be assigned (no zeros remaining)
         assert np.all(micro.grain_ids > 0)
 
-    @pytest.mark.parametrize("num_grains", [1, 5, 10, 20])
-    def test_varying_grain_counts(self, num_grains):
+    @pytest.mark.parametrize("target_num_grains", [1, 5, 10, 20])
+    def test_varying_grain_counts(self, target_num_grains):
         """Test generation with different numbers of grains"""
         micro = Microstructure(dimensions=(35, 35, 35), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=num_grains, seed=42)
+        gen = ColumnarGenerator(target_num_grains=target_num_grains, seed=42)
 
         gen.generate(micro)
 
         assert micro.num_grains >= 1
-        assert micro.num_grains <= num_grains
+        assert micro.num_grains <= target_num_grains
 
     def test_base_size_effect(self):
         """Test that base_size affects grain dimensions"""
@@ -267,10 +267,10 @@ class TestColumnarGenerator:
         micro2 = Microstructure(dimensions=(40, 40, 40), resolution=1.0)
 
         gen1 = ColumnarGenerator(
-            num_grains=5, base_size=5.0, size_variation=0.0, seed=42
+            target_num_grains=5, base_size=5.0, size_variation=0.0, seed=42
         )
         gen2 = ColumnarGenerator(
-            num_grains=5, base_size=15.0, size_variation=0.0, seed=42
+            target_num_grains=5, base_size=15.0, size_variation=0.0, seed=42
         )
 
         gen1.generate(micro1)
@@ -283,7 +283,7 @@ class TestColumnarGenerator:
         """Test that columns maintain consistent cross-section"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
         gen = ColumnarGenerator(
-            num_grains=5, aspect_ratio=5.0, base_size=10.0, size_variation=0.0, seed=42
+            target_num_grains=5, aspect_ratio=5.0, base_size=10.0, size_variation=0.0, seed=42
         )
 
         gen.generate(micro)
@@ -300,7 +300,7 @@ class TestColumnarGenerator:
     def test_num_grains_stored(self):
         """Test that num_grains is properly calculated from grain_ids"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = ColumnarGenerator(num_grains=12, seed=42)
+        gen = ColumnarGenerator(target_num_grains=12, seed=42)
 
         gen.generate(micro)
 

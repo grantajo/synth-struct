@@ -19,12 +19,12 @@ class VoronoiGenerator(MicrostructureGenerator):
     Generates grains by assigning the nearest seed point to each voxel.
     """
 
-    def __init__(self, num_grains, seed=None, chunk_size=500_000):
+    def __init__(self, target_num_grains, seed=None, chunk_size=500_000):
         """
         Initiates generator information
 
         Args:
-        - num_grains: int
+        - target_num_grains: int
             Number of grains
         - seed: int or None
             Random seed for reproducibility
@@ -32,10 +32,9 @@ class VoronoiGenerator(MicrostructureGenerator):
             Number of voxels to process per chunk for memory efficiency
         """
 
-        self.num_grains = num_grains
+        self.target_num_grains = target_num_grains
         self.seed = seed
         self.chunk_size = chunk_size
-        self.seeds = None  # Will store coordinates for Voronoi seeds
 
     def _generate_internal(self, micro):
         """
@@ -49,7 +48,7 @@ class VoronoiGenerator(MicrostructureGenerator):
             np.random.seed(self.seed)
 
         # Generate random seed points
-        self.seeds = get_seed_coordinates(self.num_grains, micro.dimensions, self.seed)
+        self.seeds = get_seed_coordinates(self.target_num_grains, micro.dimensions, self.seed)
         tree = cKDTree(self.seeds)
 
         # Total number of voxels
@@ -68,3 +67,6 @@ class VoronoiGenerator(MicrostructureGenerator):
 
         # Reshape to Microstructure voxel grid
         micro.grain_ids = grain_ids_flat.reshape(micro.dimensions)
+
+    def _get_metadata(self):
+        return super()._get_metadata()

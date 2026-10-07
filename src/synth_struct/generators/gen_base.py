@@ -16,16 +16,11 @@ class MicrostructureGenerator:
     Provides shared utilities like allocating per-grain arrays
     """
 
-    def __init__(
-        self, 
-        num_grains,
-        seed = None,
-        chunk_size: int = 500_000,
-        ):
+    def __init__(self, target_num_grains, seed=None, chunk_size: int=500_000):
         """
         Initialize base attributes that subclasses will populate.
         """
-        self.num_grains = num_grains
+        self.target_num_grains = target_num_grains
         self.seed = seed
         self.chunk_size = chunk_size
         self.rng = np.random.default_rng(seed)
@@ -46,9 +41,21 @@ class MicrostructureGenerator:
         self._validate_microstructure(micro)
 
         self._generate_internal(micro)
-        # micro.validate_grain_ids()
+
+        micro.metadata["generator"] = self._get_metadata()
+
+        if self.seeds is not None:
+            micro.metadata["seed_coordinates"] = self.seeds.copy()
 
         return micro
+
+    def _validate_microstructure(self, micro):
+        """
+        Validate that the required attributes exist in the microstructure
+        """
+        for attr in ("dimensions", "resolution", "units"):
+            if not hasattr(micro, attr):
+                raise AttributeError(f"micro must define {attr}")
 
     def _generate_internal(self):
         """
@@ -56,24 +63,12 @@ class MicrostructureGenerator:
         """
         raise NotImplementedError("Subclasses must implement the generate() method.")
 
-    def _validate_microstructure(self, micro):
-        """
-        Validate that the required attributes exist in the microstructure
-        """
-        if not hasattr(micro, "dimensions"):
-            raise AttributeError("micro must define dimensions")
-
-        if not hasattr(micro, "num_grains"):
-            raise AttributeError("micro must define num_grains")
-
-        if micro.num_grains <= 0:
-            raise ValueError("micro.num_grains must be positive")
-
-        if not hasattr(micro, "resolution"):
-            raise AttributeError("micro must define resolution")
-
-        if not hasattr(micro, "units"):
-            raise AttributeError("micro must define units")
+    def _get_metadata(self):
+        return {
+            "method": type(self).__name__,
+            "seed": self.seed,
+            "target_num_grains": self.target_num_grains,
+        }
 
     """
     Might want to move to Microstructure class
@@ -100,5 +95,5 @@ class MicrostructureGenerator:
         Return the coordinates of the Voronoi seed points
         """
         if self.seeds is None:
-            raise AttributeError("Seeds have not been generated yet. Call generate().")
-        return self.seeds
+            raise AttributeError("Generate the microstructure first.")
+        return self.seeds.copy()

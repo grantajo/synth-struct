@@ -10,9 +10,9 @@ class TestMixedGenerator:
 
     def test_initialization_default(self):
         """Test generator initialization with default parameters"""
-        gen = MixedGenerator(num_grains=10)
+        gen = MixedGenerator(target_num_grains=10)
 
-        assert gen.num_grains == 10
+        assert gen.target_num_grains == 10
         assert gen.ellipsoid_fraction == 0.5
         assert gen.aspect_ratio_mean == 5.0
         assert gen.aspect_ratio_std == 0.5
@@ -23,7 +23,7 @@ class TestMixedGenerator:
     def test_initialization_custom(self):
         """Test generator initialization with custom parameters"""
         gen = MixedGenerator(
-            num_grains=20,
+            target_num_grains=20,
             ellipsoid_fraction=0.7,
             aspect_ratio_mean=3.0,
             aspect_ratio_std=1.0,
@@ -32,7 +32,7 @@ class TestMixedGenerator:
             chunk_size=100_000,
         )
 
-        assert gen.num_grains == 20
+        assert gen.target_num_grains == 20
         assert gen.ellipsoid_fraction == 0.7
         assert gen.aspect_ratio_mean == 3.0
         assert gen.aspect_ratio_std == 1.0
@@ -42,8 +42,8 @@ class TestMixedGenerator:
 
     def test_ellipsoid_fraction_clipping(self):
         """Test that ellipsoid_fraction is clipped to [0, 1]"""
-        gen1 = MixedGenerator(num_grains=10, ellipsoid_fraction=-0.5)
-        gen2 = MixedGenerator(num_grains=10, ellipsoid_fraction=1.5)
+        gen1 = MixedGenerator(target_num_grains=10, ellipsoid_fraction=-0.5)
+        gen2 = MixedGenerator(target_num_grains=10, ellipsoid_fraction=1.5)
 
         assert gen1.ellipsoid_fraction == 0.0
         assert gen2.ellipsoid_fraction == 1.0
@@ -51,7 +51,7 @@ class TestMixedGenerator:
     def test_generate_2d(self):
         """Test 2D mixed grain generation"""
         micro = Microstructure(dimensions=(50, 50), resolution=1.0)
-        gen = MixedGenerator(num_grains=10, seed=42)
+        gen = MixedGenerator(target_num_grains=10, seed=42)
 
         gen.generate(micro)
 
@@ -63,7 +63,7 @@ class TestMixedGenerator:
     def test_generate_3d(self):
         """Test 3D mixed grain generation"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = MixedGenerator(num_grains=10, seed=42)
+        gen = MixedGenerator(target_num_grains=10, seed=42)
 
         gen.generate(micro)
 
@@ -77,8 +77,8 @@ class TestMixedGenerator:
         micro1 = Microstructure(dimensions=(40, 40), resolution=1.0)
         micro2 = Microstructure(dimensions=(40, 40), resolution=1.0)
 
-        gen1 = MixedGenerator(num_grains=8, seed=123)
-        gen2 = MixedGenerator(num_grains=8, seed=123)
+        gen1 = MixedGenerator(target_num_grains=8, seed=123)
+        gen2 = MixedGenerator(target_num_grains=8, seed=123)
 
         gen1.generate(micro1)
         gen2.generate(micro2)
@@ -90,8 +90,8 @@ class TestMixedGenerator:
         micro1 = Microstructure(dimensions=(40, 40), resolution=1.0)
         micro2 = Microstructure(dimensions=(40, 40), resolution=1.0)
 
-        gen1 = MixedGenerator(num_grains=8, seed=123)
-        gen2 = MixedGenerator(num_grains=8, seed=456)
+        gen1 = MixedGenerator(target_num_grains=8, seed=123)
+        gen2 = MixedGenerator(target_num_grains=8, seed=456)
 
         gen1.generate(micro1)
         gen2.generate(micro2)
@@ -101,7 +101,7 @@ class TestMixedGenerator:
     def test_all_ellipsoidal(self):
         """Test generation with all ellipsoidal grains"""
         micro = Microstructure(dimensions=(40, 40), resolution=1.0)
-        gen = MixedGenerator(num_grains=10, ellipsoid_fraction=1.0, seed=42)
+        gen = MixedGenerator(target_num_grains=10, ellipsoid_fraction=1.0, seed=42)
 
         gen.generate(micro)
 
@@ -115,7 +115,7 @@ class TestMixedGenerator:
     def test_all_equiaxed(self):
         """Test generation with all equiaxed grains"""
         micro = Microstructure(dimensions=(40, 40), resolution=1.0)
-        gen = MixedGenerator(num_grains=10, ellipsoid_fraction=0.0, seed=42)
+        gen = MixedGenerator(target_num_grains=10, ellipsoid_fraction=0.0, seed=42)
 
         gen.generate(micro)
 
@@ -131,7 +131,7 @@ class TestMixedGenerator:
     def test_mixed_50_50(self):
         """Test generation with 50/50 mix"""
         micro = Microstructure(dimensions=(40, 40, 40), resolution=1.0)
-        gen = MixedGenerator(num_grains=10, ellipsoid_fraction=0.5, seed=42)
+        gen = MixedGenerator(target_num_grains=10, ellipsoid_fraction=0.5, seed=42)
 
         gen.generate(micro)
 
@@ -154,7 +154,7 @@ class TestMixedGenerator:
     def test_scale_factors_2d(self):
         """Test that scale factors are generated correctly for 2D"""
         micro = Microstructure(dimensions=(40, 40), resolution=1.0)
-        gen = MixedGenerator(num_grains=10, ellipsoid_fraction=0.5, seed=42)
+        gen = MixedGenerator(target_num_grains=10, ellipsoid_fraction=0.5, seed=42)
 
         gen.generate(micro)
 
@@ -164,7 +164,7 @@ class TestMixedGenerator:
     def test_scale_factors_3d(self):
         """Test that scale factors are generated correctly for 3D"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = MixedGenerator(num_grains=10, ellipsoid_fraction=0.5, seed=42)
+        gen = MixedGenerator(target_num_grains=10, ellipsoid_fraction=0.5, seed=42)
 
         gen.generate(micro)
 
@@ -175,7 +175,7 @@ class TestMixedGenerator:
         """Test that aspect ratios are clipped to reasonable bounds"""
         micro = Microstructure(dimensions=(40, 40, 40), resolution=1.0)
         gen = MixedGenerator(
-            num_grains=100,
+            target_num_grains=100,
             ellipsoid_fraction=1.0,  # All ellipsoidal
             aspect_ratio_mean=5.0,
             aspect_ratio_std=20.0,  # Large std to potentially exceed bounds
@@ -196,7 +196,7 @@ class TestMixedGenerator:
     def test_rotation_matrices_2d(self):
         """Test that rotation matrices are valid for 2D"""
         micro = Microstructure(dimensions=(40, 40), resolution=1.0)
-        gen = MixedGenerator(num_grains=10, ellipsoid_fraction=1.0, seed=42)
+        gen = MixedGenerator(target_num_grains=10, ellipsoid_fraction=1.0, seed=42)
 
         gen.generate(micro)
 
@@ -209,7 +209,7 @@ class TestMixedGenerator:
     def test_rotation_matrices_3d(self):
         """Test that rotation matrices are valid for 3D"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
-        gen = MixedGenerator(num_grains=10, ellipsoid_fraction=1.0, seed=42)
+        gen = MixedGenerator(target_num_grains=10, ellipsoid_fraction=1.0, seed=42)
 
         gen.generate(micro)
 
@@ -223,7 +223,7 @@ class TestMixedGenerator:
         """Test that equiaxed grains use identity rotation"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
         gen = MixedGenerator(
-            num_grains=10, ellipsoid_fraction=0.0, seed=42  # All equiaxed
+            target_num_grains=10, ellipsoid_fraction=0.0, seed=42  # All equiaxed
         )
 
         gen.generate(micro)
@@ -236,7 +236,7 @@ class TestMixedGenerator:
         """Test that ellipsoidal grains have varied rotations"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
         gen = MixedGenerator(
-            num_grains=10, ellipsoid_fraction=1.0, seed=42  # All ellipsoidal
+            target_num_grains=10, ellipsoid_fraction=1.0, seed=42  # All ellipsoidal
         )
 
         gen.generate(micro)
@@ -255,7 +255,7 @@ class TestMixedGenerator:
     def test_seeds_generation(self):
         """Test that seed coordinates are generated"""
         micro = Microstructure(dimensions=(50, 50), resolution=1.0)
-        gen = MixedGenerator(num_grains=15, seed=42)
+        gen = MixedGenerator(target_num_grains=15, seed=42)
 
         gen.generate(micro)
 
@@ -271,7 +271,7 @@ class TestMixedGenerator:
     def test_all_voxels_assigned(self):
         """Test that all voxels are assigned to grains"""
         micro = Microstructure(dimensions=(30, 30), resolution=1.0)
-        gen = MixedGenerator(num_grains=10, seed=42)
+        gen = MixedGenerator(target_num_grains=10, seed=42)
 
         gen.generate(micro)
 
@@ -282,7 +282,7 @@ class TestMixedGenerator:
     def test_varying_grain_counts(self, num_grains):
         """Test generation with different numbers of grains"""
         micro = Microstructure(dimensions=(40, 40), resolution=1.0)
-        gen = MixedGenerator(num_grains=num_grains, seed=42)
+        gen = MixedGenerator(target_num_grains=num_grains, seed=42)
 
         gen.generate(micro)
 
@@ -293,7 +293,7 @@ class TestMixedGenerator:
     def test_varying_ellipsoid_fractions(self, fraction):
         """Test generation with different ellipsoid fractions"""
         micro = Microstructure(dimensions=(40, 40, 40), resolution=1.0)
-        gen = MixedGenerator(num_grains=20, ellipsoid_fraction=fraction, seed=42)
+        gen = MixedGenerator(target_num_grains=20, ellipsoid_fraction=fraction, seed=42)
 
         gen.generate(micro)
 
@@ -315,8 +315,8 @@ class TestMixedGenerator:
         micro1 = Microstructure(dimensions=(50, 50), resolution=1.0)
         micro2 = Microstructure(dimensions=(50, 50), resolution=1.0)
 
-        gen1 = MixedGenerator(num_grains=5, base_size=5.0, seed=42)
-        gen2 = MixedGenerator(num_grains=5, base_size=15.0, seed=42)
+        gen1 = MixedGenerator(target_num_grains=5, base_size=5.0, seed=42)
+        gen2 = MixedGenerator(target_num_grains=5, base_size=15.0, seed=42)
 
         gen1.generate(micro1)
         gen2.generate(micro2)
@@ -328,7 +328,7 @@ class TestMixedGenerator:
         """Test that ellipsoidal grains come first, equiaxed second"""
         micro = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
         gen = MixedGenerator(
-            num_grains=10,
+            target_num_grains=10,
             ellipsoid_fraction=0.3,  # First 3 should be ellipsoidal
             aspect_ratio_mean=5.0,
             seed=42,
@@ -352,7 +352,7 @@ class TestMixedGenerator:
         """Test handling of odd number of grains with non-integer ellipsoid count"""
         micro = Microstructure(dimensions=(40, 40), resolution=1.0)
         gen = MixedGenerator(
-            num_grains=11,
+            target_num_grains=11,
             ellipsoid_fraction=0.5,  # Should give 5 ellipsoidal, 6 equiaxed
             seed=42,
         )
@@ -381,14 +381,14 @@ class TestMixedGenerator:
         micro2 = Microstructure(dimensions=(40, 40, 40), resolution=1.0)
 
         gen1 = MixedGenerator(
-            num_grains=10,
+            target_num_grains=10,
             ellipsoid_fraction=1.0,
             aspect_ratio_mean=3.0,
             aspect_ratio_std=0.1,
             seed=42,
         )
         gen2 = MixedGenerator(
-            num_grains=10,
+            target_num_grains=10,
             ellipsoid_fraction=1.0,
             aspect_ratio_mean=8.0,
             aspect_ratio_std=0.1,

@@ -19,7 +19,6 @@ class DummyGenerator(MicrostructureGenerator):
         # Simple implementation for testing
         micro.grain_ids = np.random.randint(1, 10, micro.dimensions)
 
-
 class TestMicrostructureGenerator:
     def test_base_generator_allocation(self):
         """
@@ -32,7 +31,7 @@ class TestMicrostructureGenerator:
         micro.grain_ids = np.random.randint(1, 10, (100, 100))
 
         # Create generator and generate
-        generator = DummyGenerator()
+        generator = DummyGenerator(5)
         generator.generate(micro)
 
         # Check array allocations
@@ -66,7 +65,7 @@ class TestMicrostructureGenerator:
         micro = Microstructure(dimensions=(100, 100), resolution=0.1)
 
         # Create base generator (which doesn't implement _generate_internal)
-        generator = MicrostructureGenerator()
+        generator = MicrostructureGenerator(5)
 
         # Should raise NotImplementedError
         with pytest.raises(NotImplementedError):

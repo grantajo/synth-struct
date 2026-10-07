@@ -12,27 +12,26 @@ class TestVoronoiGeneratorInitialization:
 
     def test_init_basic(self):
         """Test basic initialization"""
-        gen = VoronoiGenerator(num_grains=10)
-        assert gen.num_grains == 10
+        gen = VoronoiGenerator(target_num_grains=10)
+        assert gen.target_num_grains == 10
         assert gen.seed is None
         assert gen.chunk_size == 500_000
-        assert gen.seeds is None
 
     def test_init_with_seed(self):
         """Test initialization with random seed"""
-        gen = VoronoiGenerator(num_grains=20, seed=42)
-        assert gen.num_grains == 20
+        gen = VoronoiGenerator(target_num_grains=20, seed=42)
+        assert gen.target_num_grains == 20
         assert gen.seed == 42
 
     def test_init_with_custom_chunk_size(self):
         """Test initialization with custom chunk size"""
-        gen = VoronoiGenerator(num_grains=15, chunk_size=100_000)
+        gen = VoronoiGenerator(target_num_grains=15, chunk_size=100_000)
         assert gen.chunk_size == 100_000
 
     def test_init_with_all_parameters(self):
         """Test initialization with all parameters"""
-        gen = VoronoiGenerator(num_grains=25, seed=123, chunk_size=250_000)
-        assert gen.num_grains == 25
+        gen = VoronoiGenerator(target_num_grains=25, seed=123, chunk_size=250_000)
+        assert gen.target_num_grains == 25
         assert gen.seed == 123
         assert gen.chunk_size == 250_000
 
@@ -57,7 +56,7 @@ class TestVoronoiGenerator2D:
 
     def test_generate_2d_basic(self, micro_2d_small):
         """Test basic 2D Voronoi generation"""
-        gen = VoronoiGenerator(num_grains=10, seed=42)
+        gen = VoronoiGenerator(target_num_grains=10, seed=42)
         gen.generate(micro_2d_small)
 
         # Check that grain IDs are assigned
@@ -71,7 +70,7 @@ class TestVoronoiGenerator2D:
 
     def test_generate_2d_correct_num_grains(self, micro_2d_medium):
         """Test that correct number of grains are generated"""
-        gen = VoronoiGenerator(num_grains=25, seed=42)
+        gen = VoronoiGenerator(target_num_grains=25, seed=42)
         gen.generate(micro_2d_medium)
 
         unique_grains = np.unique(micro_2d_medium.grain_ids)
@@ -80,7 +79,7 @@ class TestVoronoiGenerator2D:
 
     def test_generate_2d_no_background(self, micro_2d_small):
         """Test that no background (ID=0) pixels exist"""
-        gen = VoronoiGenerator(num_grains=15, seed=42)
+        gen = VoronoiGenerator(target_num_grains=15, seed=42)
         gen.generate(micro_2d_small)
 
         # Voronoi should fill entire space - no background
@@ -88,7 +87,7 @@ class TestVoronoiGenerator2D:
 
     def test_generate_2d_all_voxels_assigned(self, micro_2d_small):
         """Test that all voxels are assigned to a grain"""
-        gen = VoronoiGenerator(num_grains=10, seed=42)
+        gen = VoronoiGenerator(target_num_grains=10, seed=42)
         gen.generate(micro_2d_small)
 
         # All voxels should have a grain ID >= 1
@@ -97,11 +96,11 @@ class TestVoronoiGenerator2D:
 
     def test_generate_2d_reproducibility(self, micro_2d_medium):
         """Test that same seed produces same results"""
-        gen1 = VoronoiGenerator(num_grains=20, seed=42)
+        gen1 = VoronoiGenerator(target_num_grains=20, seed=42)
         micro1 = Microstructure(dimensions=(100, 100), resolution=1.0)
         gen1.generate(micro1)
 
-        gen2 = VoronoiGenerator(num_grains=20, seed=42)
+        gen2 = VoronoiGenerator(target_num_grains=20, seed=42)
         micro2 = Microstructure(dimensions=(100, 100), resolution=1.0)
         gen2.generate(micro2)
 
@@ -111,11 +110,11 @@ class TestVoronoiGenerator2D:
 
     def test_generate_2d_different_seeds(self, micro_2d_medium):
         """Test that different seeds produce different results"""
-        gen1 = VoronoiGenerator(num_grains=20, seed=42)
+        gen1 = VoronoiGenerator(target_num_grains=20, seed=42)
         micro1 = Microstructure(dimensions=(100, 100), resolution=1.0)
         gen1.generate(micro1)
 
-        gen2 = VoronoiGenerator(num_grains=20, seed=123)
+        gen2 = VoronoiGenerator(target_num_grains=20, seed=123)
         micro2 = Microstructure(dimensions=(100, 100), resolution=1.0)
         gen2.generate(micro2)
 
@@ -125,7 +124,7 @@ class TestVoronoiGenerator2D:
 
     def test_generate_2d_single_grain(self, micro_2d_small):
         """Test generation with single grain"""
-        gen = VoronoiGenerator(num_grains=1, seed=42)
+        gen = VoronoiGenerator(target_num_grains=1, seed=42)
         gen.generate(micro_2d_small)
 
         # All voxels should be grain 1
@@ -134,7 +133,7 @@ class TestVoronoiGenerator2D:
 
     def test_generate_2d_many_grains(self, micro_2d_medium):
         """Test generation with many grains"""
-        gen = VoronoiGenerator(num_grains=100, seed=42)
+        gen = VoronoiGenerator(target_num_grains=100, seed=42)
         gen.generate(micro_2d_medium)
 
         unique_grains = np.unique(micro_2d_medium.grain_ids)
@@ -142,7 +141,7 @@ class TestVoronoiGenerator2D:
 
     def test_seeds_stored_2d(self, micro_2d_small):
         """Test that seed coordinates are stored"""
-        gen = VoronoiGenerator(num_grains=10, seed=42)
+        gen = VoronoiGenerator(target_num_grains=10, seed=42)
         gen.generate(micro_2d_small)
 
         assert gen.seeds is not None
@@ -150,7 +149,7 @@ class TestVoronoiGenerator2D:
 
     def test_get_seed_coordinates_2d(self, micro_2d_small):
         """Test get_seed_coordinates method"""
-        gen = VoronoiGenerator(num_grains=10, seed=42)
+        gen = VoronoiGenerator(target_num_grains=10, seed=42)
         gen.generate(micro_2d_small)
 
         seeds = gen.get_seed_coordinates()
@@ -174,7 +173,7 @@ class TestVoronoiGenerator3D:
 
     def test_generate_3d_basic(self, micro_3d_small):
         """Test basic 3D Voronoi generation"""
-        gen = VoronoiGenerator(num_grains=20, seed=42)
+        gen = VoronoiGenerator(target_num_grains=20, seed=42)
         gen.generate(micro_3d_small)
 
         # Check that grain IDs are assigned
@@ -187,7 +186,7 @@ class TestVoronoiGenerator3D:
 
     def test_generate_3d_correct_num_grains(self, micro_3d_medium):
         """Test that correct number of grains are generated in 3D"""
-        gen = VoronoiGenerator(num_grains=50, seed=42)
+        gen = VoronoiGenerator(target_num_grains=50, seed=42)
         gen.generate(micro_3d_medium)
 
         unique_grains = np.unique(micro_3d_medium.grain_ids)
@@ -196,14 +195,14 @@ class TestVoronoiGenerator3D:
 
     def test_generate_3d_no_background(self, micro_3d_small):
         """Test that no background exists in 3D"""
-        gen = VoronoiGenerator(num_grains=25, seed=42)
+        gen = VoronoiGenerator(target_num_grains=25, seed=42)
         gen.generate(micro_3d_small)
 
         assert 0 not in micro_3d_small.grain_ids
 
     def test_generate_3d_all_voxels_assigned(self, micro_3d_small):
         """Test that all voxels are assigned in 3D"""
-        gen = VoronoiGenerator(num_grains=20, seed=42)
+        gen = VoronoiGenerator(target_num_grains=20, seed=42)
         gen.generate(micro_3d_small)
 
         assert np.all(micro_3d_small.grain_ids >= 1)
@@ -211,11 +210,11 @@ class TestVoronoiGenerator3D:
 
     def test_generate_3d_reproducibility(self, micro_3d_small):
         """Test reproducibility in 3D"""
-        gen1 = VoronoiGenerator(num_grains=15, seed=42)
+        gen1 = VoronoiGenerator(target_num_grains=15, seed=42)
         micro1 = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
         gen1.generate(micro1)
 
-        gen2 = VoronoiGenerator(num_grains=15, seed=42)
+        gen2 = VoronoiGenerator(target_num_grains=15, seed=42)
         micro2 = Microstructure(dimensions=(30, 30, 30), resolution=1.0)
         gen2.generate(micro2)
 
@@ -224,7 +223,7 @@ class TestVoronoiGenerator3D:
 
     def test_seeds_stored_3d(self, micro_3d_small):
         """Test that seed coordinates are stored in 3D"""
-        gen = VoronoiGenerator(num_grains=20, seed=42)
+        gen = VoronoiGenerator(target_num_grains=20, seed=42)
         gen.generate(micro_3d_small)
 
         assert gen.seeds is not None
@@ -232,7 +231,7 @@ class TestVoronoiGenerator3D:
 
     def test_get_seed_coordinates_3d(self, micro_3d_small):
         """Test get_seed_coordinates method in 3D"""
-        gen = VoronoiGenerator(num_grains=20, seed=42)
+        gen = VoronoiGenerator(target_num_grains=20, seed=42)
         gen.generate(micro_3d_small)
 
         seeds = gen.get_seed_coordinates()
@@ -254,7 +253,7 @@ class TestVoronoiGeneratorArrayAllocation:
 
     def test_orientations_allocated_2d(self, micro_2d):
         """Test that orientations array is allocated in 2D"""
-        gen = VoronoiGenerator(num_grains=10, seed=42)
+        gen = VoronoiGenerator(target_num_grains=10, seed=42)
         gen.generate(micro_2d)
 
         assert hasattr(micro_2d, "orientations")
@@ -264,7 +263,7 @@ class TestVoronoiGeneratorArrayAllocation:
 
     def test_stiffness_allocated_2d(self, micro_2d):
         """Test that stiffness array is allocated in 2D"""
-        gen = VoronoiGenerator(num_grains=10, seed=42)
+        gen = VoronoiGenerator(target_num_grains=10, seed=42)
         gen.generate(micro_2d)
 
         assert hasattr(micro_2d, "stiffness")
@@ -274,7 +273,7 @@ class TestVoronoiGeneratorArrayAllocation:
 
     def test_phase_allocated_2d(self, micro_2d):
         """Test that phase array is allocated in 2D"""
-        gen = VoronoiGenerator(num_grains=10, seed=42)
+        gen = VoronoiGenerator(target_num_grains=10, seed=42)
         gen.generate(micro_2d)
 
         assert hasattr(micro_2d, "phase")
@@ -284,7 +283,7 @@ class TestVoronoiGeneratorArrayAllocation:
 
     def test_all_arrays_allocated_3d(self, micro_3d):
         """Test that all arrays are allocated in 3D"""
-        gen = VoronoiGenerator(num_grains=25, seed=42)
+        gen = VoronoiGenerator(target_num_grains=25, seed=42)
         gen.generate(micro_3d)
 
         assert hasattr(micro_3d, "orientations")
@@ -297,7 +296,7 @@ class TestVoronoiGeneratorArrayAllocation:
 
     def test_background_index_reserved(self, micro_2d):
         """Test that index 0 is reserved for background"""
-        gen = VoronoiGenerator(num_grains=5, seed=42)
+        gen = VoronoiGenerator(target_num_grains=5, seed=42)
         gen.generate(micro_2d)
 
         # Arrays should have size num_grains + 1
@@ -314,7 +313,7 @@ class TestVoronoiGeneratorChunking:
     def test_small_chunk_size(self):
         """Test generation with small chunk size"""
         micro = Microstructure(dimensions=(50, 50), resolution=1.0)
-        gen = VoronoiGenerator(num_grains=10, seed=42, chunk_size=500)
+        gen = VoronoiGenerator(target_num_grains=10, seed=42, chunk_size=500)
         gen.generate(micro)
 
         # Should still produce valid result
@@ -324,7 +323,7 @@ class TestVoronoiGeneratorChunking:
     def test_chunk_size_larger_than_domain(self):
         """Test with chunk size larger than total voxels"""
         micro = Microstructure(dimensions=(20, 20), resolution=1.0)
-        gen = VoronoiGenerator(num_grains=5, seed=42, chunk_size=1_000_000)
+        gen = VoronoiGenerator(target_num_grains=5, seed=42, chunk_size=1_000_000)
         gen.generate(micro)
 
         # Should work fine with oversized chunk
@@ -334,7 +333,7 @@ class TestVoronoiGeneratorChunking:
         """Test with chunk size exactly equal to domain size"""
         micro = Microstructure(dimensions=(50, 50), resolution=1.0)
         total_voxels = 50 * 50
-        gen = VoronoiGenerator(num_grains=10, seed=42, chunk_size=total_voxels)
+        gen = VoronoiGenerator(target_num_grains=10, seed=42, chunk_size=total_voxels)
         gen.generate(micro)
 
         assert len(np.unique(micro.grain_ids)) == 10
@@ -343,12 +342,12 @@ class TestVoronoiGeneratorChunking:
         """Test that different chunk sizes produce same result"""
         # Generate with default chunk size
         micro1 = Microstructure(dimensions=(60, 60), resolution=1.0)
-        gen1 = VoronoiGenerator(num_grains=15, seed=42, chunk_size=500_000)
+        gen1 = VoronoiGenerator(target_num_grains=15, seed=42, chunk_size=500_000)
         gen1.generate(micro1)
 
         # Generate with small chunk size
         micro2 = Microstructure(dimensions=(60, 60), resolution=1.0)
-        gen2 = VoronoiGenerator(num_grains=15, seed=42, chunk_size=1000)
+        gen2 = VoronoiGenerator(target_num_grains=15, seed=42, chunk_size=1000)
         gen2.generate(micro2)
 
         # Results should be identical regardless of chunk size
@@ -361,7 +360,7 @@ class TestVoronoiGeneratorGrainSizes:
     def test_grain_size_variation(self):
         """Test that grains have varying sizes"""
         micro = Microstructure(dimensions=(100, 100), resolution=1.0)
-        gen = VoronoiGenerator(num_grains=20, seed=42)
+        gen = VoronoiGenerator(target_num_grains=20, seed=42)
         gen.generate(micro)
 
         # Calculate grain sizes
@@ -379,7 +378,7 @@ class TestVoronoiGeneratorGrainSizes:
     def test_all_grains_have_voxels(self):
         """Test that every grain has at least one voxel"""
         micro = Microstructure(dimensions=(100, 100), resolution=1.0)
-        gen = VoronoiGenerator(num_grains=30, seed=42)
+        gen = VoronoiGenerator(target_num_grains=30, seed=42)
         gen.generate(micro)
 
         for grain_id in range(1, 31):
@@ -389,7 +388,7 @@ class TestVoronoiGeneratorGrainSizes:
     def test_total_voxels_sum(self):
         """Test that grain voxels sum to total voxels"""
         micro = Microstructure(dimensions=(80, 80), resolution=1.0)
-        gen = VoronoiGenerator(num_grains=25, seed=42)
+        gen = VoronoiGenerator(target_num_grains=25, seed=42)
         gen.generate(micro)
 
         total_voxels = 80 * 80
@@ -406,7 +405,7 @@ class TestVoronoiGeneratorEdgeCases:
     def test_very_small_microstructure(self):
         """Test with very small microstructure"""
         micro = Microstructure(dimensions=(5, 5), resolution=1.0)
-        gen = VoronoiGenerator(num_grains=3, seed=42)
+        gen = VoronoiGenerator(target_num_grains=3, seed=42)
         gen.generate(micro)
 
         assert micro.grain_ids.shape == (5, 5)
@@ -415,7 +414,7 @@ class TestVoronoiGeneratorEdgeCases:
     def test_rectangular_2d_microstructure(self):
         """Test with non-square 2D microstructure"""
         micro = Microstructure(dimensions=(100, 50), resolution=1.0)
-        gen = VoronoiGenerator(num_grains=20, seed=42)
+        gen = VoronoiGenerator(target_num_grains=20, seed=42)
         gen.generate(micro)
 
         assert micro.grain_ids.shape == (100, 50)
@@ -424,7 +423,7 @@ class TestVoronoiGeneratorEdgeCases:
     def test_rectangular_3d_microstructure(self):
         """Test with non-cubic 3D microstructure"""
         micro = Microstructure(dimensions=(40, 30, 20), resolution=1.0)
-        gen = VoronoiGenerator(num_grains=15, seed=42)
+        gen = VoronoiGenerator(target_num_grains=15, seed=42)
         gen.generate(micro)
 
         assert micro.grain_ids.shape == (40, 30, 20)
@@ -434,7 +433,7 @@ class TestVoronoiGeneratorEdgeCases:
         """Test with more grains than voxels (edge case)"""
         micro = Microstructure(dimensions=(5, 5), resolution=1.0)
         # 25 voxels, 30 grains requested
-        gen = VoronoiGenerator(num_grains=30, seed=42)
+        gen = VoronoiGenerator(target_num_grains=30, seed=42)
         gen.generate(micro)
 
         # Some grains may not have any voxels assigned
@@ -449,7 +448,7 @@ class TestVoronoiGeneratorSeedBounds:
     def test_seeds_within_bounds_2d(self):
         """Test that all seeds are within microstructure bounds in 2D"""
         micro = Microstructure(dimensions=(100, 100), resolution=1.0)
-        gen = VoronoiGenerator(num_grains=20, seed=42)
+        gen = VoronoiGenerator(target_num_grains=20, seed=42)
         gen.generate(micro)
 
         seeds = gen.get_seed_coordinates()
@@ -461,7 +460,7 @@ class TestVoronoiGeneratorSeedBounds:
     def test_seeds_within_bounds_3d(self):
         """Test that all seeds are within microstructure bounds in 3D"""
         micro = Microstructure(dimensions=(50, 60, 70), resolution=1.0)
-        gen = VoronoiGenerator(num_grains=25, seed=42)
+        gen = VoronoiGenerator(target_num_grains=25, seed=42)
         gen.generate(micro)
 
         seeds = gen.get_seed_coordinates()

@@ -22,18 +22,17 @@ class Microstructure:
     Data container for a synthetic microstructure
     """
 
-    def __init__(self, dimensions, resolution, num_grains, units="um", phase=None):
+    def __init__(self, dimensions, resolution, units="um", phase=None):
         """
         Initiation of a Microstructure class
 
         Args:
         - dimensions: tuple - (nx, ny) for 2D, (nx, ny, nz) for 3D
         - resolution: float - physical size per voxel
-        - num_grains: int - Number of grains
+
         - units: str - physical units
         - phase: Dict - phases present
         """
-
         self.dimensions = tuple(dimensions)
         self.resolution = resolution
         self.units = units
