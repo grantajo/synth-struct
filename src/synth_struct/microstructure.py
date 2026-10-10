@@ -175,6 +175,14 @@ class Microstructure:
     def orientations(self, value):
         self.fields["orientations"] = value
 
+    @property
+    def phase(self):
+        return self.fields.get("phase")
+
+    @phase.setter
+    def phase(self, value):
+        self.field["phase"] = value
+
     # -------------------------------------------------------------------------
     # Texture
     # -------------------------------------------------------------------------
@@ -230,6 +238,20 @@ class Microstructure:
     # -------------------------------------------------------------------------
     # Utilities
     # -------------------------------------------------------------------------
+
+    """
+    def allocate_grain_arrays(self, num_grains=None):
+        ""
+        Allocate arrays indexed by grain ID, index 0 is reserved for background.
+        ""
+        if num_grains is None:
+            num_grains = self.num_grains
+
+        n = num_grains + 1
+        self.orientations = np.zeros((n, 3), dtype=np.float64)
+        self.attach_field("stiffness", np.zeros((n, 6, 6), dtype=np.float32))
+        self.attach_field("phase", np.zeros(n, dtype=np.int8))
+    """
 
     def measure_grain_volumes(self):
         """

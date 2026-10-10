@@ -36,7 +36,7 @@ class MicrostructureGenerator:
     def generate(self, micro):
         """
         Generate grains in the given Microstructure
-        Calse _generate_internal() then allocates arrays.
+        Calls _generate_internal() then allocates arrays.
         """
         self._validate_microstructure(micro)
 
@@ -57,11 +57,11 @@ class MicrostructureGenerator:
             if not hasattr(micro, attr):
                 raise AttributeError(f"micro must define {attr}")
 
-    def _generate_internal(self):
+    def _generate_internal(self, micro):
         """
         Internal generation logic. Must be implemented by subclasses.
         """
-        raise NotImplementedError("Subclasses must implement the generate() method.")
+        raise NotImplementedError("Subclasses must implement the _generate_internal() method.")
 
     def _get_metadata(self):
         return {

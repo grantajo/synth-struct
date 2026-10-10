@@ -5,7 +5,7 @@
 - Added in metadata for generators
 - Moved num_grains back out of Microstructure
 - Added in target_num_grains to tests
-  - Failing some tests now for some reason
+  - Removed orientation, stiffness, and phase allocation before generating
 
 ## Goals
 

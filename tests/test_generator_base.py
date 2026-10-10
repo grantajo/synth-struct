@@ -2,7 +2,7 @@
 
 import numpy as np
 import pytest
-from synth_struct.microstructure import Microstructure
+from synth_struct import Microstructure, Phase
 from synth_struct.generators.gen_base import MicrostructureGenerator
 from synth_struct.generators.gen_utils import (
     get_seed_coordinates,
@@ -16,45 +16,25 @@ class DummyGenerator(MicrostructureGenerator):
     """
 
     def _generate_internal(self, micro):
-        # Simple implementation for testing
-        micro.grain_ids = np.random.randint(1, 10, micro.dimensions)
+        micro.grain_ids = np.array([[1, 1], [2, 2]], dtype=np.int32)
+        
 
 class TestMicrostructureGenerator:
-    def test_base_generator_allocation(self):
+    def test_base_generator_generate(self):
         """
         Test that base generator correctly allocates per-grain arrays
         """
         # Create a microstructure
-        micro = Microstructure(dimensions=(100, 100), resolution=0.1)
-
-        # Set a dummy number of grains
-        micro.grain_ids = np.random.randint(1, 10, (100, 100))
+        micro = Microstructure(dimensions=(2, 2), resolution=0.1)
 
         # Create generator and generate
-        generator = DummyGenerator(5)
-        generator.generate(micro)
+        generator = DummyGenerator(target_num_grains=2)
+        result = generator.generate(micro)
 
         # Check array allocations
-        assert hasattr(micro, "orientations"), "Orientations not allocated"
-        assert hasattr(micro, "stiffness"), "Stiffness not allocated"
-        assert hasattr(micro, "phase"), "Phase not allocated"
-
-        # Check array shapes
-        assert micro.orientations.shape == (
-            micro.num_grains + 1,
-            3,
-        ), "Incorrect orientations shape"
-        assert micro.stiffness.shape == (
-            micro.num_grains + 1,
-            6,
-            6,
-        ), "Incorrect stiffness shape"
-        assert micro.phase.shape == (micro.num_grains + 1,), "Incorrect phase shape"
-
-        # Check data types
-        assert micro.orientations.dtype == np.float64, "Incorrect orientations dtype"
-        assert micro.stiffness.dtype == np.float32, "Incorrect stiffness dtype"
-        assert micro.phase.dtype == np.int8, "Incorrect phase dtype"
+        assert result is micro
+        assert micro.num_grains == 2
+        assert micro.metadata["generator"] == generator._get_metadata()
 
     def test_base_generator_not_implemented(self):
         """
