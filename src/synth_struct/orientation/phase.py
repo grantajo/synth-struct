@@ -8,10 +8,8 @@ lattice parameters, and associated crystallographic information.
 """
 
 from dataclasses import dataclass, field
-from typing import Optional
 
-
-from .phase_constants import KNOWN_PHASES, ALIASES, VALID_POINT_GROUPS
+from .phase_constants import ALIASES, KNOWN_PHASES, VALID_POINT_GROUPS
 
 
 def available_presets() -> list[str]:
@@ -35,7 +33,7 @@ class Phase:
     name: str
     lattice_params: tuple
     point_group: str
-    space_group: Optional[int] = None
+    space_group: int | None = None
     metadata: dict = field(default_factory=dict)
 
     def __post_init__(self):
@@ -58,11 +56,10 @@ class Phase:
                 f"Expected one of {VALID_POINT_GROUPS}"
             )
 
-        if self.space_group is not None:
-            if not (1 <= self.space_group <= 230):
-                raise ValueError(
-                    f"Space group must be between 1 and 230, got {self.space_group}"
-                )
+        if self.space_group is not None and not (1 <= self.space_group <= 230):
+            raise ValueError(
+                f"Space group must be between 1 and 230, got {self.space_group}"
+            )
 
     @property
     def a(self) -> float:

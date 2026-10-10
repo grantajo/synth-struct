@@ -7,7 +7,6 @@ Texture class for instantiating a texture for the TextureGenerators
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, Optional
 
 import numpy as np
 
@@ -253,7 +252,7 @@ class Texture:
     orientations: np.ndarray
     representation: str
     phase: Phase
-    metadata: Dict = field(default_factory=dict)
+    metadata: dict = field(default_factory=dict)
 
     def __post_init__(self):
         self._validate()
@@ -283,7 +282,7 @@ class Texture:
         """
         return self.orientations.shape[0]
 
-    def to_representation(self, representation: str) -> "Texture":
+    def to_representation(self, representation: str) -> Texture:
         """
         Convert from one texture type to another.
 
@@ -325,7 +324,7 @@ class Texture:
             metadata=self.metadata.copy(),
         )
 
-    def apply_symmetry_reduction(self) -> "Texture":
+    def apply_symmetry_reduction(self) -> Texture:
         """
         Reduce orientations to the fundamental zone for the phase's point group.
 
@@ -370,7 +369,7 @@ class Texture:
             metadata=self.metadata.copy(),
         )
 
-    def apply_scatter(self, degspread: float, seed: Optional[int]) -> "Texture":
+    def apply_scatter(self, degspread: float, seed: int | None) -> Texture:
         """
         Apply scatter around each orientation in rotation space.
 
@@ -429,7 +428,7 @@ class Texture:
 
         return scattered_texture.to_representation(self.representation)
 
-    def copy(self) -> "Texture":
+    def copy(self) -> Texture:
         """
         Creates a copy of the texture for analysis
         """
@@ -440,7 +439,7 @@ class Texture:
             metadata=self.metadata.copy(),
         )
 
-    def subset(self, indices: np.ndarray) -> "Texture":
+    def subset(self, indices: np.ndarray) -> Texture:
         """
         Return a texture corresponding to a subset of grains.
         """

@@ -16,9 +16,9 @@ There are several basic textures for cubic:
 
 import numpy as np
 
+from ..phase import Phase
 from .texture import Texture
 from .texture_base import TextureGenerator
-from ..phase import Phase
 
 CUBIC_TEXTURES = {
     "cube": np.array([0.0, 0.0, 0.0]),

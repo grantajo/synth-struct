@@ -10,11 +10,11 @@ Z || ND
 
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib_scalebar.scalebar import ScaleBar
-from orix.vector import Vector3d
 from orix.plot import IPFColorKeyTSL
+from orix.vector import Vector3d
 
 from .orix_utils import create_crystal_map, get_crystal_map_slice
 

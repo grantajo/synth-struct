@@ -6,10 +6,10 @@ This is a series of plotting functions to help with plotting.
 This is for general plotting, such as Grain IDs, etc.
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 
-from .plot_utils import shuffle_display_grain_ids, create_grain_boundary_overlay
+from .plot_utils import create_grain_boundary_overlay, shuffle_display_grain_ids
 
 
 class Plotter:

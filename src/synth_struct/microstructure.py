@@ -9,7 +9,6 @@ crystallographic symmetry, and attached data fields.
 """
 
 import copy
-from typing import Dict, Optional
 
 import numpy as np
 
@@ -125,7 +124,7 @@ class Microstructure:
     # -------------------------------------------------------------------------
 
     @property
-    def phases(self) -> Dict[int, Phase]:
+    def phases(self) -> dict[int, Phase]:
         return self._phases
 
     def add_phase(self, phase_id: int, phase: Phase) -> int:
@@ -141,7 +140,7 @@ class Microstructure:
             raise KeyError(f"No phase with ID {phase_id}")
         return self._phases[phase_id]
 
-    def get_phase_for_grain(self, grain_id: int) -> Optional[Phase]:
+    def get_phase_for_grain(self, grain_id: int) -> Phase | None:
         """
         Return the Phase for a given grain.
 

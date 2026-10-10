@@ -7,7 +7,6 @@ Base TextureGenerator class to be able to call each individual generator.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Optional
 
 from ..phase import Phase
 
@@ -35,7 +34,7 @@ class TextureGenerator(ABC):
         raise NotImplementedError
 
     @property
-    def phase(self) -> Optional[Phase]:
+    def phase(self) -> Phase | None:
         """Returns the phase associated with this generator, if any."""
         return getattr(self, "_phase", None)
 

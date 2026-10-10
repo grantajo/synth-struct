@@ -5,17 +5,16 @@ This file has functions for outputting meshes and other files
 that are useful for mechanical simulations.
 """
 
+import warnings
 from enum import Enum
 from pathlib import Path
-import warnings
 
+# import gmsh
+import h5py
 import numpy as np
 
 # from scipy.spatial import cKDTree, Voronoi, ConvexHull
 import pyvista as pv
-
-# import gmsh
-import h5py
 
 """
 class MeshPath(Enum):
@@ -620,15 +619,14 @@ def _write_abaqus_inp(
 
         # --- Nodes ---
         f.write("*Node\n")
-        for i, (x, y, z) in enumerate(nodes, start=1):
-            f.write(f"  {i}, {x:.6f}, {y:.6f}, {z:.6f}\n")
+        f.writelines(f"  {i}, {x:.6f}, {y:.6f}, {z:.6f}\n" for i, (x, y, z) in enumerate(nodes, start=1))
 
         # --- Elements per type ---
         abaqus_type = "C3D8R"  # Hex8 explicit, Tet10 standard
         f.write(f"\n*Element, type={abaqus_type}\n")
         elem_id = 1
 
-        for cell_type, connectivity in cells.items():
+        for cell_type, connectivity in cells.values():
             for conn in connectivity:
                 abaqus_conn = " ".join(str(n + 1) for n in conn)
                 f.write(f"  {elem_id}, {abaqus_conn}\n")
@@ -641,8 +639,7 @@ def _write_abaqus_inp(
                 elems = np.where(grain_ids == gid)[0] + 1
                 f.write(f"\n*Elset, elset=Grain_{gid}\n")
                 # Abaqus: 16 elements per line max
-                for chunk in [elems[i : i + 16] for i in range(0, len(elems), 16)]:
-                    f.write("  " + ", ".join(map(str, chunk)) + "\n")
+                f.writelines("  " + ", ".join(map(str, chunk)) + "\n" for chunk in [elems[i : i + 16] for i in range(0, len(elems), 16)])
 
         # --- Boundary node sets (domain faces) ---
         bounds = dims * res
@@ -659,10 +656,9 @@ def _write_abaqus_inp(
             node_ids = np.where(mask_fn(nodes))[0] + 1
             if len(node_ids):
                 f.write(f"\n*Nset, nset={name}\n")
-                for chunk in [
+                f.writelines("  " + ", ".join(map(str, chunk)) + "\n" for chunk in [
                     node_ids[i : i + 16] for i in range(0, len(node_ids), 16)
-                ]:
-                    f.write("  " + ", ".join(map(str, chunk)) + "\n")
+                ])
 
         # --- Material placeholders (one per grain) ---
         unique_grains = np.unique(mesh.cell_data.get("grain_id", []))

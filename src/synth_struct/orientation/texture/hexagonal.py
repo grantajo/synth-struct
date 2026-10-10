@@ -11,9 +11,9 @@ There are two basic textures for hexagonal:
 
 import numpy as np
 
+from ..phase import Phase
 from .texture import Texture
 from .texture_base import TextureGenerator
-from ..phase import Phase
 
 HEXAGONAL_ORIENTATIONS = {
     "basal": np.array([0.0, 0.0, 0.0]),

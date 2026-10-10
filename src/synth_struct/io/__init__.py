@@ -4,10 +4,10 @@
 File outputs
 """
 
-from .structured_mesh import SolverFormat, ElementType, export_microstructure
+from .structured_mesh import ElementType, SolverFormat, export_microstructure
 
 __all__ = [
-    "SolverFormat",
     "ElementType",
+    "SolverFormat",
     "export_microstructure",
 ]

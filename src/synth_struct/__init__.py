@@ -5,38 +5,33 @@ synth-struct: A package for generating synthetic microstructures
 with crystallographic textures.
 """
 
-from .microstructure import Microstructure
-from .micro_utils import get_grains_in_region
-
-from .generators.voronoi import VoronoiGenerator
-from .generators.ellipsoidal import EllipsoidalGenerator
-from .generators.mixed import MixedGenerator
 from .generators.columnar import ColumnarGenerator
+from .generators.ellipsoidal import EllipsoidalGenerator
 from .generators.lath import LathGenerator
-
+from .generators.mixed import MixedGenerator
+from .generators.voronoi import VoronoiGenerator
+from .io.structured_mesh import (
+    ElementType,
+    SolverFormat,
+    export_microstructure,
+)
+from .micro_utils import get_grains_in_region
+from .microstructure import Microstructure
 from .orientation.phase import Phase
-from .orientation.texture.random import RandomTexture
 from .orientation.texture.cubic import CubicTexture
-from .orientation.texture.hexagonal import HexagonalTexture
 from .orientation.texture.custom import CustomTexture
-
-from .stiffness.isotropic_stiffness import IsotropicStiffnessGenerator
-from .stiffness.cubic_stiffness import CubicStiffnessGenerator
-from .stiffness.hexagonal_stiffness import HexagonalStiffnessGenerator
-
-from .plotting.gen_plot import Plotter
+from .orientation.texture.hexagonal import HexagonalTexture
+from .orientation.texture.random import RandomTexture
 from .plotting import (
+    inverse_pole_figures,
     ipf_maps,
     pole_figures,
-    inverse_pole_figures,
 )
+from .plotting.gen_plot import Plotter
 from .plotting.ipfcolorkeys import plot_all_colorkeys
-
-from .io.structured_mesh import (
-    export_microstructure,
-    SolverFormat,
-    ElementType,
-)
+from .stiffness.cubic_stiffness import CubicStiffnessGenerator
+from .stiffness.hexagonal_stiffness import HexagonalStiffnessGenerator
+from .stiffness.isotropic_stiffness import IsotropicStiffnessGenerator
 
 __all__ = [
     # Core

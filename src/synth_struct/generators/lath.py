@@ -15,9 +15,9 @@ Possible improvements:
 
 import numpy as np
 
+from ..orientation import euler_to_rotation_matrix
 from .gen_base import MicrostructureGenerator
 from .gen_utils import aniso_voronoi_assignment
-from ..orientation import euler_to_rotation_matrix
 
 
 class LathGenerator(MicrostructureGenerator):

@@ -20,8 +20,8 @@ from __future__ import annotations
 
 import numpy as np
 
-from .stiffness_base import StiffnessGenerator
 from .stiffness import Stiffness
+from .stiffness_base import StiffnessGenerator
 from .stiffness_utils import rotate_stiffness_tensors_batch
 
 

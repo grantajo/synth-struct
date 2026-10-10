@@ -1,9 +1,9 @@
 # synth-struct/src/synth_struct/plotting/pole_figures.py
 
 import numpy as np
-from orix.vector import Vector3d
 from orix.plot import register_projections
 from orix.quaternion.symmetry import get_point_group
+from orix.vector import Vector3d
 
 from .orix_utils import create_crystal_map
 

@@ -13,4 +13,4 @@ except ImportError as e:
     print("Falling back to NumPy implementation.")
     aniso_voronoi_assignment = None
 
-__all__ = ["aniso_voronoi_assignment", "EIGEN_AVAILABLE"]
+__all__ = ["EIGEN_AVAILABLE", "aniso_voronoi_assignment"]

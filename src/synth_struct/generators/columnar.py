@@ -8,9 +8,9 @@ given direction. This generator can only be 3D
 
 import numpy as np
 
-from .gen_base import MicrostructureGenerator
-from .gen_utils import get_seed_coordinates, aniso_voronoi_assignment
 from ..orientation import rotation_z_to_x, rotation_z_to_y
+from .gen_base import MicrostructureGenerator
+from .gen_utils import aniso_voronoi_assignment, get_seed_coordinates
 
 
 class ColumnarGenerator(MicrostructureGenerator):
@@ -42,7 +42,9 @@ class ColumnarGenerator(MicrostructureGenerator):
         - seed: int or None - Random seed for reproducibility
         - chunk_size: int - Number of voxels to process per chunk for memory efficiency
         """
-        super().__init__(target_num_grains=target_num_grains, seed=seed, chunk_size=chunk_size)
+        super().__init__(
+            target_num_grains=target_num_grains, seed=seed, chunk_size=chunk_size
+        )
         self.axis = axis.lower()
         self.aspect_ratio = aspect_ratio
         self.base_size = base_size
@@ -74,7 +76,9 @@ class ColumnarGenerator(MicrostructureGenerator):
             raise ValueError("Columnar grains only supported for 3D microstructures")
 
         # Generate random seed points
-        self.seeds = get_seed_coordinates(self.target_num_grains, micro.dimensions, self.seed)
+        self.seeds = get_seed_coordinates(
+            self.target_num_grains, micro.dimensions, self.seed
+        )
 
         # Generate columnar parameters
         self.scale_factors, self.rotations = self._generate_columnar_params(
@@ -85,7 +89,9 @@ class ColumnarGenerator(MicrostructureGenerator):
             micro, self.seeds, self.scale_factors, self.rotations, self.chunk_size
         )
 
-        print(f"Generated {self.target_num_grains} columnar grains along {self.axis}-axis")
+        print(
+            f"Generated {self.target_num_grains} columnar grains along {self.axis}-axis"
+        )
 
     def _generate_columnar_params(self, target_num_grains):
         """
@@ -133,11 +139,13 @@ class ColumnarGenerator(MicrostructureGenerator):
         Update columnar generator specific metadata.
         """
         metadata = super()._get_metadata()
-        metadata.update({
-            "axis": self.axis,
-            "aspect_ratio": self.aspect_ratio,
-            "base_size": self.base_size,
-            "size_variation": self.size_variation,
-        })
+        metadata.update(
+            {
+                "axis": self.axis,
+                "aspect_ratio": self.aspect_ratio,
+                "base_size": self.base_size,
+                "size_variation": self.size_variation,
+            }
+        )
 
         return metadata

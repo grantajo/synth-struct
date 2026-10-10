@@ -1,9 +1,9 @@
 # synth-struct/src/synth_struct/plotting/pole_figures.py
 
-import numpy as np
 import matplotlib.pyplot as plt
-from orix.vector import Miller, Vector3d
+import numpy as np
 from orix.plot import register_projections
+from orix.vector import Miller, Vector3d
 
 from .orix_utils import create_crystal_map
 

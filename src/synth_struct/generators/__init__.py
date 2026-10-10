@@ -4,16 +4,16 @@
 Synthetic microstructure generators
 """
 
-from .voronoi import VoronoiGenerator
-from .ellipsoidal import EllipsoidalGenerator
 from .columnar import ColumnarGenerator
-from .mixed import MixedGenerator
+from .ellipsoidal import EllipsoidalGenerator
 from .lath import LathGenerator
+from .mixed import MixedGenerator
+from .voronoi import VoronoiGenerator
 
 __all__ = [
-    "VoronoiGenerator",
-    "EllipsoidalGenerator",
     "ColumnarGenerator",
-    "MixedGenerator",
+    "EllipsoidalGenerator",
     "LathGenerator",
+    "MixedGenerator",
+    "VoronoiGenerator",
 ]

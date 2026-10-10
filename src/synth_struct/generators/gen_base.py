@@ -6,6 +6,7 @@ This holds the MicrostructureGenerator class and associated basic functions.
 
 import numpy as np
 
+
 class MicrostructureGenerator:
     """
     Base class for microstructure generators.
@@ -16,7 +17,7 @@ class MicrostructureGenerator:
     Provides shared utilities like allocating per-grain arrays
     """
 
-    def __init__(self, target_num_grains, seed=None, chunk_size: int=500_000):
+    def __init__(self, target_num_grains, seed=None, chunk_size: int = 500_000):
         """
         Initialize base attributes that subclasses will populate.
         """
@@ -24,7 +25,7 @@ class MicrostructureGenerator:
         self.seed = seed
         self.chunk_size = chunk_size
         self.rng = np.random.default_rng(seed)
-        
+
         self.seeds = None
         self.weights = None
         self.target_volumes = None
@@ -61,7 +62,9 @@ class MicrostructureGenerator:
         """
         Internal generation logic. Must be implemented by subclasses.
         """
-        raise NotImplementedError("Subclasses must implement the _generate_internal() method.")
+        raise NotImplementedError(
+            "Subclasses must implement the _generate_internal() method."
+        )
 
     def _get_metadata(self):
         return {

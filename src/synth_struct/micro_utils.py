@@ -6,7 +6,7 @@ A series of functions to help with microstructure development
 1. Get grain IDs from a region of a Microstructure
 """
 
-from typing import Optional, List, Union
+
 import numpy as np
 
 
@@ -90,12 +90,12 @@ def get_grains_in_region(micro, region_type: str = "box", **kwargs) -> np.ndarra
 
 def _create_box_mask(
     micro,
-    x_min: Optional[int] = None,
-    x_max: Optional[int] = None,
-    y_min: Optional[int] = None,
-    y_max: Optional[int] = None,
-    z_min: Optional[int] = None,
-    z_max: Optional[int] = None,
+    x_min: int | None = None,
+    x_max: int | None = None,
+    y_min: int | None = None,
+    y_max: int | None = None,
+    z_min: int | None = None,
+    z_max: int | None = None,
 ) -> np.ndarray:
     """
     Create a box-shaped boolean mask.
@@ -147,8 +147,8 @@ def _create_box_mask(
 
 def _create_sphere_mask(
     micro,
-    center: Optional[Union[List, np.ndarray]] = None,
-    radius: Optional[float] = None,
+    center: list | np.ndarray | None = None,
+    radius: float | None = None,
 ) -> np.ndarray:
     """
     Create a spherical (or circular in 2D) boolean mask.
@@ -209,10 +209,10 @@ def _create_sphere_mask(
 
 def _create_cylinder_mask(
     micro,
-    center: Optional[Union[List, np.ndarray]] = None,
-    radius: Optional[float] = None,
-    c_min: Optional[int] = None,
-    c_max: Optional[int] = None,
+    center: list | np.ndarray | None = None,
+    radius: float | None = None,
+    c_min: int | None = None,
+    c_max: int | None = None,
     axis: str = "z",
 ) -> np.ndarray:
     """

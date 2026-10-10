@@ -7,8 +7,9 @@ Initiates a data class that holds the stiffnesses of grains
 """
 
 from __future__ import annotations
+
 from dataclasses import dataclass, field
-from typing import Dict
+
 import numpy as np
 
 
@@ -28,7 +29,7 @@ class Stiffness:
 
     stiffness_tensors: np.ndarray  # Shape: (n, 6, 6) in Voigt notation
     crystal_structure: str
-    metadata: Dict = field(default_factory=dict)
+    metadata: dict = field(default_factory=dict)
 
     def __post_init__(self):
         self._validate()
@@ -58,7 +59,7 @@ class Stiffness:
         """Number of stiffness tensors."""
         return self.stiffness_tensors.shape[0]
 
-    def copy(self) -> "Stiffness":
+    def copy(self) -> Stiffness:
         """Create a deep copy of this Stiffness object."""
         return Stiffness(
             stiffness_tensors=self.stiffness_tensors.copy(),
@@ -66,7 +67,7 @@ class Stiffness:
             metadata=self.metadata.copy(),
         )
 
-    def subset(self, indices: np.ndarray) -> "Stiffness":
+    def subset(self, indices: np.ndarray) -> Stiffness:
         """
         Return a Stiffness object corresponding to a subset of grains.
 

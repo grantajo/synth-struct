@@ -4,20 +4,20 @@
 Texture generators
 """
 
-from .texture import Texture
-from .texture_base import TextureGenerator
 from .cubic import CubicTexture
+from .custom import CustomTexture
 from .hexagonal import HexagonalTexture
 from .random import RandomTexture
-from .custom import CustomTexture
+from .texture import Texture
+from .texture_base import TextureGenerator
 
 # from .odf import ODFTexture
 
 __all__ = [
-    "Texture",
-    "TextureGenerator",
     "CubicTexture",
+    "CustomTexture",
     "HexagonalTexture",
     "RandomTexture",
-    "CustomTexture",
+    "Texture",
+    "TextureGenerator",
 ]

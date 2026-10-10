@@ -48,7 +48,9 @@ class VoronoiGenerator(MicrostructureGenerator):
             np.random.seed(self.seed)
 
         # Generate random seed points
-        self.seeds = get_seed_coordinates(self.target_num_grains, micro.dimensions, self.seed)
+        self.seeds = get_seed_coordinates(
+            self.target_num_grains, micro.dimensions, self.seed
+        )
         tree = cKDTree(self.seeds)
 
         # Total number of voxels

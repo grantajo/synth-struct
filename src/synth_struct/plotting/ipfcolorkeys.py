@@ -16,7 +16,7 @@ def plot_all_colorkeys(outdir):
 
     # List of all the point groups
     pg_laue = [
-        symmetry.Ci,  #
+        symmetry.Ci,
         symmetry.C2h,
         symmetry.D2h,
         symmetry.S6,

@@ -8,9 +8,9 @@ This creates a random orientation for each grain in a Microstructure
 
 import numpy as np
 
+from ..phase import Phase
 from .texture import Texture
 from .texture_base import TextureGenerator
-from ..phase import Phase
 
 
 class RandomTexture(TextureGenerator):

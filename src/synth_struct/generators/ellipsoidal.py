@@ -8,14 +8,14 @@ given direction, can be 2D or 3D.
 
 import numpy as np
 
-from .gen_base import MicrostructureGenerator
-from .gen_utils import get_seed_coordinates, aniso_voronoi_assignment
 from ..orientation import (
-    euler_to_rotation_matrix,
     create_rotation_matrix_2d,
+    euler_to_rotation_matrix,
     rotation_z_to_x,
     rotation_z_to_y,
 )
+from .gen_base import MicrostructureGenerator
+from .gen_utils import aniso_voronoi_assignment, get_seed_coordinates
 
 
 class EllipsoidalGenerator(MicrostructureGenerator):
@@ -77,7 +77,9 @@ class EllipsoidalGenerator(MicrostructureGenerator):
         ndim = len(micro.dimensions)
 
         # Generate random seed points
-        self.seeds = get_seed_coordinates(self.target_num_grains, micro.dimensions, self.seed)
+        self.seeds = get_seed_coordinates(
+            self.target_num_grains, micro.dimensions, self.seed
+        )
 
         # Generate ellipsoidal parameters
         self.scale_factors, self.rotations = self._generate_ellipsoidal_params(
@@ -153,11 +155,13 @@ class EllipsoidalGenerator(MicrostructureGenerator):
         Update ellipsoidal generator specific metadata
         """
         metadata = super()._get_metadata()
-        metadata.update({
-            "aspect_ratio_mean": self.aspect_ratio_mean,
-            "aspect_ratio_std": self.aspect_ratio_std,
-            "orientation": self.orientation,
-            "base_size": self.base_size,
-        })
+        metadata.update(
+            {
+                "aspect_ratio_mean": self.aspect_ratio_mean,
+                "aspect_ratio_std": self.aspect_ratio_std,
+                "orientation": self.orientation,
+                "base_size": self.base_size,
+            }
+        )
 
         return metadata

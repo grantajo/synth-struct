@@ -15,10 +15,10 @@ import warnings
 
 import numpy as np
 
+from ..phase import Phase
+from ..rotation_converter import rotation_matrix_to_euler
 from .texture import Texture
 from .texture_base import TextureGenerator
-from ..rotation_converter import rotation_matrix_to_euler
-from ..phase import Phase
 
 
 def _normalize(v):
